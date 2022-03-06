@@ -1,0 +1,35 @@
+Measuring the ASL planet split:
+file: ryllus-load-splits-before-cutscene.mp4
+
+black screen to ship (fisrt frame is the last time you see ratchet, last frame is the last black frame)
+151 165 = 14
+247 259 = 12
+325 339 = 15
+420 438 = 18
+    532
+602 633 = 31
+    727
+
+
+Splits (first frame where livesplit has split)
+163
+258
+339
+437
+531
+632
+726
+
+Conclusion: ASL file splits usually a distance of 2 frames before the ship appears frame.
+TODO: Measure in 60FPS to get better accuracy.
+
+
+Measuring the ASL load finished split: 
+file: ryllus-load-splits-after-ship-cutscene.mp4
+
+First black screen to load finished debug output:
+405 425 = 20
+704 725 = 21
+989 1010 = 21
+1387 1399 = 12 (maybe this is from spamming start to skip the ryllus cutscene)
+

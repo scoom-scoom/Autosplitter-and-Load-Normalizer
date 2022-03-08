@@ -15,24 +15,30 @@ from PIL import Image
 # Represents scanning frames of the current screen.
 class ScreenScanner(ImageScanner):
 
-    # crop_x_start = 400
-    # crop_x_end = 900
-    # crop_y_start = 400
-    # crop_y_end = 900
-
-    crop_x_start = 720
-    crop_x_end = 770
-    crop_y_start = 520
-    crop_y_end = 570
-
-    # crop_x_start = 740
-    # crop_x_end = 745
-    # crop_y_start = 540
-    # crop_y_end = 545
-    crop_width = crop_x_end - crop_x_start
-    crop_height = crop_y_end - crop_y_start
-
     def __init__(self):
+
+        # Setup important variables which will be used in the super init call.
+
+        # NOTE: This assumes full screen resolution of 1920 x 1080
+        self.screen_res_x = 1920
+        self.screen_res_y = 1080
+        self.x_centre = int(self.screen_res_x / 2)
+        self.y_centre = int(self.screen_res_y / 2)
+
+        # Choose the crop width and height. Greater values give more reliable results when matching images, as you are using more pixels.
+        self.crop_width = 5
+        self.crop_height = 5
+        if (self.crop_width % 2) != 0:
+            raise RuntimeError("Crop width not divisible by 2.")
+        if (self.crop_height % 2) != 0:
+            raise RuntimeError("Crop height not divisible by 2.")
+        self.crop_half_width = int(self.crop_width / 2)
+        self.crop_half_height = int(self.crop_height / 2)
+        self.crop_x_start = self.x_centre - self.crop_half_width
+        self.crop_x_end = self.x_centre + self.crop_half_width
+        self.crop_y_start = self.y_centre - self.crop_half_height
+        self.crop_y_end = self.y_centre + self.crop_half_height
+
         super(ScreenScanner, self).__init__()
         # self.threshold = 0
         # DEBUGGING
@@ -41,6 +47,8 @@ class ScreenScanner(ImageScanner):
         self.load_start_time = 0
         self.debug_frame_count = 0
         self.debug_start_time = time.perf_counter_ns()
+
+
 
     def get_black_cropped(self):
         return np.zeros((self.crop_y_end - self.crop_y_start, self.crop_x_end - self.crop_x_start, 3), np.uint8)
@@ -67,8 +75,8 @@ class ScreenScanner(ImageScanner):
 
         # DEBUGGING
         bmpfilenamename = "out.bmp"  # set this
-        # dataBitMap.SaveBitmapFile(cDC, bmpfilenamename)
-        # img = Image.open("out.bmp")
+        dataBitMap.SaveBitmapFile(cDC, bmpfilenamename)
+        img = Image.open("out.bmp")
 
         # https://github.com/Toufool/Auto-Split/blob/v1.6.1/src/capture_windows.py
         img: np._BufferType = np.frombuffer(dataBitMap.GetBitmapBits(True), dtype='uint8')

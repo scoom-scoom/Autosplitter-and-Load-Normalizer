@@ -8,6 +8,7 @@
     - OR use both difference and curr value below threshold, as the value differences seem to be very inconsistent.
     - Maybe the treshold can just be scaled for a particular video based on what the measurement is for the Ryllus load.
     - COULD try to match exact ship frame, but this would fail when having different offsets after cropping.
+- Add support for remains load (and all other loads with this problem) which has 1 second of skipped cutscene in Emeralves NG+ No SP run.
 - IF NEEDED Have a number of frames during the load where the program isn't scanning for anything. It should be optimal number of game frames minus 15 (half a second).
 
 # Custom made llr by video:

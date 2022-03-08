@@ -88,6 +88,6 @@ class ImageScanner:
                 self.increment_position()
 
             # DEBUGGING
-            # break
+            break
 
         self.print_final_load_time()

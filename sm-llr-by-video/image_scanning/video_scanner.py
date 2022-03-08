@@ -5,16 +5,16 @@ import numpy as np
 # Represents scanning images form a video file.
 class VideoScanner(ImageScanner):
 
-    vid_res_x = 852
-    vid_res_y = 480
-    x_mid = (vid_res_x / 2)
-    y_mid = (vid_res_y / 2)
-    crop_width = 100
-    crop_height = 100
-    crop_x_start = int(x_mid - crop_width)
-    crop_x_end = int(x_mid + crop_width)
-    crop_y_start = int(y_mid - crop_height)
-    crop_y_end = int(y_mid + crop_height)
+    # vid_res_x = 852
+    # vid_res_y = 480
+    # x_mid = (vid_res_x / 2)
+    # y_mid = (vid_res_y / 2)
+    # crop_width = 100
+    # crop_height = 100
+    # crop_x_start = int(x_mid - crop_width)
+    # crop_x_end = int(x_mid + crop_width)
+    # crop_y_start = int(y_mid - crop_height)
+    # crop_y_end = int(y_mid + crop_height)
 
     def __init__(self, fn_vid):
         super(VideoScanner, self).__init__()
@@ -22,7 +22,8 @@ class VideoScanner(ImageScanner):
 
         # Threshold for how much difference there needs to be between a frame and the black frame to consider the frame as being almost black.
         black_threshold_ryllus = 500
-        self.threshold = black_threshold_ryllus
+        self.threshold = 0
+        # self.threshold = black_threshold_ryllus
         self.frame_count = 1
         self.load_start_frame = 0
         self.load_frames_total = 0

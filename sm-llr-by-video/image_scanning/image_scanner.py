@@ -3,14 +3,36 @@ import numpy as np
 # Represents the process of scanning frames.
 class ImageScanner:
 
-    is_finished = False
-    threshold = 0
-    load_start_frame = -1
-    # The number of times we have entered a black screen. Useful for checking when to start the load timing.
-    enter_black_count = 0
+    image_res_x = 852
+    image_res_y = 480
+    # image_res_x = 1920
+    # image_res_y = 1080
 
     def __init__(self):
+        self.x_centre = int(self.image_res_x / 2)
+        self.y_centre = int(self.image_res_y / 2)
+
+        # Choose the crop width and height. Greater values give more reliable results when matching images, as you are using more pixels.
+        self.crop_width = 4
+        self.crop_height = 4
+        if (self.crop_width % 2) != 0:
+            raise RuntimeError("Crop width not divisible by 2.")
+        if (self.crop_height % 2) != 0:
+            raise RuntimeError("Crop height not divisible by 2.")
+        self.crop_half_width = int(self.crop_width / 2)
+        self.crop_half_height = int(self.crop_height / 2)
+        self.crop_x_start = self.x_centre - self.crop_half_width
+        self.crop_x_end = self.x_centre + self.crop_half_width
+        self.crop_y_start = self.y_centre - self.crop_half_height
+        self.crop_y_end = self.y_centre + self.crop_half_height
+
         self.black_cropped = self.get_black_cropped()
+
+        self.is_finished = False
+        self.threshold = 0
+        self.load_start_frame = -1
+        # The number of times we have entered a black screen. Useful for checking when to start the load timing.
+        self.enter_black_count = 0
 
     # Returns the cropped black frame to compare frames against for the start and end of the load.
     def get_black_cropped(self):
@@ -88,6 +110,6 @@ class ImageScanner:
                 self.increment_position()
 
             # DEBUGGING
-            break
+            # break
 
         self.print_final_load_time()

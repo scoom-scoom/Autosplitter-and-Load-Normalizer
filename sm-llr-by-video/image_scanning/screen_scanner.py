@@ -16,39 +16,15 @@ from PIL import Image
 class ScreenScanner(ImageScanner):
 
     def __init__(self):
-
-        # Setup important variables which will be used in the super init call.
-
-        # NOTE: This assumes full screen resolution of 1920 x 1080
-        self.screen_res_x = 1920
-        self.screen_res_y = 1080
-        self.x_centre = int(self.screen_res_x / 2)
-        self.y_centre = int(self.screen_res_y / 2)
-
-        # Choose the crop width and height. Greater values give more reliable results when matching images, as you are using more pixels.
-        self.crop_width = 5
-        self.crop_height = 5
-        if (self.crop_width % 2) != 0:
-            raise RuntimeError("Crop width not divisible by 2.")
-        if (self.crop_height % 2) != 0:
-            raise RuntimeError("Crop height not divisible by 2.")
-        self.crop_half_width = int(self.crop_width / 2)
-        self.crop_half_height = int(self.crop_height / 2)
-        self.crop_x_start = self.x_centre - self.crop_half_width
-        self.crop_x_end = self.x_centre + self.crop_half_width
-        self.crop_y_start = self.y_centre - self.crop_half_height
-        self.crop_y_end = self.y_centre + self.crop_half_height
-
         super(ScreenScanner, self).__init__()
         # self.threshold = 0
         # DEBUGGING
         self.threshold = 1
+
         self.load_time_total = 0
         self.load_start_time = 0
         self.debug_frame_count = 0
         self.debug_start_time = time.perf_counter_ns()
-
-
 
     def get_black_cropped(self):
         return np.zeros((self.crop_y_end - self.crop_y_start, self.crop_x_end - self.crop_x_start, 3), np.uint8)

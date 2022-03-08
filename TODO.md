@@ -1,4 +1,5 @@
 # Current LLR stuff
+- Change is_screen_scanning to Enum.
 - Interesting note, when I change the resolution of the youtube vid, I change the pixel difference values.
 - Test on local video first, so that I can step through the frames.
 - Test the program on various videos (video and screen scanning) to see:
@@ -9,6 +10,7 @@
     - Maybe the treshold can just be scaled for a particular video based on what the measurement is for the Ryllus load.
     - COULD try to match exact ship frame, but this would fail when having different offsets after cropping.
 - Add support for remains load (and all other loads with this problem) which has 1 second of skipped cutscene in Emeralves NG+ No SP run.
+- Make program stop as soon as it has found the llr time.
 - IF NEEDED Have a number of frames during the load where the program isn't scanning for anything. It should be optimal number of game frames minus 15 (half a second).
 
 # Custom made llr by video:

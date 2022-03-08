@@ -1,6 +1,5 @@
 import numpy as np
 
-
 # Represents the process of scanning frames.
 class ImageScanner:
 
@@ -25,8 +24,8 @@ class ImageScanner:
         self.crop_y_end = self.y_centre + self.crop_half_height
 
         self.black_cropped = self.get_black_cropped()
-
         self.is_finished = False
+        # Threshold for how much difference there needs to be between a frame and the black frame to consider the frame as being almost black.
         self.threshold = 0
         # The number of times we have entered a black screen. Useful for checking when to start the load timing.
         self.enter_black_count = 0

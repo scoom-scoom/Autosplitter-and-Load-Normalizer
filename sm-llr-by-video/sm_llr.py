@@ -1,16 +1,18 @@
-import numpy as np
 import time
+from enum import Enum
 from image_scanning.screen_scanner import ScreenScanner
 from image_scanning.video_scanner import VideoScanner
 
-is_screen_cap = False
-# is_screen_cap = True
 fn_vid = "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/llr-test-7th-pb.mp4"
+class ImageScanType(Enum):
+    SCREEN = 1
+    VIDEO = 2
 
-scanner = None
-if is_screen_cap:
+# scan_type = ImageScanType.SCREEN
+scan_type = ImageScanType.VIDEO
+if scan_type == ImageScanType.SCREEN:
     scanner = ScreenScanner()
-else:
+elif scan_type == ImageScanType.VIDEO:
     scanner = VideoScanner(fn_vid)
 
 start = time.time()

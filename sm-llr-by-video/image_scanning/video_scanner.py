@@ -1,9 +1,10 @@
 from image_scanning.image_scanner import ImageScanner
 import cv2
-import numpy as np
 
 # Represents scanning images form a video file.
 class VideoScanner(ImageScanner):
+
+    fps = 30
 
     def __init__(self, fn_vid=""):
         super(VideoScanner, self).__init__(fn_vid)
@@ -16,7 +17,6 @@ class VideoScanner(ImageScanner):
         self.frame_count = 1
         self.load_start_frame = 0
         self.load_frames_total = 0
-        self.fps = 30
 
     def get_image_res(self, fn_vid=""):
         # Detect video resolution from scanning the first frame.

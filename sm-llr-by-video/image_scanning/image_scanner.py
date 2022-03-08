@@ -28,7 +28,6 @@ class ImageScanner:
 
         self.is_finished = False
         self.threshold = 0
-        self.load_start_frame = -1
         # The number of times we have entered a black screen. Useful for checking when to start the load timing.
         self.enter_black_count = 0
 
@@ -67,7 +66,6 @@ class ImageScanner:
 
     # Resets variables after a load is timed, to prepare the variables for the next load.
     def reset_load_vars(self):
-        self.load_start_frame = -1
         self.enter_black_count = 0
 
     # Given two frames, returns true if the euclidean (pixel) distance between them is less than the threshold.

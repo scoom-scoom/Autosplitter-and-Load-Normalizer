@@ -46,6 +46,10 @@ class VideoScanner(ImageScanner):
         if self.enter_black_count == 1:
             self.load_start_frame = self.frame_count
 
+    def reset_load_vars(self):
+        super(VideoScanner, self).reset_load_vars()
+        self.load_start_frame = self.frame_count
+
     def increment_position(self):
         self.frame_count += 1
 

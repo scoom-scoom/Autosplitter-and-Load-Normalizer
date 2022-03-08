@@ -1,9 +1,9 @@
-from frame_scanning.frame_scanner import FrameScanner
+from image_scanning.image_scanner import ImageScanner
 import cv2
 import numpy as np
 
-# Represents scanning frames form a video file.
-class VideoScanner(FrameScanner):
+# Represents scanning images form a video file.
+class VideoScanner(ImageScanner):
 
     vid_res_x = 852
     vid_res_y = 480

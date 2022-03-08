@@ -1,17 +1,12 @@
-All the contents required for the autosplitter and load normalizer used for speedrunning the game Ratchet and Clank Size Matters.
-$73mkMCMpqRN8o
-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
-https://github.com/mindfulmonk600/ASL-RAC-SM.git
-mindful monk: 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
-
 # Current LLR stuff
-- Make new github which doesn't have my full name on it, and transfer this project.
-- Rename frame scanner to image scanner.
+- Interesting note, when I change the resolution of the youtube vid, I change the pixel difference values.
+- Test on local video first, so that I can step through the frames.
 - Test the program on various videos (video and screen scanning) to see:
     - If I can just use exactly 0. Is the ship fade exactly 0 after a certain number of frames everytime?
     - If the differences between black and the almost black image are consistent, or can at least be bounded.
-- AFTER more measurements, change the threshold to be the difference between prev and curr frame, based on the 7th and 8th pb measurements I did.
+- AFTER more measurements, could change the threshold to be the difference between prev and curr frame, based on the 7th and 8th pb measurements I did.
     - OR use both difference and curr value below threshold, as the value differences seem to be very inconsistent.
+    - Maybe the treshold can just be scaled for a particular video based on what the measurement is for the Ryllus load.
     - COULD try to match exact ship frame, but this would fail when having different offsets after cropping.
 - IF NEEDED Have a number of frames during the load where the program isn't scanning for anything. It should be optimal number of game frames minus 15 (half a second).
 

@@ -1,7 +1,7 @@
 import numpy as np
 
 # Represents the process of scanning frames.
-class FrameScanner:
+class ImageScanner:
 
     is_finished = False
     threshold = 0

@@ -1,7 +1,7 @@
 import numpy as np
 import time
-from frame_scanning.screen_scanner import ScreenScanner
-from frame_scanning.video_scanner import VideoScanner
+from image_scanning.screen_scanner import ScreenScanner
+from image_scanning.video_scanner import VideoScanner
 
 # is_screen_cap = False
 is_screen_cap = True

@@ -1,5 +1,5 @@
 
-from frame_scanning.frame_scanner import FrameScanner
+from image_scanning.image_scanner import ImageScanner
 import numpy as np
 import win32gui
 import win32ui
@@ -13,28 +13,30 @@ import os
 from PIL import Image
 
 # Represents scanning frames of the current screen.
-class ScreenScanner(FrameScanner):
+class ScreenScanner(ImageScanner):
 
     # crop_x_start = 400
     # crop_x_end = 900
     # crop_y_start = 400
     # crop_y_end = 900
 
-    # crop_x_start = 700
-    # crop_x_end = 780
-    # crop_y_start = 500
-    # crop_y_end = 580
+    crop_x_start = 720
+    crop_x_end = 770
+    crop_y_start = 520
+    crop_y_end = 570
 
-    crop_x_start = 740
-    crop_x_end = 745
-    crop_y_start = 540
-    crop_y_end = 545
+    # crop_x_start = 740
+    # crop_x_end = 745
+    # crop_y_start = 540
+    # crop_y_end = 545
     crop_width = crop_x_end - crop_x_start
     crop_height = crop_y_end - crop_y_start
 
     def __init__(self):
         super(ScreenScanner, self).__init__()
-        self.threshold = 0
+        # self.threshold = 0
+        # DEBUGGING
+        self.threshold = 1
         self.load_time_total = 0
         self.load_start_time = 0
         self.debug_frame_count = 0

@@ -15,8 +15,8 @@ from PIL import Image
 # Represents scanning frames of the current screen.
 class ScreenScanner(ImageScanner):
 
-    def __init__(self):
-        super(ScreenScanner, self).__init__()
+    def __init__(self, fn_vid=""):
+        super(ScreenScanner, self).__init__(fn_vid)
         # self.threshold = 0
         # DEBUGGING
         self.threshold = 1
@@ -26,8 +26,8 @@ class ScreenScanner(ImageScanner):
         self.debug_frame_count = 0
         self.debug_start_time = time.perf_counter_ns()
 
-    def get_black_cropped(self):
-        return np.zeros((self.crop_y_end - self.crop_y_start, self.crop_x_end - self.crop_x_start, 3), np.uint8)
+    def get_image_res(self, fn_vid=""):
+        return (1920, 1080)
 
     def get_next_frame_cropped(self):
         # https://stackoverflow.com/questions/1080719/screenshot-an-application-regardless-of-whats-in-front-of-it
@@ -51,8 +51,8 @@ class ScreenScanner(ImageScanner):
 
         # DEBUGGING
         bmpfilenamename = "out.bmp"  # set this
-        dataBitMap.SaveBitmapFile(cDC, bmpfilenamename)
-        img = Image.open("out.bmp")
+        # dataBitMap.SaveBitmapFile(cDC, bmpfilenamename)
+        # img = Image.open("out.bmp")
 
         # https://github.com/Toufool/Auto-Split/blob/v1.6.1/src/capture_windows.py
         img: np._BufferType = np.frombuffer(dataBitMap.GetBitmapBits(True), dtype='uint8')

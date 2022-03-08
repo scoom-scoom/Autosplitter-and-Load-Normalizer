@@ -5,19 +5,8 @@ import numpy as np
 # Represents scanning images form a video file.
 class VideoScanner(ImageScanner):
 
-    # vid_res_x = 852
-    # vid_res_y = 480
-    # x_mid = (vid_res_x / 2)
-    # y_mid = (vid_res_y / 2)
-    # crop_width = 100
-    # crop_height = 100
-    # crop_x_start = int(x_mid - crop_width)
-    # crop_x_end = int(x_mid + crop_width)
-    # crop_y_start = int(y_mid - crop_height)
-    # crop_y_end = int(y_mid + crop_height)
-
-    def __init__(self, fn_vid):
-        super(VideoScanner, self).__init__()
+    def __init__(self, fn_vid=""):
+        super(VideoScanner, self).__init__(fn_vid)
         self.vid = cv2.VideoCapture(fn_vid)
 
         # Threshold for how much difference there needs to be between a frame and the black frame to consider the frame as being almost black.
@@ -29,8 +18,13 @@ class VideoScanner(ImageScanner):
         self.load_frames_total = 0
         self.fps = 30
 
-    def get_black_cropped(self):
-        return np.zeros((self.crop_y_end - self.crop_y_start, self.crop_x_end - self.crop_x_start, 3), np.uint8)
+    def get_image_res(self, fn_vid=""):
+        # Detect video resolution from scanning the first frame.
+        self.vid = cv2.VideoCapture(fn_vid)
+        success, frame = self.vid.read()
+        if not success:
+            raise RuntimeError("Could not read the first frame of the video file.")
+        return (len(frame[0]), len(frame))
 
     def get_next_frame_cropped(self):
         success, frame = self.vid.read()

@@ -1,14 +1,12 @@
 import numpy as np
 
+
 # Represents the process of scanning frames.
 class ImageScanner:
 
-    image_res_x = 852
-    image_res_y = 480
-    # image_res_x = 1920
-    # image_res_y = 1080
-
-    def __init__(self):
+    # fn_vid is the video file name, if using video scanning.
+    def __init__(self, fn_vid=""):
+        self.image_res_x, self.image_res_y = self.get_image_res(fn_vid)
         self.x_centre = int(self.image_res_x / 2)
         self.y_centre = int(self.image_res_y / 2)
 
@@ -34,9 +32,13 @@ class ImageScanner:
         # The number of times we have entered a black screen. Useful for checking when to start the load timing.
         self.enter_black_count = 0
 
+    # Gets the image resolution in pixels (width, height) to be used in the cropping process. fn_vid is the video file name, if using video scanning.
+    def get_image_res(self, fn_vid=""):
+        raise NotImplementedError
+
     # Returns the cropped black frame to compare frames against for the start and end of the load.
     def get_black_cropped(self):
-        raise NotImplementedError
+        return np.zeros((self.crop_y_end - self.crop_y_start, self.crop_x_end - self.crop_x_start, 3), np.uint8)
 
     # Returns whether getting the frame was successful, and the frame data as a numpy array of pixels.
     def get_next_frame_cropped(self):

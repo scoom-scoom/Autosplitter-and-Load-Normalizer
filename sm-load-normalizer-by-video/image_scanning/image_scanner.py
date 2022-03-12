@@ -5,11 +5,14 @@ class ImageScanner:
 
     # fn_vid is the video file name, if using video scanning.
     def __init__(self, fn_vid=""):
+        # Probably not the best way to code this, as this line is only used for video scanning,
+        # but I couldn't figure out a nicer way to have the video scanner set the image resolution.
         self.image_res_x, self.image_res_y = self.get_image_res(fn_vid)
         self.x_centre = int(self.image_res_x / 2)
         self.y_centre = int(self.image_res_y / 2)
 
-        # Choose the crop width and height. Greater values give more reliable results when matching images, as you are using more pixels.
+        # Choose the crop width and height. Greater values give more reliable results when
+        # matching images, as you are using more pixels.
         self.crop_width = 4
         self.crop_height = 4
         if (self.crop_width % 2) != 0:
@@ -25,12 +28,14 @@ class ImageScanner:
 
         self.black_cropped = self.get_black_cropped()
         self.is_finished = False
-        # Threshold for how much difference there needs to be between a frame and the black frame to consider the frame as being almost black.
+        # Threshold for how much difference there needs to be between a frame and
+        # the black frame to consider the frame as being almost black.
         self.threshold = 0
         # The number of times we have entered a black screen. Useful for checking when to start the load timing.
         self.enter_black_count = 0
 
-    # Gets the image resolution in pixels (width, height) to be used in the cropping process. fn_vid is the video file name, if using video scanning.
+    # Gets the image resolution in pixels (width, height) to be used in the cropping
+    # process. fn_vid is the video file name, if using video scanning.
     def get_image_res(self, fn_vid=""):
         raise NotImplementedError
 
@@ -74,13 +79,17 @@ class ImageScanner:
         str_debug += str(self.get_position())
         if threshold == 0:
             almost_equal = np.array_equal(frame_one, frame_two)
-            str_debug += " Is Frame equal? " + str(almost_equal)
+            # str_debug += " Is Frame equal? " + str(almost_equal)
         else:
             # Perform more expensive norm calculation only if necessary.
             norm = np.linalg.norm(frame_one - frame_two)
             almost_equal = norm < threshold
             str_debug += " Norm: " + str(norm)
-        print(str_debug)
+        # DEBUGGING
+        if almost_equal:
+            str_debug += " Frame is equal."
+            print(str_debug)
+        # print(str_debug)
         return almost_equal
 
     def print_final_load_time(self):

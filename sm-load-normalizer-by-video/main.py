@@ -3,7 +3,10 @@ from enum import Enum
 from image_scanning.screen_scanner import ScreenScanner
 from image_scanning.video_scanner import VideoScanner
 
-fn_vid = "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/llr-test-7th-pb.mp4"
+# Change these variables here according to your video.
+fn_vid = "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any-Alemussy-ryllus.mp4"
+fps = 30
+
 class ImageScanType(Enum):
     SCREEN = 1
     VIDEO = 2
@@ -13,7 +16,7 @@ scan_type = ImageScanType.VIDEO
 if scan_type == ImageScanType.SCREEN:
     scanner = ScreenScanner()
 elif scan_type == ImageScanType.VIDEO:
-    scanner = VideoScanner(fn_vid)
+    scanner = VideoScanner(fn_vid, fps)
 
 start = time.time()
 scanner.start_scan_loop()

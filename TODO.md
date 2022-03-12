@@ -1,7 +1,5 @@
 # Current LLR stuff
-- Change is_screen_scanning to Enum.
-- Interesting note, when I change the resolution of the youtube vid, I change the pixel difference values.
-- Test on local video first, so that I can step through the frames.
+- LLR think about stopping the time when the load screen changes to the last load screen (big pixel change). Will need to make sure last load time is consistent.
 - Test the program on various videos (video and screen scanning) to see:
     - If I can just use exactly 0. Is the ship fade exactly 0 after a certain number of frames everytime?
     - If the differences between black and the almost black image are consistent, or can at least be bounded.

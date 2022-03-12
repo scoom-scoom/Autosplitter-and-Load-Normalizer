@@ -4,13 +4,13 @@ import cv2
 # Represents scanning images form a video file.
 class VideoScanner(ImageScanner):
 
-    fps = 30
-
-    def __init__(self, fn_vid=""):
+    def __init__(self, fn_vid="", fps=30):
+        self.fps = fps
         super(VideoScanner, self).__init__(fn_vid)
         self.vid = cv2.VideoCapture(fn_vid)
 
-        # Threshold for how much difference there needs to be between a frame and the black frame to consider the frame as being almost black.
+        # Threshold for how much difference there needs to be between a frame and
+        # the black frame to consider the frame as being almost black.
         black_threshold_ryllus = 500
         self.threshold = 0
         # self.threshold = black_threshold_ryllus

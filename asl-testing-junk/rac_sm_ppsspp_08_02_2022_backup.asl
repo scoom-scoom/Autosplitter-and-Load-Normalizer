@@ -16,13 +16,14 @@ startup {
 		settings.Add("IClankSplit", true, "Split after Inside Clank");
 		settings.Add("QuodronaSplit", true, "Split on Quodrona");
 		settings.Add("AutoReset", true, "Toggle this to auto-reset (NG+)");
-		settings.Add("LongLoadRemoval", false, "LongLoadRemoval - Toggle this to have the timer pause when the load time exceeds the optimal time (Layout settings -> Timer settings -> Timing method MUST be set to GameTime)");
+		settings.Add("LongLoadRemoval", false, "Long Load Removal (see tooltip).");
+		settings.SetToolTip("LongLoadRemoval", "WARNING: This feature has not been tested in a full run, use at your own risk. Toggle this to have the timer pause when the load time exceeds the optimal time.");
+		settings.Add("SplitOnBolt", false, "Split on Bolt (see tooltip).");
+		settings.SetToolTip("SplitOnBolt", "WARNING: This feature has not been tested in a full run, use at your own risk. Set this to true if you want to additionally split on each bolt (the split happens after the bolt collection animation is finished, due to current technical limitations).");
 
 		vars.loadStartTime = -1;
 		vars.isLoading = false;
 		vars.checkForLoadRemoval = false;
-
-		vars.loadStartRealTime = -1;
 
 		// Set to true if we have reached Dayni Moon 2, so that the long load removal doesn't hit Dayni Moon 1 by accident.
 		vars.dayniMoon2 = false;
@@ -31,15 +32,12 @@ startup {
 		vars.challax2 = false;
 
 		// optimalLoadTime is measured in milliseconds.
-		vars.optimalLoadTimeRyllus = 500;
-		vars.optimalLoadTimeKalidon = 500;
+		vars.optimalLoadTimeRyllus = 12783;
+		vars.optimalLoadTimeKalidon = 12809;
 
 		// Taken from https://raw.githubusercontent.com/tduva/LiveSplit-ASL/master/AlanWake.asl
 		Action<string> LogDebug = (text) => {
-			//print("[DEBUG] " + text);
-
-			// DEBUGGING
-			print(text);
+			print("[DEBUG] " + text);
 		};
 		vars.LogDebug = LogDebug;
 
@@ -49,8 +47,6 @@ startup {
 			vars.checkForLoadRemoval = false;
 			vars.dayniMoon2 = false;
 			vars.challax2 = false;
-
-			vars.loadStartRealTime = -1;
 		};
 		vars.ResetLoadTimeVars = ResetLoadTimeVars;
 
@@ -60,18 +56,12 @@ startup {
 			TimeSpan gt = (TimeSpan) timer.CurrentTime.GameTime;
 			if ((gt.TotalMilliseconds - vars.loadStartTime) > optimalLoadTime) {
 				// Pause the timer to remove the long load.
-
-				// DEBUGGING
-				// vars.isLoading = true;
+				vars.isLoading = true;
 			}
 			if (vars.currentCutscene.Current == cutsceneVal) {
-				
-				// Record the total time of the load
-				TimeSpan rt = (TimeSpan) timer.CurrentTime.RealTime;
-				vars.LogDebug("" + (rt.TotalMilliseconds - vars.loadStartRealTime));
-
 				// Resume the timer once the load is done, and the cutscene is playing.
 				vars.ResetLoadTimeVars();
+				vars.LogDebug("Load resumed");
 			}
 		};
 		vars.CheckLoadRemoval = CheckLoadRemoval;
@@ -81,9 +71,6 @@ startup {
 			TimeSpan gt = (TimeSpan) timer.CurrentTime.GameTime;
 			vars.loadStartTime = gt.TotalMilliseconds;
 			vars.checkForLoadRemoval = true;
-
-			TimeSpan rt = (TimeSpan) timer.CurrentTime.RealTime;
-			vars.loadStartRealTime = rt.TotalMilliseconds;
 		};
 		vars.LoadStarted = LoadStarted;
 }
@@ -108,13 +95,15 @@ init {
 	vars.ottoEntry = new MemoryWatcher<float>(ptr + 0xBAB4F8);
 	vars.currentCutscene = new MemoryWatcher<int>(ptr + 0x178CC1D);
     vars.kalidonMoveState = new MemoryWatcher<int>(ptr + 0xBAA8C0);
+    vars.titBoltCount = new MemoryWatcher<int>(ptr + 0x80CF8);
 	
 	vars.watchers = new MemoryWatcherList() {
 		vars.currentPlanet,
 		vars.pokiSpawn,
 		vars.ottoEntry,
 		vars.currentCutscene,
-        vars.kalidonMoveState
+        vars.kalidonMoveState,
+		vars.titBoltCount
 	};
 }
 
@@ -123,237 +112,153 @@ update {
 }
 
 split {
+	// DEBUGGING
 	// vars.LogDebug("Planet: " + vars.currentPlanet.Current);
 	// vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
+	// vars.LogDebug("Tit bolt count " + vars.titBoltCount.Current);
 
-	// DEBUGGING
-	// ------------------------------------------------ //
+	if (settings["SplitOnBolt"]) {
+		// For some reason, the memory address value containing the bolt count is multiplied by 256.
+		int boltCountOld = (int) (vars.titBoltCount.Old / 256);
+		int boltCountCurrent = (int) (vars.titBoltCount.Current / 256);
+		// Check to see if our bolt count has gone up by 1. If so, split.
+		if ((boltCountCurrent - boltCountOld) == 1) {
+			return true;
+		}
+	}
+
+	// Split on each planet
+	bool planetChanged = false;
+	if (vars.currentPlanet.Current != vars.currentPlanet.Old) {
+		planetChanged = true;
+	}
 	// Ryllus
-	if (vars.currentPlanet.Current == 2 && vars.currentPlanet.Old == 1) {
+	if (vars.currentPlanet.Current == 2 && planetChanged) {
 		if (settings["LongLoadRemoval"]) {
 			vars.LoadStarted();
 		}
+		return true;
 	}
 	// Kalidon
-	// DEBUGGING
-	if (vars.currentPlanet.Current == 3 && vars.currentPlanet.Old == 2) {
+	if (vars.currentPlanet.Current == 3 && planetChanged) {
 		if (settings["LongLoadRemoval"]) {
 			vars.LoadStarted();
+		}
+		return true;
+	}
+	if (settings["Yeezy%Split"]) {
+		if (vars.currentPlanet.Current == 3 && vars.kalidonMoveState.Current == 1097126595) {
+			return true;
+		}
+	}
+	if (settings["5TBSplit"]) {
+		if (vars.currentPlanet.Current == 3 && vars.kalidonMoveState.Current == 1094363991) {
+			return true;
 		}
 	}
 	// Metalis
-	if (vars.currentPlanet.Current == 4 && vars.currentPlanet.Old == 3) {
+	if (vars.currentPlanet.Current == 4 && planetChanged) {
 		if (settings["LongLoadRemoval"]) {
 			vars.LoadStarted();
 		}
+		return true;
 	}
 	// Metalis Giant Clank
-	if (vars.currentPlanet.Current == 15 && vars.currentPlanet.Old == 4) {
+	if (vars.currentPlanet.Current == 15 && planetChanged) {
 		if (settings["LongLoadRemoval"]) {
 			vars.LoadStarted();
 		}
+		return true;
 	}
 	// Dreamtime
-	if (vars.currentPlanet.Current == 5 && vars.currentPlanet.Old == 15) {
+	if (vars.currentPlanet.Current == 5 && planetChanged) {
 		if (settings["LongLoadRemoval"]) {
 			vars.LoadStarted();
 		}
+		return true;
 	}
 	// MOO
-	if (vars.currentPlanet.Current == 6 && vars.currentPlanet.Old == 5) {
+	if (vars.currentPlanet.Current == 6 && planetChanged) {
 		if (settings["LongLoadRemoval"]) {
 			vars.LoadStarted();
 		}
+		return true;
 	}
 	if (settings["RemainsSplit"]) {
-		if (vars.currentPlanet.Current == 23 && vars.currentPlanet.Old == 6) {
+		if (vars.currentPlanet.Current == 23 && planetChanged) {
 			if (settings["LongLoadRemoval"]) {
 				vars.LoadStarted();
 			}
+			return true;
 		}
 	}
 	if (settings["ChallaxSplit"]) {
-		if (vars.currentPlanet.Current == 7 && vars.currentPlanet.Old == 23) {
+		if (vars.currentPlanet.Current == 7 && planetChanged) {
 			if (settings["LongLoadRemoval"]) {
 				vars.LoadStarted();
 			}
+			return true;
 		}
 	}
-	// Challax Giant Clank 2
+	// Challax Giant Clank 2 (For Wrench Only and 100%)
 	if (settings["GiantClank2Split"]) {
-		if (vars.currentPlanet.Current == 21 && vars.currentPlanet.Old == 7) {
+		if (vars.currentPlanet.Current == 21 && planetChanged) {
 			if (settings["LongLoadRemoval"]) {
 				vars.LoadStarted();
 			}
+			return true;
 		}
 		// Split on Challax 2 (when you return from giant clank section back to Challax)
-		if (vars.currentPlanet.Current == 7 && vars.currentPlanet.Old == 21) {
+		if (vars.currentPlanet.Current == 7 && planetChanged) {
 			if (settings["LongLoadRemoval"]) {
 				vars.LoadStarted();
 			}
 			vars.challax2 = true;
+			return true;
 		}
 	}
 	// Dayni Moon
-	if (vars.currentPlanet.Current == 8 && vars.currentPlanet.Old == 7) {
+	if (vars.currentPlanet.Current == 8 && planetChanged) {
 		if (settings["LongLoadRemoval"]) {
 			vars.LoadStarted();
 		}
+		return true;
 	}
 	if (settings["IClankSplit"]) {
-		if (vars.currentPlanet.Current == 9 && vars.currentPlanet.Old == 8) {
+		if (vars.currentPlanet.Current == 9 && planetChanged) {
 			if (settings["LongLoadRemoval"]) {
 				vars.LoadStarted();
 			}
+			return true;
 		}
 	}
 	// Dayni Moon 2
-	if (vars.currentPlanet.Current == 8 && vars.currentPlanet.Old == 9) {
+	if (vars.currentPlanet.Current == 8 && planetChanged) {
 		if (settings["LongLoadRemoval"]) {
 			vars.LoadStarted();
 		}
 		vars.dayniMoon2 = true;
+		return true;
 	}
-
 	if (settings["QuodronaSplit"]) {
-		if (vars.currentPlanet.Current == 10 && vars.currentPlanet.Old == 8) {
+		if (vars.currentPlanet.Current == 10 && planetChanged) {
 			if (settings["LongLoadRemoval"]) {
 				vars.LoadStarted();
 			}
+			return true;
 		}
 	}
-	// ------------------------------------------------ //
-
-
-
-	// // Ryllus
-	// if (vars.currentPlanet.Current == 2 && vars.currentPlanet.Old == 1) {
-	// 	if (settings["LongLoadRemoval"]) {
-	// 		vars.LoadStarted();
-	// 	}
-	// 	return true;
-	// }
-	// // Kalidon
-	// if (vars.currentPlanet.Current == 3 && vars.currentPlanet.Old == 2) {
-	// 	if (settings["LongLoadRemoval"]) {
-	// 		vars.LoadStarted();
-	// 	}
-	// 	return true;
-	// }
-    // if (settings["Yeezy%Split"]) {
-    //     if (vars.currentPlanet.Current == 3 && vars.kalidonMoveState.Current == 1097126595) {
-    //         return true;
-    //     }
-	// }
-	// if (settings["5TBSplit"]) {
-    //     if (vars.currentPlanet.Current == 3 && vars.kalidonMoveState.Current == 1094363991) {
-    //         return true;
-    //     }
-	// }
-	// // Metalis
-	// if (vars.currentPlanet.Current == 4 && vars.currentPlanet.Old == 3) {
-	// 	if (settings["LongLoadRemoval"]) {
-	// 		vars.LoadStarted();
-	// 	}
-	// 	return true;
-	// }
-	// // Metalis Giant Clank
-	// if (vars.currentPlanet.Current == 15 && vars.currentPlanet.Old == 4) {
-	// 	if (settings["LongLoadRemoval"]) {
-	// 		vars.LoadStarted();
-	// 	}
-	// 	return true;
-	// }
-	// // Dreamtime
-	// if (vars.currentPlanet.Current == 5 && vars.currentPlanet.Old == 15) {
-	// 	if (settings["LongLoadRemoval"]) {
-	// 		vars.LoadStarted();
-	// 	}
-	// 	return true;
-	// }
-	// // MOO
-	// if (vars.currentPlanet.Current == 6 && vars.currentPlanet.Old == 5) {
-	// 	if (settings["LongLoadRemoval"]) {
-	// 		vars.LoadStarted();
-	// 	}
-	// 	return true;
-	// }
-	// if (settings["RemainsSplit"]) {
-	// 	if (vars.currentPlanet.Current == 23 && vars.currentPlanet.Old == 6) {
-	// 		if (settings["LongLoadRemoval"]) {
-	// 			vars.LoadStarted();
-	// 		}
-	// 		return true;
-	// 	}
-	// }
-	// if (settings["ChallaxSplit"]) {
-	// 	if (vars.currentPlanet.Current == 7 && vars.currentPlanet.Old == 23) {
-	// 		if (settings["LongLoadRemoval"]) {
-	// 			vars.LoadStarted();
-	// 		}
-	// 		return true;
-	// 	}
-	// }
-	// // Challax Giant Clank 2
-	// if (settings["GiantClank2Split"]) {
-	// 	if (vars.currentPlanet.Current == 21 && vars.currentPlanet.Old == 7) {
-	// 		if (settings["LongLoadRemoval"]) {
-	// 			vars.LoadStarted();
-	// 		}
-	// 		return true;
-	// 	}
-	// 	// Split on Challax 2 (when you return from giant clank section back to Challax)
-	// 	if (vars.currentPlanet.Current == 7 && vars.currentPlanet.Old == 21) {
-	// 		if (settings["LongLoadRemoval"]) {
-	// 			vars.LoadStarted();
-	// 		}
-	// 		vars.challax2 = true;
-	// 		return true;
-	// 	}
-	// }
-	// // Dayni Moon
-	// if (vars.currentPlanet.Current == 8 && vars.currentPlanet.Old == 7) {
-	// 	if (settings["LongLoadRemoval"]) {
-	// 		vars.LoadStarted();
-	// 	}
-	// 	return true;
-	// }
-	// if (settings["IClankSplit"]) {
-	// 	if (vars.currentPlanet.Current == 9 && vars.currentPlanet.Old == 8) {
-	// 		if (settings["LongLoadRemoval"]) {
-	// 			vars.LoadStarted();
-	// 		}
-	// 		return true;
-	// 	}
-	// }
-	// // Dayni Moon 2
-	// if (vars.currentPlanet.Current == 8 && vars.currentPlanet.Old == 9) {
-	// 	if (settings["LongLoadRemoval"]) {
-	// 		vars.LoadStarted();
-	// 	}
-	// 	vars.dayniMoon2 = true;
-	// 	return true;
-	// }
-
-	// if (settings["QuodronaSplit"]) {
-	// 	if (vars.currentPlanet.Current == 10 && vars.currentPlanet.Old == 8) {
-	// 		if (settings["LongLoadRemoval"]) {
-	// 			vars.LoadStarted();
-	// 		}
-	// 		return true;
-	// 	}
-	// }
-	// if (settings["SplitOtto"]) {
-	// 	if (vars.currentPlanet.Current == 10) {
-	// 		if (vars.ottoEntry.Current == 75000 && vars.ottoEntry.Old <= 0) {
-	// 			return true;
-	// 		}
-	// 	}
-	// }
-	// // Split on end of run
-	// if (vars.currentPlanet.Current == 10 && vars.currentCutscene.Current == 776417329) {
-	// 	return true;
-	// }
+	if (settings["SplitOtto"]) {
+		if (vars.currentPlanet.Current == 10) {
+			if (vars.ottoEntry.Current == 75000 && vars.ottoEntry.Old <= 0) {
+				return true;
+			}
+		}
+	}
+	// Split on end of run
+	if (vars.currentPlanet.Current == 10 && vars.currentCutscene.Current == 776417329) {
+		return true;
+	}
 }
 	
 
@@ -440,19 +345,20 @@ isLoading {
 			}
 		}
 	}
-
-	// DEBUGGING
-	// return vars.isLoading;
+	return vars.isLoading;
 }
 
 // ------------------------------------------------ //
-// Edits
+// Changelog
 // ------------------------------------------------ //
+//
+// Emeralve -> 9/2/2022
+// - shhh I was here.
+//
+// scoom_scoom -> 08/02/2022
+// - Added splitting on bolt (after the bolt animation is finished). Memory address was found by Emeralve.
 //
 // scoom_scoom -> 30/12/2021
 // - Added Yeezy% split on wildfire boots collection (the start of the minicutscene)
 // - Added 5th titanium bolt split for 5TB category (splits the moment the bolt collection minicutscene triggers)
 // - Tidied up if statements
-//
-// scoom_scoom -> ???
-// - Added long load removal.

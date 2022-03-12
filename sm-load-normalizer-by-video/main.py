@@ -4,7 +4,7 @@ from image_scanning.screen_scanner import ScreenScanner
 from image_scanning.video_scanner import VideoScanner
 
 # Change these variables here according to your video.
-fn_vid = "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any-Alemussy-ryllus.mp4"
+fn_vid = "E:/photos-and-videos/other-vids/rac/rac_sm/autosplitting/any-Touh-ryllus.mp4"
 fps = 30
 
 class ImageScanType(Enum):

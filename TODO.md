@@ -1,4 +1,5 @@
 # Current LLR stuff
+- Figure out why asl file won't let me print out the current frame number (add one line at a time).
 - LLR think about stopping the time when the load screen changes to the last load screen (big pixel change). Will need to make sure last load time is consistent.
 - Test the program on various videos (video and screen scanning) to see:
     - If I can just use exactly 0. Is the ship fade exactly 0 after a certain number of frames everytime?

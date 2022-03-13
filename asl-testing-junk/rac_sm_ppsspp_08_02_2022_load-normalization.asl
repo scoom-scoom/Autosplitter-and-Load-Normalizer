@@ -24,11 +24,6 @@ startup {
 		"Set this to true if you want to additionally split on each bolt (the split happens after the bolt collection animation" +
 		"is finished, due to current technical limitations).");
 
-		// settings.SetToolTip("LongLoadRemoval", "WARNING: This feature has not been tested in a full run, use at your own risk. Toggle this to have the timer pause when the load time exceeds the optimal time.");
-		// settings.Add("SplitOnBolt", false, "Split on Bolt (see tooltip).");
-		// settings.SetToolTip("SplitOnBolt", "WARNING: This feature has not been tested in a full run, use at your own risk. Set this to true if you want to additionally split on each bolt (the split happens after the bolt collection animation is finished, due to current technical limitations).");
-
-		// vars.FrameNumber = 0;
 		vars.loadStartTime = -1;
 		vars.isLoading = false;
 		vars.checkForLoadRemoval = false;
@@ -50,6 +45,7 @@ startup {
 		vars.LogDebug = LogDebug;
 
 		Action ResetLoadTimeVars = () => {
+			// vars.FrameNumber = 0;
 			vars.loadStartTime = -1;
 			vars.isLoading = false;
 			vars.checkForLoadRemoval = false;
@@ -69,7 +65,7 @@ startup {
 			if (vars.currentCutscene.Current == cutsceneVal) {
 				// Resume the timer once the load is done, and the cutscene is playing.
 				vars.ResetLoadTimeVars();
-				vars.LogDebug("Load resumed");
+				vars.LogDebug("Load resumed.");
 			}
 		};
 		vars.CheckLoadRemoval = CheckLoadRemoval;
@@ -78,13 +74,15 @@ startup {
 			// Record the time, as we have entered the load. This will be used for long load removal.
 			TimeSpan gt = (TimeSpan) timer.CurrentTime.GameTime;
 			vars.loadStartTime = gt.TotalMilliseconds;
+			vars.LogDebug("Load started.");
 			vars.checkForLoadRemoval = true;
 		};
 		vars.LoadStarted = LoadStarted;
 }
 
 init {
-	refreshRate = 1000/30;
+	// Run at 30 fps for this 30 fps game. For some weird reason, 60 fps is actually 30 fps (this has been tested). Maybe it's because the code in this file takes ages to run.
+	refreshRate = 60;
 	
 	var ptr = IntPtr.Zero;
 
@@ -288,7 +286,6 @@ reset {
 }
 
 isLoading {
-	// vars.LogDebug("Frame number: ", vars.FrameNumber);
 	// Long load removal
 	if (vars.checkForLoadRemoval){
 		// Ryllus
@@ -353,12 +350,11 @@ isLoading {
 			}
 		}
 	}
-	// vars.FrameNumber = vars.FrameNumber + 1;
 	return vars.isLoading;
 }
 
 // ------------------------------------------------ //
-// Changelog
+// Changelog (used before this project was on github)
 // ------------------------------------------------ //
 //
 // Emeralve -> 9/2/2022

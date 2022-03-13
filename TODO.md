@@ -1,5 +1,4 @@
 # Current LLR stuff
-- Make sure autosplitter file is consistently timing loads.
 - IF HAVING ISSUES WITH BLACK SCREEN NOT BEING 0 DIFFERENCE, LLR think about stopping the time when the load screen changes to the last load screen (big pixel change). Will need to make sure last load time is consistent.
 - Test the program on various videos (video and screen scanning) to see:
     - If I can just use exactly 0. Is the ship fade exactly 0 after a certain number of frames everytime?
@@ -8,9 +7,10 @@
     - OR use both difference and curr value below threshold, as the value differences seem to be very inconsistent.
     - Maybe the treshold can just be scaled for a particular video based on what the measurement is for the Ryllus load.
     - COULD try to match exact ship frame, but this would fail when having different offsets after cropping.
-- Add support for remains load (and all other loads with this problem) which has 1 second of skipped cutscene in Emeralves NG+ No SP run.
 - Make program stop as soon as it has found the llr time.
-- IF NEEDED Have a number of frames during the load where the program isn't scanning for anything. It should be optimal number of game frames minus 15 (half a second).
+- Make sure autosplitter file is consistently timing loads.
+- [NOT RECOMMENDED] IF NEEDED Have a number of frames during the load where the program isn't scanning for anything.
+    - BE CAREFUL as this depends on what WR time is. If someone does a run with a new strat where the time is significantly lower, then this program could break.
 
 # Custom made llr by video:
 - 1.) Give video file to program, and it will scan frame by frame and output LLR time of the speed-run based on the category.

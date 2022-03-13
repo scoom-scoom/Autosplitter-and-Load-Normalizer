@@ -3,6 +3,20 @@ import numpy as np
 # Represents the process of scanning frames.
 class ImageScanner:
 
+    # The thresholds below are used because of the fact that a load is defined as a series of image
+    # frames between two black screens. This leads to problems if not delt with properly.
+
+    # All loads must be higher than this time to be considered a load. This stops other image frames
+    # between black screens throughout the run from accidentally being counted as a load.
+    # Example:
+    # - A black screen between gameplay and a cutscene, and skipping the cutscene sends you
+    # back to a black screen, but you do not want the cutscene to be accidentally counted as a load).
+    CONST_LOAD_THRESH_LOW_SECONDS = 5
+
+    # All loads must be lower than this time to be considered a load. This stops ship proxies from
+    # counting gameplay as a load, as ship proxies give a black screen.
+    CONST_LOAD_THRESH_HIGH_SECONDS = 25
+
     # fn_vid is the video file name, if using video scanning.
     def __init__(self, fn_vid=""):
         # Probably not the best way to code this, as this line is only used for video scanning,
@@ -13,8 +27,9 @@ class ImageScanner:
 
         # Choose the crop width and height. Greater values give more reliable results when
         # matching images, as you are using more pixels.
-        self.crop_width = 4
-        self.crop_height = 4
+        # self.crop_width = 4
+        # self.crop_height = 4
+        (self.crop_width, self.crop_height) = self.get_crop_width_and_height(fn_vid)
         if (self.crop_width % 2) != 0:
             raise RuntimeError("Crop width not divisible by 2.")
         if (self.crop_height % 2) != 0:
@@ -34,6 +49,9 @@ class ImageScanner:
         # The number of times we have entered a black screen. Useful for checking when to start the load timing.
         self.enter_black_count = 0
 
+    def get_crop_width_and_height(self, fn_vid=""):
+        raise NotImplementedError
+
     # Gets the image resolution in pixels (width, height) to be used in the cropping
     # process. fn_vid is the video file name, if using video scanning.
     def get_image_res(self, fn_vid=""):
@@ -49,7 +67,6 @@ class ImageScanner:
 
     # Functionality performed when going from a non-black frame to a black frame (entering).
     # This functionality is important for timing the loads.
-    # TODO: Adapt code for more than 1 load cutscene, if present in people's runs.
     def enter_black_frame(self):
         raise NotImplementedError
 
@@ -57,6 +74,9 @@ class ImageScanner:
     # This functionality is important for timing the loads.
     def exit_black_frame(self):
         raise NotImplementedError
+
+    def is_load_valid(self, load_time):
+        return (load_time > self.CONST_LOAD_THRESH_LOW_SECONDS) and (load_time < self.CONST_LOAD_THRESH_HIGH_SECONDS)
 
     # Increments the position, which is either the frame number for the video scanning,
     # or the total time for the screen scanning.
@@ -85,10 +105,6 @@ class ImageScanner:
             norm = np.linalg.norm(frame_one - frame_two)
             almost_equal = norm < threshold
             str_debug += " Norm: " + str(norm)
-        # DEBUGGING
-        if almost_equal:
-            str_debug += " Frame is equal."
-            print(str_debug)
         # print(str_debug)
         return almost_equal
 

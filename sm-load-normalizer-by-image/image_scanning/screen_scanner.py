@@ -10,13 +10,14 @@ import time
 # Represents scanning frames of the current screen.
 class ScreenScanner(ImageScanner):
 
-    def __init__(self, fn_vid=""):
-        super(ScreenScanner, self).__init__(fn_vid)
+    def __init__(self, crop_scale=(1, 1), fn_vid=""):
+        super(ScreenScanner, self).__init__(crop_scale, fn_vid)
         # Threshold for how much difference there needs to be between a frame
         # and the black frame to consider the frame as being almost black.
         # self.threshold = 0
         # DEBUGGING
         self.threshold = 1
+        self.default_res = (1920, 1080)
 
         self.load_time_total = 0
         self.load_start_time = 0
@@ -24,7 +25,7 @@ class ScreenScanner(ImageScanner):
         self.debug_start_time = time.perf_counter_ns()
 
     def get_image_res(self, fn_vid=""):
-        return (1920, 1080)
+        return self.default_res
 
     def get_next_frame_cropped(self):
         # https://stackoverflow.com/questions/1080719/screenshot-an-application-regardless-of-whats-in-front-of-it
@@ -77,10 +78,15 @@ class ScreenScanner(ImageScanner):
     def enter_black_frame(self):
         if self.enter_black_count == 1:
             # We are at the end of the load.
-            curr_time = time.perf_counter_ns()
-            self.load_time_total += (curr_time - self.load_start_time)
+            load_time = time.perf_counter_ns() - self.load_start_time
+            # Only add the load if it is valid.
+            if self.is_load_valid(load_time):
+                self.load_time_total += load_time
+                # Don't add one to enter_black_count, or it will carry over and interfere with the next load screen.
+            else:
+                # Count this scenario as a regular entering into a black frame.
+                self.enter_black_count += 1
             self.reset_load_vars()
-            # Don't add one to enter_black_count, or it will carry over and interfere with the next load screen.
             # DEBUGGING
             self.is_finished = True
             return

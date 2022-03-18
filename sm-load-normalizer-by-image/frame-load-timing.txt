@@ -21,7 +21,7 @@ Splits (first frame where livesplit has split)
 726
 
 Conclusion: ASL file splits usually a distance of 2 frames before the ship appears frame.
-TODO: Measure in 60FPS to get better accuracy.
+Later: Measure in 60FPS to get better accuracy.
 
 
 Measuring the ASL load finished split: 

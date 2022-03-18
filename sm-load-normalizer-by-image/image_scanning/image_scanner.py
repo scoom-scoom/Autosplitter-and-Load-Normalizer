@@ -1,4 +1,5 @@
 import numpy as np
+from dataclasses import dataclass
 
 # Represents the process of scanning frames.
 class ImageScanner:
@@ -17,8 +18,24 @@ class ImageScanner:
     # counting gameplay as a load, as ship proxies give a black screen.
     CONST_LOAD_THRESH_HIGH_SECONDS = 25
 
-    # fn_vid is the video file name, if using video scanning.
-    def __init__(self, fn_vid=""):
+    # Crop scale is the scaling of the size of the cropped patch in the centre of the image,
+    # in the form (crop_scale_width, crop_scale_height). fn_vid is the video file name, if using video scanning.
+    def __init__(self, crop_scale=(1, 1), fn_vid=""):
+        # Some supported video resolutions are taken from https://typito.com/blog/best-video-format-for-youtube/.
+        # All of them are currently 16:9 (widescreen) resolutions, which is the most common.
+        # Be cautious when adding more video resolutions, as the tuning of the crop patch size might
+        # not be as fine when the greatest common denominator of video resolutions turns out to be a small number.
+
+        # Video resolutions MUST be seperated by a comma in order to parse correctly.
+        self.vid_res_supported = \
+            "256x144," \
+            "640x360," \
+            "1280x720," \
+            "1920x1080," \
+            "2560x1440," \
+            "3840x2160"
+
+        self.crop_scale = crop_scale
         # Probably not the best way to code this, as this line is only used for video scanning,
         # but I couldn't figure out a nicer way to have the video scanner set the image resolution.
         self.image_res_x, self.image_res_y = self.get_image_res(fn_vid)
@@ -27,8 +44,6 @@ class ImageScanner:
 
         # Choose the crop width and height. Greater values give more reliable results when
         # matching images, as you are using more pixels.
-        # self.crop_width = 4
-        # self.crop_height = 4
         (self.crop_width, self.crop_height) = self.get_crop_width_and_height(fn_vid)
         if (self.crop_width % 2) != 0:
             raise RuntimeError("Crop width not divisible by 2.")
@@ -49,8 +64,64 @@ class ImageScanner:
         # The number of times we have entered a black screen. Useful for checking when to start the load timing.
         self.enter_black_count = 0
 
+    def find_gcd_from_list(self, nums):
+        # https://www.geeksforgeeks.org/gcd-two-array-numbers/
+        # Code contributed by Mohit Gupta_OMG
+        # GCD of more than two (or array) numbers
+
+        # Function implements the Euclidian
+        # algorithm to find the Highest Common Factor (H.C.F.) of two numbers
+        def find_gcd(x, y):
+            while y != 0:
+                x, y = y, x % y
+            return x
+
+        num1 = nums[0]
+        num2 = nums[1]
+        gcd = find_gcd(num1, num2)
+
+        for i in range(2, len(nums)):
+            gcd = find_gcd(gcd, nums[i])
+        return gcd
+
+    # Determine the crop size depending on the image resolution
     def get_crop_width_and_height(self, fn_vid=""):
-        raise NotImplementedError
+        (res_width, res_height) = self.get_image_res(fn_vid)
+
+        # Parse the supported resolutions. We will proceed with the calculation even if our image
+        # resolution is not listed as supported, as there might be a chance that the calculation works out
+        # to be a nice number of pixels.
+        resolutions = self.vid_res_supported.split(",")
+        res_widths = []
+        res_heights = []
+        for res in resolutions:
+            res_widths.append((int) (res.split("x")[0]))
+            res_heights.append((int) (res.split("x")[1]))
+
+        # We want the greatest common factor of these resolutions, so that we can divide the width and height
+        # by the greatest number possible, while still allowing the division to result in an integer number of
+        # pixels. Using the greatest number possible lets the crop size parameter be tuned as finely as possible.
+        # Tuning the crop size parameter finely is useful for cases where an image has a chance to
+        # be falsely detected as a black screen due to having black pixels in the centre.
+
+        gcd_res_width = self.find_gcd_from_list(res_widths)
+        gcd_res_height = self.find_gcd_from_list(res_heights)
+
+        # For any image of the resolutions specified in self.vid_res_supported, this calculation will always give us the
+        # same looking crop in the image, just a larger number of patch pixels for higher resolution videos which have
+        # more pixels. This helps debugging as the cropped image will not vary for different resolutions of the same
+        # video.
+        percentage_width = 1 / gcd_res_width
+        percentage_height = 1 / gcd_res_height
+        # Make sure these scales are ints to keep the pixel numbers even.
+        width_scale = (int) (self.crop_scale[0])
+        height_scale = (int) (self.crop_scale[1])
+        # * 2 first so that the number is guaranteed to be even.
+        crop_width = (int) ((res_width * percentage_width) * 2)
+        crop_height = (int) ((res_height * percentage_height) * 2)
+        crop_width *= width_scale
+        crop_height *= height_scale
+        return (crop_width, crop_height)
 
     # Gets the image resolution in pixels (width, height) to be used in the cropping
     # process. fn_vid is the video file name, if using video scanning.

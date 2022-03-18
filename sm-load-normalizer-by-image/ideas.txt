@@ -1,2 +1,0 @@
-- Have a toggle for whether there is a cutscene before the ship load, and another toggle for after the ship load.
-- If you need to optimize the program, you could stop it from scanning in between loads (during gameplay).

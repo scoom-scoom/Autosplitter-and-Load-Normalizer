@@ -1,4 +1,6 @@
 # Current LLR stuff
+- Great idea, have the program try to scan through with the smallest crop patch size, and if there is an incorrect number of loads, it can scan through again with +1 on the patch size scale.
+If this also fails, it can override the patch scaling and go up in pixel steps until it gets the correct number of loads.
 - IF HAVING ISSUES WITH BLACK SCREEN NOT BEING 0 DIFFERENCE, LLR think about stopping the time when the load screen changes to the last load screen (big pixel change). Will need to make sure last load time is consistent.
 - Test the program on various videos (video and screen scanning) to see:
     - If I can just use exactly 0. Is the ship fade exactly 0 after a certain number of frames everytime?
@@ -7,9 +9,8 @@
     - OR use both difference and curr value below threshold, as the value differences seem to be very inconsistent.
     - Maybe the treshold can just be scaled for a particular video based on what the measurement is for the Ryllus load.
     - COULD try to match exact ship frame, but this would fail when having different offsets after cropping.
-- Make program stop as soon as it has found the llr time.
 - Make sure autosplitter file is consistently timing loads.
-- [NOT RECOMMENDED] IF NEEDED Have a number of frames during the load where the program isn't scanning for anything.
+- [LAST RESORT OPTIMIZATION] IF NEEDED Have a number of frames during the load where the program isn't scanning for anything.
     - BE CAREFUL as this depends on what WR time is. If someone does a run with a new strat where the time is significantly lower, then this program could break.
 
 # Custom made llr by video:

@@ -19,7 +19,6 @@ class ScreenScanner(ImageScanner):
         self.threshold = 1
         self.default_res = (1920, 1080)
 
-        self.load_time_total = 0
         self.load_start_time = 0
         self.debug_frame_count = 0
         self.debug_start_time = time.perf_counter_ns()
@@ -75,26 +74,11 @@ class ScreenScanner(ImageScanner):
         self.debug_frame_count += 1
         return (True, img)
 
-    def enter_black_frame(self):
-        if self.enter_black_count == 1:
-            # We are at the end of the load.
-            load_time = time.perf_counter_ns() - self.load_start_time
-            # Only add the load if it is valid.
-            if self.is_load_valid(load_time):
-                self.load_time_total += load_time
-                # Don't add one to enter_black_count, or it will carry over and interfere with the next load screen.
-            else:
-                # Count this scenario as a regular entering into a black frame.
-                self.enter_black_count += 1
-            self.reset_load_vars()
-            # DEBUGGING
-            self.is_finished = True
-            return
-        self.enter_black_count += 1
+    def get_time_diff(self):
+        return (time.perf_counter_ns() - self.load_start_time) * 1e-9
 
-    def exit_black_frame(self):
-        if self.enter_black_count == 1:
-            self.load_start_time = time.perf_counter_ns()
+    def record_position(self):
+        self.load_start_time = time.perf_counter_ns()
 
     def increment_position(self):
         # No need to increment time, as time increments itself naturally according to the laws of physics.
@@ -103,8 +87,8 @@ class ScreenScanner(ImageScanner):
     def get_position(self):
         return round(time.perf_counter_ns() * 1e-9, 2)
 
-    def print_final_load_time(self):
-        print("Total load time is:", round(self.load_time_total * 1e-9, 2), "seconds")
+    def print_finished_stats(self):
+        super(ScreenScanner, self).print_finished_stats()
         debug_end_time = time.perf_counter_ns()
         fps = self.debug_frame_count / ((debug_end_time - self.debug_start_time) * 1e-9)
         print("FPS is: ", round(fps, 2))

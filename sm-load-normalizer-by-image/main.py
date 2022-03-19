@@ -4,7 +4,7 @@ from image_scanning.screen_scanner import ScreenScanner
 from image_scanning.video_scanner import VideoScanner
 
 # fn_vid = "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any-Alemussy.mp4"
-fn_vid = "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any-Alemussy-ryllus-and-kalidon.mp4"
+fn_vid = "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any-Alemussy-ryllus-and-kalidon-360p.mp4"
 fps = 30
 
 # The parameter crop_scale determines how large the cropped image in the centre should be.

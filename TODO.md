@@ -1,7 +1,8 @@
 # Current LLR stuff
 - Test for different res vids of Alemusa kalidon and ryllus loads.
 - Test for entire run.
-- Great idea, have the program try to scan through with the smallest crop patch size, and if there is an incorrect number of loads, it can scan through again with +1 on the patch size scale.
+- GREAT IDEA you could change the patch size after each load, so that the next load will be detected correctly.
+- GREAT IDEA, have the program try to scan through with the smallest crop patch size, and if there is an incorrect number of loads, it can scan through again with +1 on the patch size scale.
 If this also fails, it can override the patch scaling and go up in pixel steps until it gets the correct number of loads.
 - IF HAVING ISSUES WITH BLACK SCREEN NOT BEING 0 DIFFERENCE, LLR think about stopping the time when the load screen changes to the last load screen (big pixel change). Will need to make sure last load time is consistent.
 - Test the program on various videos (video and screen scanning) to see:

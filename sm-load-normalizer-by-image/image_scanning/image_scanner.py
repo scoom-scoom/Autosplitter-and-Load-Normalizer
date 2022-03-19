@@ -26,6 +26,7 @@ class ImageScanner:
         # Be cautious when adding more video resolutions, as the tuning of the crop patch size might
         # not be as fine when the greatest common denominator of video resolutions turns out to be a small number.
 
+        # TODO put this into a JSON file, or something similar.
         # Video resolutions MUST be seperated by a comma in order to parse correctly.
         self.vid_res_supported = \
             "256x144," \
@@ -63,6 +64,9 @@ class ImageScanner:
         self.threshold = 0
         # The number of times we have entered a black screen. Useful for checking when to start the load timing.
         self.enter_black_count = 0
+        self.load_time_total = 0
+        # Counts the number of loads added. Useful for debugging.
+        self.debug_load_number = 0
 
     def find_gcd_from_list(self, nums):
         # https://www.geeksforgeeks.org/gcd-two-array-numbers/
@@ -136,18 +140,42 @@ class ImageScanner:
     def get_next_frame_cropped(self):
         raise NotImplementedError
 
+    # Adds the load to the total load time.
+    def add_load_to_total(self, load_time):
+        raise NotImplementedError
+
     # Functionality performed when going from a non-black frame to a black frame (entering).
     # This functionality is important for timing the loads.
     def enter_black_frame(self):
-        raise NotImplementedError
+        if self.enter_black_count == 1:
+            # We are at the end of the load.
+            load_time = self.get_time_diff()
+            # Only add the load if it is valid.
+            if self.is_load_valid(load_time):
+                self.load_time_total += load_time
+                # DEBUGGING
+                self.debug_load_number += 1
+                print("Load number", str(self.debug_load_number), "added.")
+                # Don't add one to enter_black_count, or it will carry over and interfere with the next load screen.
+            else:
+                # Count this scenario as a regular entering into a black frame.
+                self.enter_black_count += 1
+            self.reset_load_vars()
+            return
+        self.enter_black_count += 1
 
     # Functionality performed when going from a black frame to a non-black frame (exiting).
     # This functionality is important for timing the loads.
     def exit_black_frame(self):
-        raise NotImplementedError
+        if self.enter_black_count == 1:
+            self.record_position()
 
     def is_load_valid(self, load_time):
         return (load_time > self.CONST_LOAD_THRESH_LOW_SECONDS) and (load_time < self.CONST_LOAD_THRESH_HIGH_SECONDS)
+
+    # Records the current position, which is either the current frame or current time.
+    def record_position(self):
+        raise NotImplementedError
 
     # Increments the position, which is either the frame number for the video scanning,
     # or the total time for the screen scanning.
@@ -157,6 +185,11 @@ class ImageScanner:
     # Get the current position, which is either the frame number for the video scanning,
     # or the current time for the screen scanning.
     def get_position(self):
+        raise NotImplementedError
+
+    # Get the difference in time between the last measured time and now. This is used to
+    # time loads.
+    def get_time_diff(self):
         raise NotImplementedError
 
     # Resets variables after a load is timed, to prepare the variables for the next load.
@@ -178,9 +211,6 @@ class ImageScanner:
             str_debug += " Norm: " + str(norm)
         # print(str_debug)
         return almost_equal
-
-    def print_final_load_time(self):
-        raise NotImplementedError
 
     def start_scan_loop(self):
         success, frame = self.get_next_frame_cropped()
@@ -207,4 +237,8 @@ class ImageScanner:
             # DEBUGGING
             # break
 
-        self.print_final_load_time()
+        self.print_finished_stats()
+
+    # Prints stats about the program once it's finished.
+    def print_finished_stats(self):
+        print("Total load time is:", round(self.load_time_total, 2), "seconds")

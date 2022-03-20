@@ -4,15 +4,19 @@
 # See 
 # https://www.cloudbees.com/blog/yaml-tutorial-everything-you-need-get-started
 # for YAML documentation.
-fps : 30
-filename_vid : "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any-Alemussy-ryllus-and-kalidon-360p.mp4"
-image_scan_type :
-
+vid:
+  fps: 30
+  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any-Alemussy-ryllus-and-kalidon-360p.mp4"
+# Determines whether to scan a video or scan the screen.
+image_scan_type: "video"
+# These are the two options. MAKE SURE the image_scan_type maches the string exactly.
+IMAGE_SCAN_TYPE_VIDEO: "video"
+IMAGE_SCAN_TYPE_SCREEN: "screen"
 # The parameter crop_scale determines how large the cropped image in the centre should be.
 # If it's too small, there is a chance that images with some black in the middle
 # will be falsely counted as a black screen. If it is too large, there is a chance
 # that the cropped image also includes pixels outside of the game video (e.g.
 # twitch layout), which would most likely not be black.
-crop_scale :
-  width : 3
-  height : 3
+crop_scale:
+  width: 3
+  height: 3

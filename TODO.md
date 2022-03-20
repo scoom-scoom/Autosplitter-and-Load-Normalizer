@@ -1,4 +1,5 @@
 # Current LLR stuff
+- Figure out how to do the image_scanning_type enum in the settings.yaml file.
 - Test for different res vids of Alemusa kalidon and ryllus loads.
 - Test for entire run.
 - GREAT IDEA you could change the patch size after each load, so that the next load will be detected correctly.

@@ -1,23 +1,14 @@
 import time
 from enum import Enum
+import yaml
 from image_scanning.screen_scanner import ScreenScanner
 from image_scanning.video_scanner import VideoScanner
 
-# fn_vid = "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any-Alemussy.mp4"
-fn_vid = "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any-Alemussy-ryllus-and-kalidon-360p.mp4"
-fps = 30
+def read_yaml(file_path):
+    with open(file_path, "r") as f:
+        return yaml.safe_load(f)
 
-# The parameter crop_scale determines how large the cropped image in the centre should be.
-# If it's too small, there is a chance that images with some black in the middle
-# will be falsely counted as a black screen. If it is too large, there is a chance
-# that the cropped image also includes pixels outside of the game video (e.g.
-# twitch layout), which would most likely not be black.
-
-# crop_scale_width = 1
-# crop_scale_height = 1
-crop_scale_width = 3
-crop_scale_height = 3
-crop_scale = (crop_scale_width, crop_scale_height)
+settings = read_yaml("settings.yaml")
 
 class ImageScanType(Enum):
     SCREEN = 1
@@ -25,10 +16,11 @@ class ImageScanType(Enum):
 
 # scan_type = ImageScanType.SCREEN
 scan_type = ImageScanType.VIDEO
+crop_scale = (settings["crop_scale"]["width"], settings["crop_scale"]["height"])
 if scan_type == ImageScanType.SCREEN:
     scanner = ScreenScanner(crop_scale)
 elif scan_type == ImageScanType.VIDEO:
-    scanner = VideoScanner(crop_scale, fn_vid, fps)
+    scanner = VideoScanner(crop_scale, settings["filename_vid"], settings["fps"])
 
 start = time.time()
 scanner.start_scan_loop()

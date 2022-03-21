@@ -1,5 +1,4 @@
 import numpy as np
-from dataclasses import dataclass
 
 # Represents the process of scanning frames.
 class ImageScanner:
@@ -20,32 +19,19 @@ class ImageScanner:
 
     # Crop scale is the scaling of the size of the cropped patch in the centre of the image,
     # in the form (crop_scale_width, crop_scale_height). fn_vid is the video file name, if using video scanning.
-    def __init__(self, crop_scale=(1, 1), fn_vid=""):
-        # Some supported video resolutions are taken from https://typito.com/blog/best-video-format-for-youtube/.
-        # All of them are currently 16:9 (widescreen) resolutions, which is the most common.
-        # Be cautious when adding more video resolutions, as the tuning of the crop patch size might
-        # not be as fine when the greatest common denominator of video resolutions turns out to be a small number.
+    def __init__(self, settings):
+        self.settings = settings
 
-        # TODO put this into a JSON file, or something similar.
-        # Video resolutions MUST be seperated by a comma in order to parse correctly.
-        self.vid_res_supported = \
-            "256x144," \
-            "640x360," \
-            "1280x720," \
-            "1920x1080," \
-            "2560x1440," \
-            "3840x2160"
-
-        self.crop_scale = crop_scale
+        self.crop_scale = (settings["crop_scale"]["width"], settings["crop_scale"]["height"])
         # Probably not the best way to code this, as this line is only used for video scanning,
         # but I couldn't figure out a nicer way to have the video scanner set the image resolution.
-        self.image_res_x, self.image_res_y = self.get_image_res(fn_vid)
+        self.image_res_x, self.image_res_y = self.get_image_res()
         self.x_centre = int(self.image_res_x / 2)
         self.y_centre = int(self.image_res_y / 2)
 
         # Choose the crop width and height. Greater values give more reliable results when
         # matching images, as you are using more pixels.
-        (self.crop_width, self.crop_height) = self.get_crop_width_and_height(fn_vid)
+        (self.crop_width, self.crop_height) = self.get_crop_width_and_height()
         if (self.crop_width % 2) != 0:
             raise RuntimeError("Crop width not divisible by 2.")
         if (self.crop_height % 2) != 0:
@@ -89,25 +75,24 @@ class ImageScanner:
         return gcd
 
     # Determine the crop size depending on the image resolution
-    def get_crop_width_and_height(self, fn_vid=""):
-        (res_width, res_height) = self.get_image_res(fn_vid)
+    def get_crop_width_and_height(self):
+        (res_width, res_height) = self.get_image_res()
 
         # Parse the supported resolutions. We will proceed with the calculation even if our image
         # resolution is not listed as supported, as there might be a chance that the calculation works out
         # to be a nice number of pixels.
-        resolutions = self.vid_res_supported.split(",")
+        resolutions = self.settings["res_supported"]
         res_widths = []
         res_heights = []
         for res in resolutions:
-            res_widths.append((int) (res.split("x")[0]))
-            res_heights.append((int) (res.split("x")[1]))
+            res_widths.append(res[0])
+            res_heights.append(res[1])
 
         # We want the greatest common factor of these resolutions, so that we can divide the width and height
         # by the greatest number possible, while still allowing the division to result in an integer number of
         # pixels. Using the greatest number possible lets the crop size parameter be tuned as finely as possible.
         # Tuning the crop size parameter finely is useful for cases where an image has a chance to
         # be falsely detected as a black screen due to having black pixels in the centre.
-
         gcd_res_width = self.find_gcd_from_list(res_widths)
         gcd_res_height = self.find_gcd_from_list(res_heights)
 
@@ -129,7 +114,7 @@ class ImageScanner:
 
     # Gets the image resolution in pixels (width, height) to be used in the cropping
     # process. fn_vid is the video file name, if using video scanning.
-    def get_image_res(self, fn_vid=""):
+    def get_image_res(self):
         raise NotImplementedError
 
     # Returns the cropped black frame to compare frames against for the start and end of the load.

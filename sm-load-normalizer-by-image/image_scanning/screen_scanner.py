@@ -10,9 +10,9 @@ import time
 # Represents scanning frames of the current screen.
 class ScreenScanner(ImageScanner):
 
-    def __init__(self, crop_scale=(1, 1), fn_vid=""):
+    def __init__(self, settings):
+        super(ScreenScanner, self).__init__(settings)
         self.default_res = (1920, 1080)
-        super(ScreenScanner, self).__init__(crop_scale, fn_vid)
         # Threshold for how much difference there needs to be between a frame
         # and the black frame to consider the frame as being almost black.
         # self.threshold = 0
@@ -22,7 +22,7 @@ class ScreenScanner(ImageScanner):
         self.debug_frame_count = 0
         self.debug_start_time = time.perf_counter_ns()
 
-    def get_image_res(self, fn_vid=""):
+    def get_image_res(self):
         return self.default_res
 
     def get_next_frame_cropped(self):

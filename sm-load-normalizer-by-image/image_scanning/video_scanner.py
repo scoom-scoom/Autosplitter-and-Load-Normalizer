@@ -4,10 +4,10 @@ import cv2
 # Represents scanning images form a video file.
 class VideoScanner(ImageScanner):
 
-    def __init__(self, crop_scale=(1, 1), fn_vid="", fps=30):
-        self.fps = fps
-        super(VideoScanner, self).__init__(crop_scale, fn_vid)
-        self.vid = cv2.VideoCapture(fn_vid)
+    def __init__(self, settings):
+        super(VideoScanner, self).__init__(settings)
+        self.fps = self.settings["vid"]["fps"]
+        self.vid = cv2.VideoCapture(self.settings["vid"]["filename_vid"])
 
         # Threshold for how much difference there needs to be between a frame and
         # the black frame to consider the frame as being almost black.
@@ -17,9 +17,9 @@ class VideoScanner(ImageScanner):
         self.frame_count = 1
         self.load_start_frame = 0
 
-    def get_image_res(self, fn_vid=""):
+    def get_image_res(self):
         # Detect video resolution from scanning the first frame.
-        self.vid = cv2.VideoCapture(fn_vid)
+        self.vid = cv2.VideoCapture(self.settings["vid"]["filename_vid"])
         success, frame = self.vid.read()
         if not success:
             raise RuntimeError("Could not read the first frame of the video file.")

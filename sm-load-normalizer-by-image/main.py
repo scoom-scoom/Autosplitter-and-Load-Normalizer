@@ -8,12 +8,11 @@ def read_yaml(file_path):
         return yaml.safe_load(f)
 
 settings = read_yaml("settings.yaml")
-# print(settings["res_supported"])
 
 scan_type = settings["image_scan_type"]
-if scan_type == settings["IMAGE_SCAN_TYPE_VIDEO"]:
+if scan_type == settings["CONST_IMAGE_SCAN_TYPE_VIDEO"]:
     scanner = VideoScanner(settings)
-elif scan_type == settings["IMAGE_SCAN_TYPE_SCREEN"]:
+elif scan_type == settings["CONST_IMAGE_SCAN_TYPE_SCREEN"]:
     scanner = ScreenScanner(settings)
 
 start = time.time()

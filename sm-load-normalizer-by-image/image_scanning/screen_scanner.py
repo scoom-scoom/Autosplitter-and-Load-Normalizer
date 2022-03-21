@@ -16,8 +16,6 @@ class ScreenScanner(ImageScanner):
         # Threshold for how much difference there needs to be between a frame
         # and the black frame to consider the frame as being almost black.
         # self.threshold = 0
-        # DEBUGGING
-        self.threshold = 1
         self.load_start_time = 0
         self.debug_frame_count = 0
         self.debug_start_time = time.perf_counter_ns()
@@ -27,7 +25,6 @@ class ScreenScanner(ImageScanner):
 
     def get_next_frame_cropped(self):
         # https://stackoverflow.com/questions/1080719/screenshot-an-application-regardless-of-whats-in-front-of-it
-        # window_name = "sm-llr.py"
         window_name = "scan this now"
         shell = win32com.client.Dispatch("Wscript.Shell")
         # Returns true if focus given successfully.
@@ -61,7 +58,7 @@ class ScreenScanner(ImageScanner):
                 temp[x][y] = (pixel[0], pixel[1], pixel[2])
         img = temp
 
-        # Free resources
+        # Free resources.
         try:
             dcObj.DeleteDC()
             cDC.DeleteDC()

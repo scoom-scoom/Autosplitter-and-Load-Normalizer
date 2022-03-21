@@ -3,34 +3,26 @@ import numpy as np
 # Represents the process of scanning frames.
 class ImageScanner:
 
-    # The thresholds below are used because of the fact that a load is defined as a series of image
-    # frames between two black screens. This leads to problems if not delt with properly.
+    # The thresholds below are used due to the fact that a load is defined as a series of image
+    # frames between two black screens. This leads to problems if not dealt with properly.
 
-    # All loads must be higher than this time to be considered a load. This stops other image frames
+    # All loads must be higher than this time (in seconds) to be considered a load. This stops other image frames
     # between black screens throughout the run from accidentally being counted as a load.
     # Example:
     # - A black screen between gameplay and a cutscene, and skipping the cutscene sends you
     # back to a black screen, but you do not want the cutscene to be accidentally counted as a load).
-    CONST_LOAD_THRESH_LOW_SECONDS = 5
+    CONST_LOAD_THRESH_LOW = 5
 
-    # All loads must be lower than this time to be considered a load. This stops ship proxies from
-    # counting gameplay as a load, as ship proxies give a black screen.
-    CONST_LOAD_THRESH_HIGH_SECONDS = 25
+    # All loads must be lower than this time (in seconds) to be considered a load. For example, this
+    # stops ship proxies from counting gameplay as a load, as ship proxies give a black screen.
+    CONST_LOAD_THRESH_HIGH = 25
 
-    # Crop scale is the scaling of the size of the cropped patch in the centre of the image,
-    # in the form (crop_scale_width, crop_scale_height). fn_vid is the video file name, if using video scanning.
     def __init__(self, settings):
         self.settings = settings
-
         self.crop_scale = (settings["crop_scale"]["width"], settings["crop_scale"]["height"])
-        # Probably not the best way to code this, as this line is only used for video scanning,
-        # but I couldn't figure out a nicer way to have the video scanner set the image resolution.
         self.image_res_x, self.image_res_y = self.get_image_res()
         self.x_centre = int(self.image_res_x / 2)
         self.y_centre = int(self.image_res_y / 2)
-
-        # Choose the crop width and height. Greater values give more reliable results when
-        # matching images, as you are using more pixels.
         (self.crop_width, self.crop_height) = self.get_crop_width_and_height()
         if (self.crop_width % 2) != 0:
             raise RuntimeError("Crop width not divisible by 2.")
@@ -92,17 +84,18 @@ class ImageScanner:
         # by the greatest number possible, while still allowing the division to result in an integer number of
         # pixels. Using the greatest number possible lets the crop size parameter be tuned as finely as possible.
         # Tuning the crop size parameter finely is useful for cases where an image has a chance to
-        # be falsely detected as a black screen due to having black pixels in the centre.
+        # be falsely detected as a black screen due to having black pixels in the centre (e.g. during
+        # ship proxies).
         gcd_res_width = self.find_gcd_from_list(res_widths)
         gcd_res_height = self.find_gcd_from_list(res_heights)
 
-        # For any image of the resolutions specified in self.vid_res_supported, this calculation will always give us the
-        # same looking crop in the image, just a larger number of patch pixels for higher resolution videos which have
-        # more pixels. This helps debugging as the cropped image will not vary for different resolutions of the same
-        # video.
+        # For any image of the resolutions specified in the "resolutions" variable, this calculation
+        # will always give us the same looking crop in the image, just a larger number of cropped pixels
+        # for higher resolution videos which have more pixels. This helps debugging as the content in the
+        # cropped image will not vary for different resolutions of the same video.
         percentage_width = 1 / gcd_res_width
         percentage_height = 1 / gcd_res_height
-        # Make sure these scales are ints to keep the pixel numbers even.
+        # Make sure these scales are ints to keep the pixel numbers integers.
         width_scale = (int) (self.crop_scale[0])
         height_scale = (int) (self.crop_scale[1])
         # * 2 first so that the number is guaranteed to be even.
@@ -113,7 +106,7 @@ class ImageScanner:
         return (crop_width, crop_height)
 
     # Gets the image resolution in pixels (width, height) to be used in the cropping
-    # process. fn_vid is the video file name, if using video scanning.
+    # process.
     def get_image_res(self):
         raise NotImplementedError
 
@@ -121,7 +114,9 @@ class ImageScanner:
     def get_black_cropped(self):
         return np.zeros((self.crop_y_end - self.crop_y_start, self.crop_x_end - self.crop_x_start, 3), np.uint8)
 
-    # Returns whether getting the frame was successful, and the frame data as a numpy array of pixels.
+    # Returns (success, frame):
+    # - "success" states if the frame read was successful.
+    # - "frame" is the frame data as a numpy array of pixels.
     def get_next_frame_cropped(self):
         raise NotImplementedError
 
@@ -141,7 +136,6 @@ class ImageScanner:
                 # DEBUGGING
                 self.debug_load_number += 1
                 print("Load number", str(self.debug_load_number), "added.")
-                # Don't add one to enter_black_count, or it will carry over and interfere with the next load screen.
             else:
                 # Count this scenario as a regular entering into a black frame.
                 self.enter_black_count += 1
@@ -156,19 +150,17 @@ class ImageScanner:
             self.record_position()
 
     def is_load_valid(self, load_time):
-        return (load_time > self.CONST_LOAD_THRESH_LOW_SECONDS) and (load_time < self.CONST_LOAD_THRESH_HIGH_SECONDS)
+        return (load_time > self.CONST_LOAD_THRESH_LOW) and (load_time < self.CONST_LOAD_THRESH_HIGH)
 
-    # Records the current position, which is either the current frame or current time.
+    # The position is either a frame number for video scanning, or a time stamp for screen scanning.
     def record_position(self):
         raise NotImplementedError
 
-    # Increments the position, which is either the frame number for the video scanning,
-    # or the total time for the screen scanning.
+    # The position is either a frame number for video scanning, or a time stamp for screen scanning.
     def increment_position(self):
         raise NotImplementedError
 
-    # Get the current position, which is either the frame number for the video scanning,
-    # or the current time for the screen scanning.
+    # The position is either a frame number for video scanning, or a time stamp for screen scanning.
     def get_position(self):
         raise NotImplementedError
 
@@ -181,8 +173,7 @@ class ImageScanner:
     def reset_load_vars(self):
         self.enter_black_count = 0
 
-    # Given two frames, returns true if the euclidean (pixel) distance between them is less than the threshold.
-    # You can also supply the frame for debugging purposes.
+    # Given two frames, returns true if the euclidean distance (pixel distance) between them is less than the threshold.
     def are_frames_almost_equal(self, frame_one, frame_two, threshold=0):
         str_debug = "Position: "
         str_debug += str(self.get_position())
@@ -215,7 +206,7 @@ class ImageScanner:
             # Read the next frame.
             success, frame = self.get_next_frame_cropped()
             if success:
-                # Update the is_prev_frame_black variable for the next loop iteration.
+                # Update the "is_prev_frame_black" variable for the next loop iteration.
                 is_prev_frame_black = is_curr_frame_black
                 self.increment_position()
 

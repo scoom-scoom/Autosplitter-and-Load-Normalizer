@@ -4,14 +4,18 @@
 # See 
 # https://www.cloudbees.com/blog/yaml-tutorial-everything-you-need-get-started
 # for YAML documentation.
+
+# Determines whether to scan a video or scan the screen.
+image_scan_type: "video"
+
+# These are the two options. MAKE SURE the image_scan_type matches the string exactly.
+CONST_IMAGE_SCAN_TYPE_VIDEO: "video"
+CONST_IMAGE_SCAN_TYPE_SCREEN: "screen"
+
 vid:
   fps: 30
   filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any-Alemussy-ryllus-and-kalidon-360p.mp4"
-# Determines whether to scan a video or scan the screen.
-image_scan_type: "video"
-# These are the two options. MAKE SURE the image_scan_type matches the string exactly.
-IMAGE_SCAN_TYPE_VIDEO: "video"
-IMAGE_SCAN_TYPE_SCREEN: "screen"
+
 # The parameter crop_scale determines how large the cropped image in the centre should be.
 # If it's too small, there is a chance that images with some black in the middle
 # will be falsely counted as a black screen. If it is too large, there is a chance
@@ -20,6 +24,7 @@ IMAGE_SCAN_TYPE_SCREEN: "screen"
 crop_scale:
   width: 3
   height: 3
+
 # Some supported video resolutions are taken from https://typito.com/blog/best-video-format-for-youtube/.
 # All of them are currently 16:9 (widescreen) resolutions, which is the most common.
 # Be cautious when adding more video resolutions, as the tuning of the crop size might

@@ -19,22 +19,22 @@ class ImageScanner:
 
     def __init__(self, settings):
         self.settings = settings
+        # Init crop settings
         self.crop_scale = (settings["crop_scale"]["width"], settings["crop_scale"]["height"])
         self.image_res_x, self.image_res_y = self.get_image_res()
-        self.x_centre = int(self.image_res_x / 2)
-        self.y_centre = int(self.image_res_y / 2)
+        x_centre = int(self.image_res_x / 2)
+        y_centre = int(self.image_res_y / 2)
         (self.crop_width, self.crop_height) = self.get_crop_width_and_height()
         if (self.crop_width % 2) != 0:
             raise RuntimeError("Crop width not divisible by 2.")
         if (self.crop_height % 2) != 0:
             raise RuntimeError("Crop height not divisible by 2.")
-        self.crop_half_width = int(self.crop_width / 2)
-        self.crop_half_height = int(self.crop_height / 2)
-        self.crop_x_start = self.x_centre - self.crop_half_width
-        self.crop_x_end = self.x_centre + self.crop_half_width
-        self.crop_y_start = self.y_centre - self.crop_half_height
-        self.crop_y_end = self.y_centre + self.crop_half_height
-
+        crop_half_width = int(self.crop_width / 2)
+        crop_half_height = int(self.crop_height / 2)
+        self.crop_x_start = x_centre - crop_half_width
+        self.crop_x_end = x_centre + crop_half_width
+        self.crop_y_start = y_centre - crop_half_height
+        self.crop_y_end = y_centre + crop_half_height
         self.black_cropped = self.get_black_cropped()
         self.is_finished = False
         # Threshold for how much difference there needs to be between a frame and
@@ -105,8 +105,7 @@ class ImageScanner:
         crop_height *= height_scale
         return (crop_width, crop_height)
 
-    # Gets the image resolution in pixels (width, height) to be used in the cropping
-    # process.
+    # Gets the image resolution in pixels (width, height) to be used in the cropping process.
     def get_image_res(self):
         raise NotImplementedError
 

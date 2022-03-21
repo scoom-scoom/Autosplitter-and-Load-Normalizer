@@ -12,7 +12,6 @@ class ScreenScanner(ImageScanner):
 
     def __init__(self, settings):
         super(ScreenScanner, self).__init__(settings)
-        self.default_res = (1920, 1080)
         # Threshold for how much difference there needs to be between a frame
         # and the black frame to consider the frame as being almost black.
         # self.threshold = 0
@@ -21,7 +20,7 @@ class ScreenScanner(ImageScanner):
         self.debug_start_time = time.perf_counter_ns()
 
     def get_image_res(self):
-        return self.default_res
+        return self.settings["screen"]["res_default"]
 
     def get_next_frame_cropped(self):
         # https://stackoverflow.com/questions/1080719/screenshot-an-application-regardless-of-whats-in-front-of-it

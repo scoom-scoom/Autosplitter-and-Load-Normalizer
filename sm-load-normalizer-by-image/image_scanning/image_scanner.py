@@ -21,14 +21,16 @@ class ImageScanner:
         self.settings = settings
         # Init crop settings
         self.crop_scale = (settings["crop_scale"]["width"], settings["crop_scale"]["height"])
-        self.image_res_x, self.image_res_y = self.get_image_res()
-        x_centre = int(self.image_res_x / 2)
-        y_centre = int(self.image_res_y / 2)
+        self.image_res_width, self.image_res_height = self.get_image_res()
+        x_centre = int(self.image_res_width / 2)
+        y_centre = int(self.image_res_height / 2)
         (self.crop_width, self.crop_height) = self.get_crop_width_and_height()
         if (self.crop_width % 2) != 0:
-            raise RuntimeError("Crop width not divisible by 2.")
+            print("Crop width not divisible by 2.")
+            self.crop_width += 1
         if (self.crop_height % 2) != 0:
-            raise RuntimeError("Crop height not divisible by 2.")
+            print("Crop height not divisible by 2.")
+            self.crop_height += 1
         crop_half_width = int(self.crop_width / 2)
         crop_half_height = int(self.crop_height / 2)
         self.crop_x_start = x_centre - crop_half_width
@@ -68,11 +70,9 @@ class ImageScanner:
 
     # Determine the crop size depending on the image resolution
     def get_crop_width_and_height(self):
-        (res_width, res_height) = self.get_image_res()
-
-        # Parse the supported resolutions. We will proceed with the calculation even if our image
-        # resolution is not listed as supported, as there might be a chance that the calculation works out
-        # to be a nice number of pixels.
+        # We will proceed with the calculation even if our image resolution is not listed as
+        # supported, as there might be a chance that the calculation works out to be a nice
+        # number of pixels.
         resolutions = self.settings["res_supported"]
         res_widths = []
         res_heights = []
@@ -99,8 +99,8 @@ class ImageScanner:
         width_scale = (int) (self.crop_scale[0])
         height_scale = (int) (self.crop_scale[1])
         # * 2 first so that the number is guaranteed to be even.
-        crop_width = (int) ((res_width * percentage_width) * 2)
-        crop_height = (int) ((res_height * percentage_height) * 2)
+        crop_width = (int) ((self.image_res_width * percentage_width) * 2)
+        crop_height = (int) ((self.image_res_height * percentage_height) * 2)
         crop_width *= width_scale
         crop_height *= height_scale
         return (crop_width, crop_height)
@@ -123,6 +123,18 @@ class ImageScanner:
     def add_load_to_total(self, load_time):
         raise NotImplementedError
 
+    def record_load(self, load_time):
+        # Check if it is the Pokitaru load (the first load), which is not counted
+        # in the speed run.
+        if self.debug_load_number == 0:
+            self.debug_load_number += 1
+            print("Pokitaru load detected and skipped")
+        else:
+            self.load_time_total += load_time
+            # DEBUGGING
+            self.debug_load_number += 1
+            print("Load number", str(self.debug_load_number), "added.")
+
     # Functionality performed when going from a non-black frame to a black frame (entering).
     # This functionality is important for timing the loads.
     def enter_black_frame(self):
@@ -131,10 +143,7 @@ class ImageScanner:
             load_time = self.get_time_diff()
             # Only add the load if it is valid.
             if self.is_load_valid(load_time):
-                self.load_time_total += load_time
-                # DEBUGGING
-                self.debug_load_number += 1
-                print("Load number", str(self.debug_load_number), "added.")
+                self.record_load(load_time)
             else:
                 # Count this scenario as a regular entering into a black frame.
                 self.enter_black_count += 1

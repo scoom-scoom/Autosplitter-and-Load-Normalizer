@@ -1,5 +1,4 @@
 # Current LLR stuff
-- Add more settings to settings file.
 - Test for different res vids of Alemusa kalidon and ryllus loads.
 - Test for entire run.
 - GREAT IDEA you could change the patch size after each load, so that the next load will be detected correctly.

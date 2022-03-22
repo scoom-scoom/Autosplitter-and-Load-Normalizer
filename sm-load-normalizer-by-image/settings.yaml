@@ -15,7 +15,8 @@ CONST_IMAGE_SCAN_TYPE_SCREEN: "screen"
 
 vid:
   fps: 30
-  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any-Alemussy-ryllus-and-kalidon-360p.mp4"
+#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/any-Alemussy-ryllus-and-kalidon-360p.mp4"
+  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/any-Alemussy-360p.mp4"
 
 screen:
   res_default: [1920, 1080]

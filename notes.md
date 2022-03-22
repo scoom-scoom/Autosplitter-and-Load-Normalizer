@@ -1,6 +1,7 @@
 ## Load screens in the categories:
 
-### Any% (12 loads in total) - taken from Alemusa WR vid 2021-02-04 on speedrun.com
+### Any% (13 loads in total) - taken from Alemusa WR vid 2021-02-04 on speedrun.com
+- Pokitaru ship (not counted towards the load time though)
 - Ryllus ship
 - Kalidon ship
 - Metallis ratchet floating (this still does black entrance and black fade out visually, not sure about exact values though)

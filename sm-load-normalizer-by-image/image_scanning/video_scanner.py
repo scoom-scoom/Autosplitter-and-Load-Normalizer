@@ -19,20 +19,20 @@ class VideoScanner(ImageScanner):
             raise RuntimeError("Could not read the first frame of the video file.")
         return (len(frame[0]), len(frame))
 
-    def get_next_frame_cropped(self):
+    def get_next_frame(self):
         success, frame = self.vid.read()
-        frame_cropped = None
-        if success:
-            frame_cropped = frame[self.crop_y_start:self.crop_y_end, self.crop_x_start:self.crop_x_end]
-        return (success, frame_cropped)
+        return (success, frame)
+
+    def crop_frame(self, frame):
+        return frame[self.crop_y_start:self.crop_y_end, self.crop_x_start:self.crop_x_end]
 
     def get_time_diff(self):
         return (self.frame_count - self.load_start_frame) / self.fps
 
-    def enter_black_frame(self):
+    def enter_black_frame(self, debug_frame_before_black):
         # DEBUGGING
         print("Entering black at frame", str(self.frame_count))
-        super(VideoScanner, self).enter_black_frame()
+        super(VideoScanner, self).enter_black_frame(debug_frame_before_black)
 
     def record_position(self):
         self.load_start_frame = self.frame_count

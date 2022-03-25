@@ -1,3 +1,4 @@
+import cv2
 import numpy as np
 
 # Represents the process of scanning frames.
@@ -33,7 +34,9 @@ class ImageScanner:
         self.enter_black_count = 0
         self.load_time_total = 0
         # Counts the number of loads added. Useful for debugging.
-        self.debug_load_number = 0
+        self.loads_added = 0
+        self.debug_frame_before_load = None
+        self.debug_frame_after_load = None
 
     # def find_gcd_from_list(self, nums):
     #     # https://www.geeksforgeeks.org/gcd-two-array-numbers/
@@ -103,7 +106,10 @@ class ImageScanner:
     # Returns (success, frame):
     # - "success" states if the frame read was successful.
     # - "frame" is the frame data as a numpy array of pixels.
-    def get_next_frame_cropped(self):
+    def get_next_frame(self):
+        raise NotImplementedError
+
+    def crop_frame(self, frame):
         raise NotImplementedError
 
     def is_load_valid(self, load_number, load_time):
@@ -118,30 +124,38 @@ class ImageScanner:
     def record_load(self, load_time):
         # Check if it is the Pokitaru load (the first load), which is not counted
         # in the speed run.
-        if self.debug_load_number == 0:
-            self.debug_load_number += 1
+        if self.loads_added == 0:
+            self.loads_added += 1
             print("Pokitaru load detected and skipped")
         else:
             self.load_time_total += load_time
             # DEBUGGING
-            self.debug_load_number += 1
-            print("Load number", str(self.debug_load_number), "added.")
+            self.loads_added += 1
+            print("Load number", str(self.loads_added), "added.")
 
     # Functionality performed when going from a non-black frame to a black frame (entering).
     # This functionality is important for timing the loads.
-    def enter_black_frame(self):
-        if self.enter_black_count == 1:
+    def enter_black_frame(self, debug_frame_before_black):
+        # DEBUGGING
+        if self.enter_black_count == 0:
+            self.enter_black_count = 1
+            self.debug_frame_before_load = debug_frame_before_black
+        elif self.enter_black_count == 1:
             # We are at the end of the load.
             load_time = self.get_time_diff()
             # Only add the load if it is valid.
-            if self.is_load_valid(self.debug_load_number, load_time):
+            if self.is_load_valid(self.loads_added, load_time):
                 self.record_load(load_time)
+                self.enter_black_count = 0
+                # DEBUGGING
+                cv2.imwrite("frames/enter-black-load_" + str(self.loads_added) + "-_before" + ".png",
+                            self.debug_frame_before_load)
+                cv2.imwrite("frames/enter-black-load_" + str(self.loads_added) + "-after" + ".png",
+                            debug_frame_before_black)
+                # Don't add one to "enter_black_count" here, just return and begin the process again.
             else:
-                # Count this scenario as a regular entering into a black frame.
-                self.enter_black_count += 1
-            self.reset_load_vars()
-            return
-        self.enter_black_count += 1
+                # No load was added, so count this as the first enter_black_frame.
+                self.enter_black_count = 1
 
     # Functionality performed when going from a black frame to a non-black frame (exiting).
     # This functionality is important for timing the loads.
@@ -166,10 +180,6 @@ class ImageScanner:
     def get_time_diff(self):
         raise NotImplementedError
 
-    # Resets variables after a load is timed, to prepare the variables for the next load.
-    def reset_load_vars(self):
-        self.enter_black_count = 0
-
     # Given two frames, returns true if the euclidean distance (pixel distance) between them is less than the threshold.
     def are_frames_almost_equal(self, frame_one, frame_two, threshold=0):
         str_debug = "Position: "
@@ -186,22 +196,28 @@ class ImageScanner:
         return almost_equal
 
     def start_scan_loop(self):
-        success, frame = self.get_next_frame_cropped()
+        success, frame = self.get_next_frame()
         if not success:
             raise RuntimeError("Failed to read first frame.")
+        frame_cropped = self.crop_frame(frame)
 
         is_prev_frame_black = False
+        # DEBUGGING
+        debug_prev_frame = frame
         while success:
             if self.is_finished:
                 break
 
-            is_curr_frame_black = self.are_frames_almost_equal(frame, self.black_cropped, self.threshold)
+            is_curr_frame_black = self.are_frames_almost_equal(frame_cropped, self.black_cropped, self.threshold)
             if (not is_prev_frame_black) and is_curr_frame_black:
-                self.enter_black_frame()
+                self.enter_black_frame(debug_prev_frame)
             elif is_prev_frame_black and (not is_curr_frame_black):
                 self.exit_black_frame()
+            # DEBUGGING
+            debug_prev_frame = frame
             # Read the next frame.
-            success, frame = self.get_next_frame_cropped()
+            success, frame = self.get_next_frame()
+            frame_cropped = self.crop_frame(frame)
             if success:
                 # Update the "is_prev_frame_black" variable for the next loop iteration.
                 is_prev_frame_black = is_curr_frame_black

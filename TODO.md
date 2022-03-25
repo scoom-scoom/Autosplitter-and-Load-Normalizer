@@ -1,4 +1,8 @@
 # Current LLR stuff
+- Have the program save the image at the start and end of the measured load, so that you can quickly check if something is wrong.
+- Measure poki load times.
+- Check many different runs work with the load bounds for the first 3 loads.
+- Continue measuring load times (only 10 samples per load at first) and check that different runs work.
 - Start by only measuring the middle 2x2 patch of pixels.
     - Make sure each load is within the load time threshold. This will get rid of most false detections. DON'T FORGET to change the times for OG PSP hardware, which is longer than emulator.
     - Make sure each black screen lasts for a time within the black screen threshold. Not sure how much this will help, but it's definitely worth a shot.

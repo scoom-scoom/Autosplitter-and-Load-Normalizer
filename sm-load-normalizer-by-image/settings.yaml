@@ -15,11 +15,22 @@ CONST_IMAGE_SCAN_TYPE_SCREEN: "screen"
 
 vid:
   fps: 30
-#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/any-Alemussy-ryllus-and-kalidon-360p.mp4"
   filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/any-Alemussy-360p.mp4"
 
 screen:
   res_default: [1920, 1080]
+
+# Load bounds in seconds, in the format [min load time, max load time].
+#
+# Stops other image frames between black screens throughout the run
+# from accidentally being counted as a load.
+# Example - ship proxies produce black screens, and the gameplay can
+# be counted as a load if these bounds are not applied.
+# TODO update poki bounds with real values.
+load_bounds:
+  [[5, 20], # Pokitaru
+  [12.783, 17.202], # Ryllus
+  [12.809, 17.189]] # Kalidon
 
 # The parameter crop_scale determines how large the cropped image in the centre should be.
 # If it's too small, there is a chance that images with some black in the middle

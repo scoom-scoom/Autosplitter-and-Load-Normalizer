@@ -12,9 +12,6 @@ class ScreenScanner(ImageScanner):
 
     def __init__(self, settings):
         super(ScreenScanner, self).__init__(settings)
-        # Threshold for how much difference there needs to be between a frame
-        # and the black frame to consider the frame as being almost black.
-        # self.threshold = 0
         self.load_start_time = 0
         self.debug_frame_count = 0
         self.debug_start_time = time.perf_counter_ns()

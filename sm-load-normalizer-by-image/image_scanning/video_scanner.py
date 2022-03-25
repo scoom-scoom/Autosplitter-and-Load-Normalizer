@@ -8,12 +8,6 @@ class VideoScanner(ImageScanner):
         super(VideoScanner, self).__init__(settings)
         self.fps = self.settings["vid"]["fps"]
         self.vid = cv2.VideoCapture(self.settings["vid"]["filename_vid"])
-
-        # Threshold for how much difference there needs to be between a frame and
-        # the black frame to consider the frame as being almost black.
-        # black_threshold_ryllus = 500
-        # self.threshold = black_threshold_ryllus
-        # self.threshold = 0
         self.frame_count = 1
         self.load_start_frame = 0
 

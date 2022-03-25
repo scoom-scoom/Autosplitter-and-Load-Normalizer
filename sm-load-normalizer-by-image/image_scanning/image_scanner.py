@@ -3,28 +3,15 @@ import numpy as np
 # Represents the process of scanning frames.
 class ImageScanner:
 
-    # The thresholds below are used due to the fact that a load is defined as a series of image
-    # frames between two black screens. This leads to problems if not dealt with properly.
-
-    # All loads must be higher than this time (in seconds) to be considered a load. This stops other image frames
-    # between black screens throughout the run from accidentally being counted as a load.
-    # Example:
-    # - A black screen between gameplay and a cutscene, and skipping the cutscene sends you
-    # back to a black screen, but you do not want the cutscene to be accidentally counted as a load).
-    CONST_LOAD_THRESH_LOW = 5
-
-    # All loads must be lower than this time (in seconds) to be considered a load. For example, this
-    # stops ship proxies from counting gameplay as a load, as ship proxies give a black screen.
-    CONST_LOAD_THRESH_HIGH = 25
-
     def __init__(self, settings):
         self.settings = settings
         # Init crop settings
-        self.crop_scale = (settings["crop_scale"]["width"], settings["crop_scale"]["height"])
+        # self.crop_scale = (settings["crop_scale"]["width"], settings["crop_scale"]["height"])
         self.image_res_width, self.image_res_height = self.get_image_res()
         x_centre = int(self.image_res_width / 2)
         y_centre = int(self.image_res_height / 2)
-        (self.crop_width, self.crop_height) = self.get_crop_width_and_height()
+        (self.crop_width, self.crop_height) = (2, 2)
+        # (self.crop_width, self.crop_height) = self.get_crop_width_and_height()
         if (self.crop_width % 2) != 0:
             print("Crop width not divisible by 2.")
             self.crop_width += 1
@@ -48,62 +35,62 @@ class ImageScanner:
         # Counts the number of loads added. Useful for debugging.
         self.debug_load_number = 0
 
-    def find_gcd_from_list(self, nums):
-        # https://www.geeksforgeeks.org/gcd-two-array-numbers/
-        # Code contributed by Mohit Gupta_OMG
-        # GCD of more than two (or array) numbers
-
-        # Function implements the Euclidian
-        # algorithm to find the Highest Common Factor (H.C.F.) of two numbers
-        def find_gcd(x, y):
-            while y != 0:
-                x, y = y, x % y
-            return x
-
-        num1 = nums[0]
-        num2 = nums[1]
-        gcd = find_gcd(num1, num2)
-
-        for i in range(2, len(nums)):
-            gcd = find_gcd(gcd, nums[i])
-        return gcd
+    # def find_gcd_from_list(self, nums):
+    #     # https://www.geeksforgeeks.org/gcd-two-array-numbers/
+    #     # Code contributed by Mohit Gupta_OMG
+    #     # GCD of more than two (or array) numbers
+    #
+    #     # Function implements the Euclidian
+    #     # algorithm to find the Highest Common Factor (H.C.F.) of two numbers
+    #     def find_gcd(x, y):
+    #         while y != 0:
+    #             x, y = y, x % y
+    #         return x
+    #
+    #     num1 = nums[0]
+    #     num2 = nums[1]
+    #     gcd = find_gcd(num1, num2)
+    #
+    #     for i in range(2, len(nums)):
+    #         gcd = find_gcd(gcd, nums[i])
+    #     return gcd
 
     # Determine the crop size depending on the image resolution
-    def get_crop_width_and_height(self):
-        # We will proceed with the calculation even if our image resolution is not listed as
-        # supported, as there might be a chance that the calculation works out to be a nice
-        # number of pixels.
-        resolutions = self.settings["res_supported"]
-        res_widths = []
-        res_heights = []
-        for res in resolutions:
-            res_widths.append(res[0])
-            res_heights.append(res[1])
-
-        # We want the greatest common factor of these resolutions, so that we can divide the width and height
-        # by the greatest number possible, while still allowing the division to result in an integer number of
-        # pixels. Using the greatest number possible lets the crop size parameter be tuned as finely as possible.
-        # Tuning the crop size parameter finely is useful for cases where an image has a chance to
-        # be falsely detected as a black screen due to having black pixels in the centre (e.g. during
-        # ship proxies).
-        gcd_res_width = self.find_gcd_from_list(res_widths)
-        gcd_res_height = self.find_gcd_from_list(res_heights)
-
-        # For any image of the resolutions specified in the "resolutions" variable, this calculation
-        # will always give us the same looking crop in the image, just a larger number of cropped pixels
-        # for higher resolution videos which have more pixels. This helps debugging as the content in the
-        # cropped image will not vary for different resolutions of the same video.
-        percentage_width = 1 / gcd_res_width
-        percentage_height = 1 / gcd_res_height
-        # Make sure these scales are ints to keep the pixel numbers integers.
-        width_scale = (int) (self.crop_scale[0])
-        height_scale = (int) (self.crop_scale[1])
-        # * 2 first so that the number is guaranteed to be even.
-        crop_width = (int) ((self.image_res_width * percentage_width) * 2)
-        crop_height = (int) ((self.image_res_height * percentage_height) * 2)
-        crop_width *= width_scale
-        crop_height *= height_scale
-        return (crop_width, crop_height)
+    # def get_crop_width_and_height(self):
+    #     # We will proceed with the calculation even if our image resolution is not listed as
+    #     # supported, as there might be a chance that the calculation works out to be a nice
+    #     # number of pixels.
+    #     resolutions = self.settings["res_supported"]
+    #     res_widths = []
+    #     res_heights = []
+    #     for res in resolutions:
+    #         res_widths.append(res[0])
+    #         res_heights.append(res[1])
+    #
+    #     # We want the greatest common factor of these resolutions, so that we can divide the width and height
+    #     # by the greatest number possible, while still allowing the division to result in an integer number of
+    #     # pixels. Using the greatest number possible lets the crop size parameter be tuned as finely as possible.
+    #     # Tuning the crop size parameter finely is useful for cases where an image has a chance to
+    #     # be falsely detected as a black screen due to having black pixels in the centre (e.g. during
+    #     # ship proxies).
+    #     gcd_res_width = self.find_gcd_from_list(res_widths)
+    #     gcd_res_height = self.find_gcd_from_list(res_heights)
+    #
+    #     # For any image of the resolutions specified in the "resolutions" variable, this calculation
+    #     # will always give us the same looking crop in the image, just a larger number of cropped pixels
+    #     # for higher resolution videos which have more pixels. This helps debugging as the content in the
+    #     # cropped image will not vary for different resolutions of the same video.
+    #     percentage_width = 1 / gcd_res_width
+    #     percentage_height = 1 / gcd_res_height
+    #     # Make sure these scales are ints to keep the pixel numbers integers.
+    #     width_scale = (int) (self.crop_scale[0])
+    #     height_scale = (int) (self.crop_scale[1])
+    #     # * 2 first so that the number is guaranteed to be even.
+    #     crop_width = (int) ((self.image_res_width * percentage_width) * 2)
+    #     crop_height = (int) ((self.image_res_height * percentage_height) * 2)
+    #     crop_width *= width_scale
+    #     crop_height *= height_scale
+    #     return (crop_width, crop_height)
 
     # Gets the image resolution in pixels (width, height) to be used in the cropping process.
     def get_image_res(self):
@@ -119,9 +106,14 @@ class ImageScanner:
     def get_next_frame_cropped(self):
         raise NotImplementedError
 
-    # Adds the load to the total load time.
-    def add_load_to_total(self, load_time):
-        raise NotImplementedError
+    def is_load_valid(self, load_number, load_time):
+        load_bounds = self.settings["load_bounds"]
+        load_bound = load_bounds[load_number]
+        # "load_bound[0] - 1" and "load_bound[1] + 1" to be safe, as the bounds are taken from a large sample of loads,
+        # but there may be a load which goes beyond these bounds.
+        load_bound_min = load_bound[0] - 1
+        load_bound_max = load_bound[1] + 1
+        return (load_time > load_bound_min) and (load_time < load_bound_max)
 
     def record_load(self, load_time):
         # Check if it is the Pokitaru load (the first load), which is not counted
@@ -142,7 +134,7 @@ class ImageScanner:
             # We are at the end of the load.
             load_time = self.get_time_diff()
             # Only add the load if it is valid.
-            if self.is_load_valid(load_time):
+            if self.is_load_valid(self.debug_load_number, load_time):
                 self.record_load(load_time)
             else:
                 # Count this scenario as a regular entering into a black frame.
@@ -156,9 +148,6 @@ class ImageScanner:
     def exit_black_frame(self):
         if self.enter_black_count == 1:
             self.record_position()
-
-    def is_load_valid(self, load_time):
-        return (load_time > self.CONST_LOAD_THRESH_LOW) and (load_time < self.CONST_LOAD_THRESH_HIGH)
 
     # The position is either a frame number for video scanning, or a time stamp for screen scanning.
     def record_position(self):

@@ -1,20 +1,16 @@
 # Current LLR stuff
-- Test for different res vids of Alemusa kalidon and ryllus loads.
-- Test for entire run.
+- Start by only measuring the middle 2x2 patch of pixels.
+    - Make sure each load is within the load time threshold. This will get rid of most false detections. DON'T FORGET to change the times for OG PSP hardware, which is longer than emulator.
+    - Make sure each black screen lasts for a time within the black screen threshold. Not sure how much this will help, but it's definitely worth a shot.
+    - If there are still false detections:
+        - Ask Isaki if he has any ideas.
+        - Could check to see if the pixels are close to the cutscene pixels (e.g. blue pixels for the ship cutscene). This could be dodgy though due to gameplay triggering this, but you can still use this as a last resort after the previous 2 checks.
+        - Make the program wait a number of seconds before detecting the ship cutscene. This will need to be updated according to the comgold sheet (have the program download the comgold sheet when it starts and use these values to make sure that the program doesn't wait too long and miss an actual load.)
+            - BE CAREFUL as this depends on what WR time is. If someone does a run with a new strat where the time is significantly lower, then this program could break.
 - GREAT IDEA you could change the patch size after each load, so that the next load will be detected correctly.
 - GREAT IDEA, have the program try to scan through with the smallest crop patch size, and if there is an incorrect number of loads, it can scan through again with +1 on the patch size scale.
-If this also fails, it can override the patch scaling and go up in pixel steps until it gets the correct number of loads.
-- IF HAVING ISSUES WITH BLACK SCREEN NOT BEING 0 DIFFERENCE, LLR think about stopping the time when the load screen changes to the last load screen (big pixel change). Will need to make sure last load time is consistent.
-- Test the program on various videos (video and screen scanning) to see:
-    - If I can just use exactly 0. Is the ship fade exactly 0 after a certain number of frames everytime?
-    - If the differences between black and the almost black image are consistent, or can at least be bounded.
-- AFTER more measurements, could change the threshold to be the difference between prev and curr frame, based on the 7th and 8th pb measurements I did.
-    - OR use both difference and curr value below threshold, as the value differences seem to be very inconsistent.
-    - Maybe the treshold can just be scaled for a particular video based on what the measurement is for the Ryllus load.
-    - COULD try to match exact ship frame, but this would fail when having different offsets after cropping.
-- Make sure autosplitter file is consistently timing loads.
-- [LAST RESORT OPTIMIZATION] IF NEEDED Have a number of frames during the load where the program isn't scanning for anything.
-    - BE CAREFUL as this depends on what WR time is. If someone does a run with a new strat where the time is significantly lower, then this program could break.
+    - If this also fails, it can override the patch scaling and go up in pixel steps until it gets the correct number of loads.
+- Make sure autosplitter file is consistently timing loads.    
 
 # Custom made llr by video:
 - 1.) Give video file to program, and it will scan frame by frame and output LLR time of the speed-run based on the category.

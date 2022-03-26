@@ -1,5 +1,5 @@
 # Current LLR stuff
-- Have the program save the image at the start and end of the measured load, so that you can quickly check if something is wrong.
+- Solve the issue with Ryllus gameplay being falsely detected as a load.
 - Measure poki load times.
 - Check many different runs work with the load bounds for the first 3 loads.
 - Continue measuring load times (only 10 samples per load at first) and check that different runs work.

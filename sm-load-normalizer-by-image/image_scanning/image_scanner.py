@@ -204,6 +204,7 @@ class ImageScanner:
         is_prev_frame_black = False
         # DEBUGGING
         debug_prev_frame = frame
+        assign_debug_frame = 0
         while success:
             if self.is_finished:
                 break
@@ -214,7 +215,8 @@ class ImageScanner:
             elif is_prev_frame_black and (not is_curr_frame_black):
                 self.exit_black_frame()
             # DEBUGGING
-            debug_prev_frame = frame
+            if assign_debug_frame % 50 == 0:
+                debug_prev_frame = frame
             # Read the next frame.
             success, frame = self.get_next_frame()
             frame_cropped = self.crop_frame(frame)
@@ -225,7 +227,7 @@ class ImageScanner:
 
             # DEBUGGING
             # break
-
+            assign_debug_frame += 1
         self.print_finished_stats()
 
     # Prints stats about the program once it's finished.

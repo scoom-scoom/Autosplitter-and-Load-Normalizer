@@ -34,11 +34,20 @@ screen:
 # from accidentally being counted as a load.
 # Example - ship proxies produce black screens, and the gameplay can
 # be counted as a load if these bounds are not applied.
-# TODO update poki bounds with real values.
+# TODO update poki bounds with real values, if needed.
 load_bounds:
-  [[5, 20], # Pokitaru
+  [
+  [5, 20], # Pokitaru
   [12.783, 17.202], # Ryllus
-  [12.809, 17.189]] # Kalidon
+  [12.809, 17.189], # Kalidon
+  [4.705, 4.772], # Metallis
+  [2.457, 2.491], # Giant Clank 1
+  [17.046, 17.1], # Dreamtime
+  [12.764, 15.515], # Medical Outpost Omega
+  [12.707, 17.117], # Remains
+  [12.798, 17.192], # Challax 1
+  [2.413, 2.437] # Giant Clank 2 (for wrench only and 100%)
+  ]
 
 # The parameter crop_scale determines how large the cropped image in the centre should be.
 # If it's too small, there is a chance that images with some black in the middle

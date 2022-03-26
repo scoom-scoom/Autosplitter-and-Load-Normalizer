@@ -53,8 +53,8 @@ startup {
 		// Takes the optimalLoadTime for this current load and the value (in memory) of the cutscene which plays at the end of the load.
 		// This info is used to determine when to pause and resume the timer to remove the long load.
 		Action<int, int> CheckLoadRemoval = (optimalLoadTime, cutsceneVal) => {
-			TimeSpan gt = (TimeSpan) timer.CurrentTime.GameTime;
-			if ((gt.TotalMilliseconds - vars.loadStartTime) > optimalLoadTime) {
+			TimeSpan rt = (TimeSpan) timer.CurrentTime.RealTime;
+			if ((rt.TotalMilliseconds - vars.loadStartTime) > optimalLoadTime) {
 				// Pause the timer to remove the long load.
 				vars.isLoading = true;
 			}
@@ -68,8 +68,8 @@ startup {
 
 		Action LoadStarted = () => {
 			// Record the time, as we have entered the load. This will be used for long load removal.
-			TimeSpan gt = (TimeSpan) timer.CurrentTime.GameTime;
-			vars.loadStartTime = gt.TotalMilliseconds;
+			TimeSpan rt = (TimeSpan) timer.CurrentTime.RealTime;
+			vars.loadStartTime = rt.TotalMilliseconds;
 			vars.checkForLoadRemoval = true;
 		};
 		vars.LoadStarted = LoadStarted;

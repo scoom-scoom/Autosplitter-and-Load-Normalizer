@@ -33,10 +33,11 @@ class ImageScanner:
         # The number of times we have entered a black screen. Useful for checking when to start the load timing.
         self.enter_black_count = 0
         self.load_time_total = 0
-        # Counts the number of loads added. Useful for debugging.
+        self.load_bounds = self.settings["load_bounds"]
         self.poki_sped_up = settings["poki_sped_up"]
         if self.poki_sped_up:
             print("Poki is sped up, so is already accounted for.")
+        # Counts the number of loads added. Useful for debugging.
         self.loads_added = 1 if self.poki_sped_up else 0
         self.debug_frame_before_load = None
         self.debug_frame_after_load = None
@@ -116,8 +117,13 @@ class ImageScanner:
         raise NotImplementedError
 
     def is_load_valid(self, load_number, load_time):
-        load_bounds = self.settings["load_bounds"]
-        load_bound = load_bounds[load_number]
+        try:
+            load_bound = self.load_bounds[load_number]
+        except IndexError:
+            load_bound = [2, 25]
+        # load_bounds = self.settings["load_bounds"]
+        # load_bound = load_bounds[load_number]
+
         # "load_bound[0] - 1" and "load_bound[1] + 1" to be safe, as the bounds are taken from a large sample of loads,
         # but there may be a load which goes beyond these bounds.
         load_bound_min = load_bound[0] - 1
@@ -224,8 +230,8 @@ class ImageScanner:
                 debug_prev_frame = frame
             # Read the next frame.
             success, frame = self.get_next_frame()
-            frame_cropped = self.crop_frame(frame)
             if success:
+                frame_cropped = self.crop_frame(frame)
                 # Update the "is_prev_frame_black" variable for the next loop iteration.
                 is_prev_frame_black = is_curr_frame_black
                 self.increment_position()

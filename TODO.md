@@ -1,6 +1,5 @@
 # Current LLR stuff
-- Measure poki load times.
-- Check many different runs work with the load bounds for the first 3 loads.
+- Fix ASL load time measurements to use real time, not game time.
 - Continue measuring load times (only 10 samples per load at first) and check that different runs work.
 - Start by only measuring the middle 2x2 patch of pixels.
     - Make sure each load is within the load time threshold. This will get rid of most false detections. DON'T FORGET to change the times for OG PSP hardware, which is longer than emulator.
@@ -61,3 +60,5 @@
 - Measure CPU usage
 - Have a link in my github to the releases page of Toufool.
 - Maybe publish LLR changes to actual repo?
+
+Tested the program on various videos. It seems to only work on EMU runs, and there isn't much I can do about that for now (I could run the program over the vid many times with different settings until the final load normalized time is valid).

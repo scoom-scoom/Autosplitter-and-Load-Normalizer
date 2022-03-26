@@ -1,4 +1,7 @@
-# Timed loads using the asl file
+# Timed loads (in milliseconds) using the asl file
+
+## Pokitaru:
+
 
 ## Ryllus:
 15539
@@ -34,14 +37,108 @@
 
 # Kalidon
 15524
-15103 
-12813 
-15461 
-15511 
-14931 
-15528 
-17189 
-17181 
+15103
+12813
+15461
+15511
+14931
+15528
+17189
+17181
 12809
 
+# Metallis (ratchet floating)
+4772
+4736
+4764
+4761
+4757
+4722
+4705
+
+# Giant Clank 1
+2463
+2470
+2457
+2491
+2473
+
+# Dreamtime
+17100
+17070
+17063
+17046
+
+# Moo ship
+13404
+14875
+15469
+15427
+14869
+12764
+15485
+15515
+15055
+15043
+14896
+12781
+14899
+12765
+15047
+
+# Remains ship
+12758
+12720
+12707
+14835
+17084
+17083
+17117
+17073
+12746
+13373
+17065
+
+# Challax ship before giant clank 2
+12824
+13480
+17187
+13448
+15560
+14904
+14917
+15529
+17192
+17165
+15559
+13447
+15512
+15513
+15551
+13461
+15488
+14909
+17165
+17150
+17141
+15511
+15508
+15526
+15529
+15500
+12798
+
+# Giant Clank 2
+2417
+2437
+2413
+2417
+2420
+2430
+
+# Challax ship after giant clank 2
+# Dayni ship
+# IC ratchet using shrink ray
+# Dayni 2 ratchet floating
+# Quodrona ship
 

@@ -9,7 +9,9 @@
 - Dreamtime (fades into white screen visually, and then fades into black, not sure about exact values though)
 - Moo ship
 - Remains ship
-- Challax ship
+- Challax ship before giant clank 2
+- Giant Clank 2
+- Challax ship after giant clank 2
 - Dayni ship
 - IC ratchet using shrink ray (this still does black entrance and black fade out visually, not sure about exact values though)
 - Dayni 2 ratchet floating (this still does black entrance and black fade out visually, not sure about exact values though)

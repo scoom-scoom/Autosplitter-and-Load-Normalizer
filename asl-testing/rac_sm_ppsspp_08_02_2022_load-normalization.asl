@@ -45,7 +45,6 @@ startup {
 		vars.LogDebug = LogDebug;
 
 		Action ResetLoadTimeVars = () => {
-			// vars.FrameNumber = 0;
 			vars.loadStartTime = -1;
 			vars.isLoading = false;
 			vars.checkForLoadRemoval = false;
@@ -57,31 +56,31 @@ startup {
 		// Takes the optimalLoadTime for this current load and the value (in memory) of the cutscene which plays at the end of the load.
 		// This info is used to determine when to pause and resume the timer to remove the long load.
 		Action<int, int> CheckLoadRemoval = (optimalLoadTime, cutsceneVal) => {
-			TimeSpan gt = (TimeSpan) timer.CurrentTime.GameTime;
-			if ((gt.TotalMilliseconds - vars.loadStartTime) > optimalLoadTime) {
+			TimeSpan rt = (TimeSpan) timer.CurrentTime.RealTime;
+			if ((rt.TotalMilliseconds - vars.loadStartTime) > optimalLoadTime) {
 				// Pause the timer to remove the long load.
-				vars.isLoading = true;
+				// vars.isLoading = true;
 			}
 			if (vars.currentCutscene.Current == cutsceneVal) {
+				vars.LogDebug("Load time is:" + (rt.TotalMilliseconds - vars.loadStartTime));
 				// Resume the timer once the load is done, and the cutscene is playing.
 				vars.ResetLoadTimeVars();
-				vars.LogDebug("Load resumed.");
 			}
 		};
 		vars.CheckLoadRemoval = CheckLoadRemoval;
 
 		Action LoadStarted = () => {
 			// Record the time, as we have entered the load. This will be used for long load removal.
-			TimeSpan gt = (TimeSpan) timer.CurrentTime.GameTime;
-			vars.loadStartTime = gt.TotalMilliseconds;
-			vars.LogDebug("Load started.");
+			TimeSpan rt = (TimeSpan) timer.CurrentTime.RealTime;
+			vars.loadStartTime = rt.TotalMilliseconds;
 			vars.checkForLoadRemoval = true;
 		};
 		vars.LoadStarted = LoadStarted;
 }
 
 init {
-	// Run at 30 fps for this 30 fps game. For some weird reason, 60 fps is actually 30 fps (this has been tested). Maybe it's because the code in this file takes ages to run.
+	// Run at 30 fps for this 30 fps game. For some weird reason, 60 fps is actually 30 fps (this has been tested). Maybe 
+	// it's because the code in this file takes ages to run each frame.
 	refreshRate = 60;
 	
 	var ptr = IntPtr.Zero;
@@ -119,6 +118,7 @@ update {
 
 split {
 	// DEBUGGING
+	// vars.LogDebug("TEST");
 	// vars.LogDebug("Planet: " + vars.currentPlanet.Current);
 	// vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
 

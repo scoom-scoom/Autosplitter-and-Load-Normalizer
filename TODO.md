@@ -1,5 +1,4 @@
 # Current LLR stuff
-- Solve the issue with Ryllus gameplay being falsely detected as a load.
 - Measure poki load times.
 - Check many different runs work with the load bounds for the first 3 loads.
 - Continue measuring load times (only 10 samples per load at first) and check that different runs work.

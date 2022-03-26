@@ -5,17 +5,25 @@
 # https://www.cloudbees.com/blog/yaml-tutorial-everything-you-need-get-started
 # for YAML documentation.
 
-# Determines whether to scan a video or scan the screen.
-#image_scan_type: "screen"
-image_scan_type: "video"
-
 # These are the two options. MAKE SURE the image_scan_type matches the string exactly.
 CONST_IMAGE_SCAN_TYPE_VIDEO: "video"
 CONST_IMAGE_SCAN_TYPE_SCREEN: "screen"
 
+# Determines whether to scan a video or scan the screen.
+#image_scan_type: "screen"
+image_scan_type: "video"
+
 vid:
   fps: 30
-  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/any-Alemussy-360p.mp4"
+#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/voll-360p.mp4"
+#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus/dudek-360p.mp4"
+#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Touh.mp4"
+#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/Alemussy-144p.mp4"
+  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/Alemussy-360p.mp4"
+
+# Set to true if the poki load is sped up in the video. This is common
+# as speed runners use the speed hack on emulator to skip the first load fast.
+poki_sped_up: False
 
 screen:
   res_default: [1920, 1080]
@@ -38,8 +46,8 @@ load_bounds:
 # that the cropped image also includes pixels outside of the game video (e.g.
 # twitch layout), which would most likely not be black.
 crop_scale:
-  width: 3
-  height: 3
+  width: 1
+  height: 1
 
 # Some supported video resolutions are taken from https://typito.com/blog/best-video-format-for-youtube/.
 # All of them are currently 16:9 (widescreen) resolutions, which is the most common.

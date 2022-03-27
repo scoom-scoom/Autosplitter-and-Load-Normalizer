@@ -1,3 +1,5 @@
+import os
+
 import cv2
 import numpy as np
 
@@ -41,6 +43,15 @@ class ImageScanner:
         self.loads_added = 1 if self.poki_sped_up else 0
         self.debug_frame_before_load = None
         self.debug_frame_after_load = None
+        self.loads_to_skip = settings["loads_to_skip"]
+        # Clear the old debug frame data.
+        dir_working = os.path.abspath(os.getcwd())
+        dir_frames = os.path.join(dir_working, "frames")
+        for filename in os.listdir(dir_frames):
+            f = os.path.join(dir_frames, filename)
+            # Check if it is a file
+            if os.path.isfile(f):
+                os.remove(f)
 
     def find_gcd_from_list(self, nums):
         # https://www.geeksforgeeks.org/gcd-two-array-numbers/
@@ -133,14 +144,13 @@ class ImageScanner:
     def record_load(self, load_time):
         # Check if it is the Pokitaru load (the first load), which is not counted
         # in the speed run.
-        if (self.loads_added == 0) and (not self.poki_sped_up):
-            self.loads_added += 1
+        if (self.loads_added == 0):
             print("Pokitaru load detected and skipped")
         else:
             self.load_time_total += load_time
             # DEBUGGING
-            self.loads_added += 1
-            print("Load number", str(self.loads_added), "added.")
+            print("Load number", str(self.loads_added + 1), "added.")
+        self.loads_added += 1
 
     # Functionality performed when going from a non-black frame to a black frame (entering).
     # This functionality is important for timing the loads.
@@ -210,18 +220,22 @@ class ImageScanner:
             raise RuntimeError("Failed to read first frame.")
         frame_cropped = self.crop_frame(frame)
 
-        is_prev_frame_black = False
+        is_prev_frame_almost_black = False
         # DEBUGGING
         debug_prev_frame = frame
         assign_debug_frame = 0
         while success:
             if self.is_finished:
                 break
-
-            is_curr_frame_black = self.are_frames_almost_equal(frame_cropped, self.black_cropped, self.threshold)
-            if (not is_prev_frame_black) and is_curr_frame_black:
+            next_load = self.loads_added + 1
+            if next_load in self.loads_to_skip:
+                # Skip the load
+                print("Load " + str(next_load) + " skipped.")
+                self.loads_added += 1
+            is_curr_frame_almost_black = self.are_frames_almost_equal(frame_cropped, self.black_cropped, self.threshold)
+            if (not is_prev_frame_almost_black) and is_curr_frame_almost_black:
                 self.enter_black_frame(debug_prev_frame)
-            elif is_prev_frame_black and (not is_curr_frame_black):
+            elif is_prev_frame_almost_black and (not is_curr_frame_almost_black):
                 self.exit_black_frame()
             # DEBUGGING
             # Save every 50th frame, as many frames right before the black screen are very close to black due to the
@@ -232,8 +246,8 @@ class ImageScanner:
             success, frame = self.get_next_frame()
             if success:
                 frame_cropped = self.crop_frame(frame)
-                # Update the "is_prev_frame_black" variable for the next loop iteration.
-                is_prev_frame_black = is_curr_frame_black
+                # Update the "is_prev_frame_almost_black" variable for the next loop iteration.
+                is_prev_frame_almost_black = is_curr_frame_almost_black
                 self.increment_position()
 
             # DEBUGGING

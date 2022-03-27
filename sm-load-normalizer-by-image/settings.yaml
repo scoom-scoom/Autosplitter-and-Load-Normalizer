@@ -21,12 +21,35 @@ vid:
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/Alemussy-144p.mp4"
   filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/Alemussy-360p.mp4"
 
+screen:
+  res_default: [1920, 1080]
+
+# Here is a list of the loads in order, so that you know which number corresponds to which load:
+# 1.) Pokitaru
+# 2.) Ryllus
+# 3.) Kalidon
+# 4.) Metallis (ratchet floating)
+# 5.) Giant Clank 1
+# 6.) Dreamtime
+# 7.) Medical Outpost Omega
+# 8.) Remains
+# 9.) Challax (before giant clank 2)
+# 10.) Giant Clank 2
+# 11.) Challax (after giant clank 2)
+# 12.) Dayni
+# 13.) IC ratchet (using the shrink ray)
+# 14.) Dayni 2 (ratchet floating)
+# 15.) Quodrona
+
 # Set to true if the poki load is sped up in the video. This is common
 # as speed runners use the speed hack on emulator to skip the first load fast.
 poki_sped_up: False
 
-screen:
-  res_default: [1920, 1080]
+# Specify loads to skip, as they cause issues in the program, and don't have much load time variation anyway.
+loads_to_skip: [
+#  4, # Metallis
+#  5  # Giant Clank 1
+]
 
 # Load bounds in seconds, in the format [min load time, max load time].
 #
@@ -42,7 +65,7 @@ load_bounds:
   [12.809, 17.189], # Kalidon
   [4.705, 4.772], # Metallis
   [2.457, 2.491], # Giant Clank 1
-  [17.046, 17.1], # Dreamtime
+  [17.046, 17.299], # Dreamtime
   [12.764, 15.515], # Medical Outpost Omega
   [12.707, 17.117], # Remains
   [12.798, 17.192], # Challax 1

@@ -1,5 +1,7 @@
 # Current LLR stuff
-- Fix ASL load time measurements to use real time, not game time.
+- Deal with load 9 (Challax). The issue is that there are full black screens either side of gameplay, which equate to within the load bounds.
+    - Might have to time the start and end black screen.
+    - LAST RESORT Could match the stars texture within a given threshold.
 - Continue measuring load times (only 10 samples per load at first) and check that different runs work.
 - Start by only measuring the middle 2x2 patch of pixels.
     - Make sure each load is within the load time threshold. This will get rid of most false detections. DON'T FORGET to change the times for OG PSP hardware, which is longer than emulator.

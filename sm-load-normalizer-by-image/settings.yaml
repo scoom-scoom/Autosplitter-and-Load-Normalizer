@@ -47,8 +47,8 @@ poki_sped_up: False
 
 # Specify loads to skip, as they cause issues in the program, and don't have much load time variation anyway.
 loads_to_skip: [
-#  4, # Metallis
-#  5  # Giant Clank 1
+  4, # Metallis
+  5  # Giant Clank 1
 ]
 
 # Load bounds in seconds, in the format [min load time, max load time].
@@ -69,7 +69,7 @@ load_bounds:
   [12.764, 15.515], # Medical Outpost Omega
   [12.707, 17.117], # Remains
   [12.798, 17.192], # Challax 1
-  [2.413, 2.437] # Giant Clank 2 (for wrench only and 100%)
+#  [2.413, 2.437], # Giant Clank 2 (for wrench only and 100%)
   ]
 
 # The parameter crop_scale determines how large the cropped image in the centre should be.
@@ -77,17 +77,17 @@ load_bounds:
 # will be falsely counted as a black screen. If it is too large, there is a chance
 # that the cropped image also includes pixels outside of the game video (e.g.
 # twitch layout), which would most likely not be black.
-crop_scale:
-  width: 1
-  height: 1
+#crop_scale:
+#  width: 1
+#  height: 1
 
 # Some supported video resolutions are taken from https://typito.com/blog/best-video-format-for-youtube/.
 # All of them are currently 16:9 (widescreen) resolutions, which is the most common.
 # Be cautious when adding more video resolutions, as the tuning of the crop size might
 # not be as fine when the greatest common denominator of video resolutions turns out to be a small number.
-res_supported: [[256, 144],
-                [640, 360],
-                [1280, 720],
-                [1920, 1080],
-                [2560, 1440],
-                [3840, 2160]]
+#res_supported: [[256, 144],
+#                [640, 360],
+#                [1280, 720],
+#                [1920, 1080],
+#                [2560, 1440],
+#                [3840, 2160]]

@@ -13,7 +13,10 @@ class ImageScanner:
         self.image_res_width, self.image_res_height = self.get_image_res()
         x_centre = int(self.image_res_width / 2)
         y_centre = int(self.image_res_height / 2)
-        (self.crop_width, self.crop_height) = (2, 2)
+        # Crop size must be big, as the Remains ship cutscene has a big black pixel patch in the centre,
+        # under the orange shaped remains planet, just before the load is finished.
+        (self.crop_width, self.crop_height) = (50, 50)
+        # (self.crop_width, self.crop_height) = (2, 2)
         # (self.crop_width, self.crop_height) = self.get_crop_width_and_height()
         if (self.crop_width % 2) != 0:
             print("Crop width not divisible by 2.")
@@ -137,8 +140,10 @@ class ImageScanner:
 
         # "load_bound[0] - 1" and "load_bound[1] + 1" to be safe, as the bounds are taken from a large sample of loads,
         # but there may be a load which goes beyond these bounds.
-        load_bound_min = load_bound[0] - 1
-        load_bound_max = load_bound[1] + 1
+        # load_bound_min = load_bound[0] - 1
+        # load_bound_max = load_bound[1] + 1
+        load_bound_min = load_bound[0] - 0.5
+        load_bound_max = load_bound[1] + 0.5
         return (load_time > load_bound_min) and (load_time < load_bound_max)
 
     def record_load(self, load_time):

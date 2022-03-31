@@ -32,23 +32,35 @@
 
 ## Full run:
 - Alemusa - 360p
+
 Entering black at frame 54
-Entering black at frame 526
+Entering black at frame 532
 Pokitaru load detected and skipped
 Entering black at frame 2399
 Entering black at frame 2792
 Load number 2 added.
 Entering black at frame 5646
-Entering black at frame 6035
+Entering black at frame 6039
 Load number 3 added.
+Entering black at frame 12120
+Entering black at frame 12277
+Load number 4 added.
+Entering black at frame 15175
+Entering black at frame 15262
+Load number 5 added.
+Entering black at frame 24604
+Entering black at frame 25102
+Load number 6 added.
+Entering black at frame 35829
+Entering black at frame 36311
+Load number 7 added.
+Entering black at frame 40604
+Entering black at frame 41026
+Load number 8 added.
 
-- Touh - 360p
-Entering black at frame 85
-Entering black at frame 566
-Pokitaru load detected and skipped
-Entering black at frame 2586
-Entering black at frame 3118
-Load number 2 added.
-Entering black at frame 6452
-Entering black at frame 6959
-Load number 3 added.
+Entering black at frame 43089
+Entering black at frame 43549
+Load number 9 added.
+
+9 should start at around 43780
+9 should end at around 44298

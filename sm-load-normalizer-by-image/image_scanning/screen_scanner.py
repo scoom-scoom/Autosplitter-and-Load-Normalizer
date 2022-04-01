@@ -12,7 +12,8 @@ class ScreenScanner(ImageScanner):
 
     def __init__(self, settings):
         super(ScreenScanner, self).__init__(settings)
-        self.start_time = 0
+        self.load_start_time = 0
+        self.black_screen_start_time = 0
         self.debug_frame_count = 0
         self.debug_start_time = time.perf_counter_ns()
 
@@ -70,12 +71,17 @@ class ScreenScanner(ImageScanner):
     def crop_frame(self, frame):
         return frame
 
-    def get_time_diff(self):
-        return (time.perf_counter_ns() - self.start_time) * 1e-9
+    def get_load_time_diff(self):
+        return (time.perf_counter_ns() - self.load_start_time) * 1e-9
 
-    def record_position(self):
-        self.start_time = time.perf_counter_ns()
-        return self.start_time
+    def get_black_screen_time_diff(self):
+        return (time.perf_counter_ns() - self.black_screen_start_time) * 1e-9
+
+    def record_load_start_position(self):
+        self.load_start_time = time.perf_counter_ns()
+
+    def record_black_screen_start_position(self):
+        self.black_screen_start_time = time.perf_counter_ns()
 
     def increment_position(self):
         # No need to increment time, as time increments itself naturally according to the laws of physics.

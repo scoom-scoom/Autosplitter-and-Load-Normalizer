@@ -163,17 +163,34 @@ class ImageScanner:
             print("Load number", str(self.loads_added + 1), "added.")
         self.loads_added += 1
 
+    # The position is either a frame number for video scanning, or a time stamp for screen scanning.
+    def record_load_start_position(self):
+        raise NotImplementedError
+
+    # Same functionality as "record_load_position", just for black screens instead.
+    def record_black_screen_start_position(self):
+        raise NotImplementedError
+
+    # Get the difference in time between the last measured time and now. This is used to
+    # time loads.
+    def get_load_time_diff(self):
+        raise NotImplementedError
+
+    # Same functionality as "get_load_time_diff", just for black screens instead.
+    def get_black_screen_time_diff(self):
+        raise NotImplementedError
+
     # Functionality performed when going from a non-black frame to a black frame (entering).
     # This functionality is important for timing the loads.
     def enter_black_frame(self, debug_frame_before_black):
         if self.enter_black_count == 0:
             # Time the black screen to make sure it is valid.
-            self.record_position()
+            self.record_black_screen_start_position()
             self.enter_black_count = 1
             self.debug_frame_before_load = debug_frame_before_black
         elif self.enter_black_count == 1:
             # We are at the end of the load.
-            load_time = self.get_time_diff()
+            load_time = self.get_load_time_diff()
             # Only add the load if it is valid.
             if self.is_load_valid(self.loads_added, load_time):
                 self.record_load(load_time)
@@ -188,25 +205,20 @@ class ImageScanner:
                 # No load was added, so count this as the first enter_black_frame.
                 self.enter_black_count = 1
                 # Time the black screen to make sure it is valid.
-                self.record_position()
+                self.record_black_screen_start_position()
 
     # Functionality performed when going from a black frame to a non-black frame (exiting).
     # This functionality is important for timing the loads.
     def exit_black_frame(self):
         if self.enter_black_count == 1:
-            black_time = self.get_time_diff()
+            black_time = self.get_black_screen_time_diff()
             if self.is_black_screen_valid(black_time):
                 # Start recording the position again, as we now need to measure a potential load.
-                self.record_position()
+                self.record_load_start_position()
             else:
                 # We know that there cannot be a load after this black screen, so restart the
                 # load measurement process.
                 self.enter_black_count = 0
-
-    # The position is either a frame number for video scanning, or a time stamp for screen scanning.
-    # Also returns the position recorded.
-    def record_position(self):
-        raise NotImplementedError
 
     # The position is either a frame number for video scanning, or a time stamp for screen scanning.
     def increment_position(self):
@@ -214,11 +226,6 @@ class ImageScanner:
 
     # The position is either a frame number for video scanning, or a time stamp for screen scanning.
     def get_position(self):
-        raise NotImplementedError
-
-    # Get the difference in time between the last measured time and now. This is used to
-    # time loads.
-    def get_time_diff(self):
         raise NotImplementedError
 
     # Given two frames, returns true if the euclidean distance (pixel distance) between them is less than the threshold.

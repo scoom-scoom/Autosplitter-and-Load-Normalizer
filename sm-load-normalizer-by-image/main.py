@@ -18,4 +18,4 @@ elif scan_type == settings["CONST_IMAGE_SCAN_TYPE_SCREEN"]:
 start = time.time()
 scanner.start_scan_loop()
 end = time.time()
-print("Total program runtime:", round(end - start, 2))
+print("Total program runtime is:", round(end - start, 2), "seconds.")

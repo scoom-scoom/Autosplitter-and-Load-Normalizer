@@ -45,6 +45,7 @@ screen:
 # as speed runners use the speed hack on emulator to skip the first load fast.
 poki_sped_up: False
 
+# TODO try run the program with no loads skipped at all.
 # Specify loads to skip, as they cause issues in the program, and don't have much load time variation anyway.
 loads_to_skip: [
   4, # Metallis

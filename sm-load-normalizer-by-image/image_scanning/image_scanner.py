@@ -146,6 +146,12 @@ class ImageScanner:
         load_bound_max = load_bound[1] + 0.5
         return (load_time > load_bound_min) and (load_time < load_bound_max)
 
+    # Checks if the number of black screen frames is valid.
+    def is_black_screen_valid(self, black_time):
+        # Black screens before and after the loads are always longer than 10 frames
+        # (all measured ones have been 15 frames or more).
+        return black_time > (10.0 / 30.0)
+
     def record_load(self, load_time):
         # Check if it is the Pokitaru load (the first load), which is not counted
         # in the speed run.
@@ -160,8 +166,9 @@ class ImageScanner:
     # Functionality performed when going from a non-black frame to a black frame (entering).
     # This functionality is important for timing the loads.
     def enter_black_frame(self, debug_frame_before_black):
-        # DEBUGGING
         if self.enter_black_count == 0:
+            # Time the black screen to make sure it is valid.
+            self.record_position()
             self.enter_black_count = 1
             self.debug_frame_before_load = debug_frame_before_black
         elif self.enter_black_count == 1:
@@ -180,14 +187,24 @@ class ImageScanner:
             else:
                 # No load was added, so count this as the first enter_black_frame.
                 self.enter_black_count = 1
+                # Time the black screen to make sure it is valid.
+                self.record_position()
 
     # Functionality performed when going from a black frame to a non-black frame (exiting).
     # This functionality is important for timing the loads.
     def exit_black_frame(self):
         if self.enter_black_count == 1:
-            self.record_position()
+            black_time = self.get_time_diff()
+            if self.is_black_screen_valid(black_time):
+                # Start recording the position again, as we now need to measure a potential load.
+                self.record_position()
+            else:
+                # We know that there cannot be a load after this black screen, so restart the
+                # load measurement process.
+                self.enter_black_count = 0
 
     # The position is either a frame number for video scanning, or a time stamp for screen scanning.
+    # Also returns the position recorded.
     def record_position(self):
         raise NotImplementedError
 

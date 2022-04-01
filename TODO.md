@@ -1,4 +1,5 @@
 # Current LLR stuff
+- Use functions "record load position" and "record black screen position" so that you don't get errors.
 - Deal with load 9 (Challax). The issue is that there are full black screens either side of gameplay, which equate to within the load bounds.
     - Might have to time the start and end black screen.
     - LAST RESORT Could match the stars texture within a given threshold.

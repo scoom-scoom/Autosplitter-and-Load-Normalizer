@@ -64,3 +64,9 @@ Load number 9 added.
 
 9 should start at around 43780
 9 should end at around 44298
+
+DEBUG:
+ENTERING black at frame 42751
+EXITING black at frame 42755
+ENTERING black at frame 43089
+EXITING black at frame 43093

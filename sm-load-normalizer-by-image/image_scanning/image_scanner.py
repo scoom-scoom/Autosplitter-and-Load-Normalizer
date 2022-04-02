@@ -139,6 +139,23 @@ class ImageScanner:
     def crop_frame(self, frame):
         raise NotImplementedError
 
+    # The position is either a frame number for video scanning, or a time stamp for screen scanning.
+    def record_load_start_position(self):
+        raise NotImplementedError
+
+    # Same functionality as "record_load_position", just for black screens instead.
+    def record_black_screen_start_position(self):
+        raise NotImplementedError
+
+    # Get the difference in time between the last measured time and now. This is used to
+    # time loads.
+    def get_load_time_diff(self):
+        raise NotImplementedError
+
+    # Same functionality as "get_load_time_diff", just for black screens instead.
+    def get_black_screen_time_diff(self):
+        raise NotImplementedError
+
     def is_load_valid(self, load_number, load_time):
         try:
             load_bound = self.load_bounds[load_number]
@@ -172,39 +189,21 @@ class ImageScanner:
             print("Load number", str(self.loads_added + 1), "added.")
         self.loads_added += 1
 
-    # The position is either a frame number for video scanning, or a time stamp for screen scanning.
-    def record_load_start_position(self):
-        raise NotImplementedError
-
-    # Same functionality as "record_load_position", just for black screens instead.
-    def record_black_screen_start_position(self):
-        raise NotImplementedError
-
-    # Get the difference in time between the last measured time and now. This is used to
-    # time loads.
-    def get_load_time_diff(self):
-        raise NotImplementedError
-
-    # Same functionality as "get_load_time_diff", just for black screens instead.
-    def get_black_screen_time_diff(self):
-        raise NotImplementedError
-
     # Functionality performed when going from a non-black frame to a black frame (entering).
     # This functionality is important for timing the loads.
     def enter_black_frame(self, debug_frame_before_black):
         if self.scanner_state == ScannerState.DEFAULT:
             self.scanner_state = ScannerState.IN_FIRST_BLACK_SCREEN
             self.debug_frame_before_load = debug_frame_before_black
-            # Time the black screen to make sure it is valid.
-            self.record_black_screen_start_position()
+            # Challax edge case.
+            if self.loads_added == 8:
+                # Time the black screen to make sure it is valid.
+                self.record_black_screen_start_position()
         elif self.scanner_state == ScannerState.IN_POTENTIAL_LOAD:
             # We are at the end of the load.
             load_time = self.get_load_time_diff()
             # Only add the load if it is valid.
             if self.is_load_valid(self.loads_added, load_time):
-                # Note that we only check the validity of the first black screen in order
-                # to keep the checks to a minimum (too many checks may cause a failure
-                # to record a valid load). Checks are only added when they are needed.
                 self.record_load(load_time)
                 self.scanner_state = ScannerState.IN_SECOND_BLACK_SCREEN
                 # DEBUGGING
@@ -218,38 +217,15 @@ class ImageScanner:
                 self.scanner_state = ScannerState.IN_FIRST_BLACK_SCREEN
 
                 # Time the black screen to make sure it is valid.
-                self.record_black_screen_start_position()
-
-    # def enter_black_frame(self, debug_frame_before_black):
-        # if self.enter_black_count == 0:
-        #     self.enter_black_count = 1
-        #     self.debug_frame_before_load = debug_frame_before_black
-        #     # Time the black screen to make sure it is valid.
-        #     self.record_black_screen_start_position()
-        # elif self.enter_black_count == 1:
-        #     # We are at the end of the load.
-        #     load_time = self.get_load_time_diff()
-        #     # Only add the load if it is valid.
-        #     if self.is_load_valid(self.loads_added, load_time):
-        #         self.record_load(load_time)
-        #         self.enter_black_count = 0
-        #         # DEBUGGING
-        #         cv2.imwrite("frames/enter-black-load_" + str(self.loads_added) + "-_before" + ".png",
-        #                     self.debug_frame_before_load)
-        #         cv2.imwrite("frames/enter-black-load_" + str(self.loads_added) + "-after" + ".png",
-        #                     debug_frame_before_black)
-        #         # Don't add one to "enter_black_count" here, just return and begin the process again.
-        #     else:
-        #         # No load was added, so count this as the first enter_black_frame.
-        #         self.enter_black_count = 1
-        #
-        #         # Time the black screen to make sure it is valid.
-        #         self.record_black_screen_start_position()
+                # Challax edge case.
+                if self.loads_added == 8:
+                    self.record_black_screen_start_position()
 
     # Functionality performed when going from a black frame to a non-black frame (exiting).
     # This functionality is important for timing the loads.
     def exit_black_frame(self):
-        if self.scanner_state == ScannerState.IN_FIRST_BLACK_SCREEN:
+        # Challax edge case.
+        if (self.scanner_state == ScannerState.IN_FIRST_BLACK_SCREEN) and (self.loads_added == 8):
             black_time = self.get_black_screen_time_diff()
             if self.is_black_screen_valid(black_time):
                 self.scanner_state = ScannerState.IN_POTENTIAL_LOAD
@@ -258,20 +234,13 @@ class ImageScanner:
                 # We know that there cannot be a load after this black screen, so restart the
                 # load measurement process.
                 self.scanner_state = ScannerState.DEFAULT
+        elif self.scanner_state == ScannerState.IN_FIRST_BLACK_SCREEN:
+            self.scanner_state = ScannerState.IN_POTENTIAL_LOAD
+            self.record_load_start_position()
         elif self.scanner_state == ScannerState.IN_SECOND_BLACK_SCREEN:
             # We have finished recording this load. Set the scanner state back to default to
             # prepare for measuring the next load.
             self.scanner_state = ScannerState.DEFAULT
-
-    # def exit_black_frame(self):
-    #     if self.enter_black_count == 1:
-    #         black_time = self.get_black_screen_time_diff()
-    #         if self.is_black_screen_valid(black_time):
-    #             self.record_load_start_position()
-    #         else:
-    #             # We know that there cannot be a load after this black screen, so restart the
-    #             # load measurement process.
-    #             self.enter_black_count = 0
 
     # The position is either a frame number for video scanning, or a time stamp for screen scanning.
     def increment_position(self):

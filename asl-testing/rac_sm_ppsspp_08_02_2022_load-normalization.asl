@@ -16,8 +16,8 @@ startup {
 		settings.Add("IClankSplit", true, "Split after Inside Clank");
 		settings.Add("QuodronaSplit", true, "Split on Quodrona");
 		settings.Add("AutoReset", true, "Toggle this to auto-reset (NG+)");
-		settings.Add("LongLoadRemoval", false, "Long Load Removal (see tooltip).");
-		settings.SetToolTip("LongLoadRemoval", "WARNING: This feature has not been tested in a full run, use at your own risk." +
+		settings.Add("LoadNormalization", false, "Load Normalization (see tooltip).");
+		settings.SetToolTip("LoadNormalization", "WARNING: This feature has not been tested in a full run, use at your own risk." +
 		"Toggle this to have the timer pause when the load time exceeds the optimal time.");
 		settings.Add("SplitOnBolt", false, "Split on Bolt (see tooltip).");
 		settings.SetToolTip("SplitOnBolt", "WARNING: This feature has not been tested in a full run, use at your own risk." + 
@@ -26,12 +26,12 @@ startup {
 
 		vars.loadStartTime = -1;
 		vars.isLoading = false;
-		vars.checkForLoadRemoval = false;
+		vars.checkForLoadNormalization = false;
 
-		// Set to true if we have reached Dayni Moon 2, so that the long load removal doesn't hit Dayni Moon 1 by accident.
+		// Set to true if we have reached Dayni Moon 2, so that the load normalization doesn't hit Dayni Moon 1 by accident.
 		vars.dayniMoon2 = false;
 
-		// Set to true if we have reached Challax 2 in Wrench Only or Hundo, so that the long load removal doesn't hit Challax 1 by accident.
+		// Set to true if we have reached Challax 2 in Wrench Only or Hundo, so that the load normalization doesn't hit Challax 1 by accident.
 		vars.challax2 = false;
 
 		// optimalLoadTime is measured in milliseconds.
@@ -47,18 +47,18 @@ startup {
 		Action ResetLoadTimeVars = () => {
 			vars.loadStartTime = -1;
 			vars.isLoading = false;
-			vars.checkForLoadRemoval = false;
+			vars.checkForLoadNormalization = false;
 			vars.dayniMoon2 = false;
 			vars.challax2 = false;
 		};
 		vars.ResetLoadTimeVars = ResetLoadTimeVars;
 
 		// Takes the optimalLoadTime for this current load and the value (in memory) of the cutscene which plays at the end of the load.
-		// This info is used to determine when to pause and resume the timer to remove the long load.
-		Action<int, int> CheckLoadRemoval = (optimalLoadTime, cutsceneVal) => {
+		// This info is used to determine when to pause and resume the timer to normalize the long load.
+		Action<int, int> CheckLoadNormalization = (optimalLoadTime, cutsceneVal) => {
 			TimeSpan rt = (TimeSpan) timer.CurrentTime.RealTime;
 			if ((rt.TotalMilliseconds - vars.loadStartTime) > optimalLoadTime) {
-				// Pause the timer to remove the long load.
+				// Pause the timer to normalize the long load.
 				// vars.isLoading = true;
 			}
 			if (vars.currentCutscene.Current == cutsceneVal) {
@@ -67,13 +67,13 @@ startup {
 				vars.ResetLoadTimeVars();
 			}
 		};
-		vars.CheckLoadRemoval = CheckLoadRemoval;
+		vars.CheckLoadNormalization = CheckLoadNormalization;
 
 		Action LoadStarted = () => {
-			// Record the time, as we have entered the load. This will be used for long load removal.
+			// Record the time, as we have entered the load. This will be used for load normalization.
 			TimeSpan rt = (TimeSpan) timer.CurrentTime.RealTime;
 			vars.loadStartTime = rt.TotalMilliseconds;
-			vars.checkForLoadRemoval = true;
+			vars.checkForLoadNormalization = true;
 		};
 		vars.LoadStarted = LoadStarted;
 }
@@ -122,6 +122,9 @@ split {
 	// vars.LogDebug("Planet: " + vars.currentPlanet.Current);
 	// vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
 
+	// NOTE: You cannot use "else if" statements in this block, as there are toggled settings.
+	// For example, if one of the settings is true but there is no split, then none of the other
+	// "else if" statements will be checked for a split.
 	if (settings["SplitOnBolt"]) {
 		// For some reason, the memory address value containing the bolt count is multiplied by 256.
 		int boltCountOld = (int) (vars.titBoltCount.Old / 256);
@@ -139,14 +142,14 @@ split {
 	}
 	// Ryllus
 	if (vars.currentPlanet.Current == 2 && planetChanged) {
-		if (settings["LongLoadRemoval"]) {
+		if (settings["LoadNormalization"]) {
 			vars.LoadStarted();
 		}
 		return true;
 	}
 	// Kalidon
 	if (vars.currentPlanet.Current == 3 && planetChanged) {
-		if (settings["LongLoadRemoval"]) {
+		if (settings["LoadNormalization"]) {
 			vars.LoadStarted();
 		}
 		return true;
@@ -163,35 +166,35 @@ split {
 	}
 	// Metalis
 	if (vars.currentPlanet.Current == 4 && planetChanged) {
-		if (settings["LongLoadRemoval"]) {
+		if (settings["LoadNormalization"]) {
 			vars.LoadStarted();
 		}
 		return true;
 	}
 	// Metalis Giant Clank
 	if (vars.currentPlanet.Current == 15 && planetChanged) {
-		if (settings["LongLoadRemoval"]) {
+		if (settings["LoadNormalization"]) {
 			vars.LoadStarted();
 		}
 		return true;
 	}
 	// Dreamtime
 	if (vars.currentPlanet.Current == 5 && planetChanged) {
-		if (settings["LongLoadRemoval"]) {
+		if (settings["LoadNormalization"]) {
 			vars.LoadStarted();
 		}
 		return true;
 	}
 	// MOO
 	if (vars.currentPlanet.Current == 6 && planetChanged) {
-		if (settings["LongLoadRemoval"]) {
+		if (settings["LoadNormalization"]) {
 			vars.LoadStarted();
 		}
 		return true;
 	}
 	if (settings["RemainsSplit"]) {
 		if (vars.currentPlanet.Current == 23 && planetChanged) {
-			if (settings["LongLoadRemoval"]) {
+			if (settings["LoadNormalization"]) {
 				vars.LoadStarted();
 			}
 			return true;
@@ -199,7 +202,7 @@ split {
 	}
 	if (settings["ChallaxSplit"]) {
 		if (vars.currentPlanet.Current == 7 && planetChanged) {
-			if (settings["LongLoadRemoval"]) {
+			if (settings["LoadNormalization"]) {
 				vars.LoadStarted();
 			}
 			return true;
@@ -208,14 +211,14 @@ split {
 	// Challax Giant Clank 2 (For Wrench Only and 100%)
 	if (settings["GiantClank2Split"]) {
 		if (vars.currentPlanet.Current == 21 && planetChanged) {
-			if (settings["LongLoadRemoval"]) {
+			if (settings["LoadNormalization"]) {
 				vars.LoadStarted();
 			}
 			return true;
 		}
 		// Split on Challax 2 (when you return from giant clank section back to Challax)
 		if (vars.currentPlanet.Current == 7 && planetChanged) {
-			if (settings["LongLoadRemoval"]) {
+			if (settings["LoadNormalization"]) {
 				vars.LoadStarted();
 			}
 			vars.challax2 = true;
@@ -224,14 +227,14 @@ split {
 	}
 	// Dayni Moon
 	if (vars.currentPlanet.Current == 8 && planetChanged) {
-		if (settings["LongLoadRemoval"]) {
+		if (settings["LoadNormalization"]) {
 			vars.LoadStarted();
 		}
 		return true;
 	}
 	if (settings["IClankSplit"]) {
 		if (vars.currentPlanet.Current == 9 && planetChanged) {
-			if (settings["LongLoadRemoval"]) {
+			if (settings["LoadNormalization"]) {
 				vars.LoadStarted();
 			}
 			return true;
@@ -239,7 +242,7 @@ split {
 	}
 	// Dayni Moon 2
 	if (vars.currentPlanet.Current == 8 && planetChanged) {
-		if (settings["LongLoadRemoval"]) {
+		if (settings["LoadNormalization"]) {
 			vars.LoadStarted();
 		}
 		vars.dayniMoon2 = true;
@@ -247,7 +250,7 @@ split {
 	}
 	if (settings["QuodronaSplit"]) {
 		if (vars.currentPlanet.Current == 10 && planetChanged) {
-			if (settings["LongLoadRemoval"]) {
+			if (settings["LoadNormalization"]) {
 				vars.LoadStarted();
 			}
 			return true;
@@ -286,67 +289,69 @@ reset {
 }
 
 isLoading {
-	// Long load removal
-	if (vars.checkForLoadRemoval){
+	// NOTE: You cannot use "else if" statements in this block, as there are toggled settings.
+	// For example, if one of the settings is true but there is no split, then none of the other
+	// "else if" statements will be checked for a split.
+	if (vars.checkForLoadNormalization){
 		// Ryllus
 		if (vars.currentPlanet.Current == 2) {
-			vars.CheckLoadRemoval(vars.optimalLoadTimeRyllus, 776024624);
+			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776024624);
 		}
 		// Kalidon
 		else if (vars.currentPlanet.Current == 3) {
-			vars.CheckLoadRemoval(vars.optimalLoadTimeKalidon, 776024880);
+			vars.CheckLoadNormalization(vars.optimalLoadTimeKalidon, 776024880);
 		}
 		// Metalis
 		else if (vars.currentPlanet.Current == 4) {
-			vars.CheckLoadRemoval(vars.optimalLoadTimeKalidon, 776025136);
+			vars.CheckLoadNormalization(vars.optimalLoadTimeKalidon, 776025136);
 		}
 		// Metalis Giant Clank
 		if (vars.currentPlanet.Current == 15) {
-			vars.CheckLoadRemoval(vars.optimalLoadTimeKalidon, 654548);
+			vars.CheckLoadNormalization(vars.optimalLoadTimeKalidon, 654548);
 		}
 		// Dreamtime
 		if (vars.currentPlanet.Current == 5) {
-			vars.CheckLoadRemoval(vars.optimalLoadTimeRyllus, 776025392);
+			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776025392);
 		}
 		// MOO
 		if (vars.currentPlanet.Current == 6) {
-			vars.CheckLoadRemoval(vars.optimalLoadTimeRyllus, 776025648);
+			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776025648);
 		}
 		if (settings["RemainsSplit"]) {
 			if (vars.currentPlanet.Current == 23) {
-				vars.CheckLoadRemoval(vars.optimalLoadTimeRyllus, 654548);
+				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 654548);
 			}
 		}
 		if (settings["ChallaxSplit"]) {
 			if (vars.currentPlanet.Current == 7 && !vars.challax2) {
-				vars.CheckLoadRemoval(vars.optimalLoadTimeRyllus, 776025904);
+				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776025904);
 			}
 		}
 		// Challax Giant Clank 2
 		if (settings["GiantClank2Split"]) {
 			if (vars.currentPlanet.Current == 21) {
-				vars.CheckLoadRemoval(vars.optimalLoadTimeRyllus, 654548);
+				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 654548);
 			}
-			if (vars.currentPlanet.Current == 7 && vars.challax2) {
-				vars.CheckLoadRemoval(vars.optimalLoadTimeRyllus, 776353584);
+			else if (vars.currentPlanet.Current == 7 && vars.challax2) {
+				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776353584);
 			} 
 		}
 		// Dayni Moon
 		if (vars.currentPlanet.Current == 8 && !vars.dayniMoon2) {
-			vars.CheckLoadRemoval(vars.optimalLoadTimeRyllus, 654548);
+			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 654548);
 		}
 		if (settings["IClankSplit"]) {
 			if (vars.currentPlanet.Current == 9) {
-				vars.CheckLoadRemoval(vars.optimalLoadTimeRyllus, 776026416);
+				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776026416);
 			}
 		}
 		// Dayni Moon 2
 		if (vars.currentPlanet.Current == 8 && vars.dayniMoon2) {
-			vars.CheckLoadRemoval(vars.optimalLoadTimeRyllus, 776353840);
+			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776353840);
 		}
 		if (settings["QuodronaSplit"]) {
 			if (vars.currentPlanet.Current == 10) {
-				vars.CheckLoadRemoval(vars.optimalLoadTimeRyllus, 776024113);
+				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776024113);
 			}
 		}
 	}

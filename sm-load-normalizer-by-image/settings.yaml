@@ -34,8 +34,8 @@ screen:
 # 7.) Medical Outpost Omega
 # 8.) Remains
 # 9.) Challax (before giant clank 2)
-# 10.) Giant Clank 2
-# 11.) Challax (after giant clank 2)
+# 10.) Giant Clank 2 (only in wrench only and 100%)
+# 11.) Challax (after giant clank 2, only in wrench only and 100%)
 # 12.) Dayni
 # 13.) IC ratchet (using the shrink ray)
 # 14.) Dayni 2 (ratchet floating)
@@ -71,6 +71,32 @@ load_bounds:
   [12.707, 17.117], # Remains
   [12.798, 17.192], # Challax 1
 #  [2.413, 2.437], # Giant Clank 2 (for wrench only and 100%)
+  ]
+
+# Black screen bounds in seconds, in the format
+#  [[MIN black screen 1, MAX black screen 1],
+#  [MIN black screen 2, MAX black screen 2]]
+#
+# Stops other image frames between black screens throughout the run
+# from accidentally being counted as a load.
+# Example - ship proxies produce black screens, and the gameplay can
+# be counted as a load if the length of the black screen is not measured.
+#
+# IGNORE means that no bounds are taken into account. We only want to check
+# bounds when needed, so that we do not stop other valid loads from being
+# counted by accident.
+black_screen_bounds:
+  [
+  IGNORE, # Pokitaru
+  IGNORE, # Ryllus
+  IGNORE, # Kalidon
+  IGNORE, # Metallis
+  IGNORE, # Giant Clank 1
+  IGNORE, # Dreamtime
+  IGNORE, # Medical Outpost Omega
+  IGNORE, # Remains
+  [[0.333333, 0.666666], IGNORE], # Challax 1 - first black screen is between 10 and 20 frames.
+#  IGNORE, # Giant Clank 2 (for wrench only and 100%)
   ]
 
 # The parameter crop_scale determines how large the cropped image in the centre should be.

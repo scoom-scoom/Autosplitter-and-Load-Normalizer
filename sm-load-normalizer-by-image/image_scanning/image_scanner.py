@@ -48,6 +48,7 @@ class ImageScanner:
         self.scanner_state = ScannerState.DEFAULT
         self.load_time_total = 0
         self.load_bounds = self.settings["load_bounds"]
+        self.black_screen_bounds = self.settings["black_screen_bounds"]
         self.poki_sped_up = settings["poki_sped_up"]
         if self.poki_sped_up:
             print("Poki is sped up, so is already accounted for.")
@@ -172,11 +173,20 @@ class ImageScanner:
         load_bound_max = load_bound[1] + 0.5
         return (load_time > load_bound_min) and (load_time < load_bound_max)
 
-    # Checks if the number of black screen frames is valid.
     def is_black_screen_valid(self, black_time):
-        # Black screens before and after the loads are always longer than 10 frames
-        # (all measured ones have been 15 frames or more).
-        return black_time > (10.0 / 30.0)
+        bound = self.black_screen_bounds[self.loads_added]
+        if bound == 'IGNORE':
+            return True
+        else:
+            # Check if the black screen is valid given the bounds.
+            bound_to_use = None
+            if self.scanner_state == ScannerState.IN_FIRST_BLACK_SCREEN:
+                bound_to_use = bound[0]
+            elif self.scanner_state == ScannerState.IN_SECOND_BLACK_SCREEN:
+                bound_to_use = bound[1]
+            if bound_to_use == 'IGNORE':
+                return True
+            return (bound_to_use[0] < black_time) and (black_time < bound_to_use[1])
 
     def record_load(self, load_time):
         # Check if it is the Pokitaru load (the first load), which is not counted
@@ -195,10 +205,8 @@ class ImageScanner:
         if self.scanner_state == ScannerState.DEFAULT:
             self.scanner_state = ScannerState.IN_FIRST_BLACK_SCREEN
             self.debug_frame_before_load = debug_frame_before_black
-            # Challax edge case.
-            if self.loads_added == 8:
-                # Time the black screen to make sure it is valid.
-                self.record_black_screen_start_position()
+            # Time the black screen to make sure it is valid.
+            self.record_black_screen_start_position()
         elif self.scanner_state == ScannerState.IN_POTENTIAL_LOAD:
             # We are at the end of the load.
             load_time = self.get_load_time_diff()
@@ -217,15 +225,12 @@ class ImageScanner:
                 self.scanner_state = ScannerState.IN_FIRST_BLACK_SCREEN
 
                 # Time the black screen to make sure it is valid.
-                # Challax edge case.
-                if self.loads_added == 8:
-                    self.record_black_screen_start_position()
+                self.record_black_screen_start_position()
 
     # Functionality performed when going from a black frame to a non-black frame (exiting).
     # This functionality is important for timing the loads.
     def exit_black_frame(self):
-        # Challax edge case.
-        if (self.scanner_state == ScannerState.IN_FIRST_BLACK_SCREEN) and (self.loads_added == 8):
+        if self.scanner_state == ScannerState.IN_FIRST_BLACK_SCREEN:
             black_time = self.get_black_screen_time_diff()
             if self.is_black_screen_valid(black_time):
                 self.scanner_state = ScannerState.IN_POTENTIAL_LOAD
@@ -234,9 +239,6 @@ class ImageScanner:
                 # We know that there cannot be a load after this black screen, so restart the
                 # load measurement process.
                 self.scanner_state = ScannerState.DEFAULT
-        elif self.scanner_state == ScannerState.IN_FIRST_BLACK_SCREEN:
-            self.scanner_state = ScannerState.IN_POTENTIAL_LOAD
-            self.record_load_start_position()
         elif self.scanner_state == ScannerState.IN_SECOND_BLACK_SCREEN:
             # We have finished recording this load. Set the scanner state back to default to
             # prepare for measuring the next load.

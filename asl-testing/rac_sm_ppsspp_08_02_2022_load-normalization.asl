@@ -9,20 +9,15 @@ startup {
 		
         settings.Add("Yeezy%Split", false, "Yeezy% - Split on wildfire boots collection");
         settings.Add("5TBSplit", false, "5TB - Split on 5th Titanium Bolt");
-		settings.Add("RemainsSplit", true, "Split on Remains");
-		settings.Add("SplitOtto", true, "Split on Otto entry");
-		settings.Add("ChallaxSplit", true, "Split on Challax");
 		settings.Add("GiantClank2Split", true, "Split on Giant Clank 2 (For Wrench only and 100%)");
-		settings.Add("IClankSplit", true, "Split after Inside Clank");
-		settings.Add("QuodronaSplit", true, "Split on Quodrona");
-		settings.Add("AutoReset", true, "Toggle this to auto-reset (NG+)");
-		settings.Add("LoadNormalization", false, "Load Normalization (see tooltip).");
-		settings.SetToolTip("LoadNormalization", "WARNING: This feature has not been tested in a full run, use at your own risk." +
-		"Toggle this to have the timer pause when the load time exceeds the optimal time.");
+		settings.Add("Challax2Split", true, "Split on Challax 2 (For Wrench only and 100%)");
 		settings.Add("SplitOnBolt", false, "Split on Bolt (see tooltip).");
 		settings.SetToolTip("SplitOnBolt", "WARNING: This feature has not been tested in a full run, use at your own risk." + 
 		"Set this to true if you want to additionally split on each bolt (the split happens after the bolt collection animation" +
 		"is finished, due to current technical limitations).");
+		settings.Add("LoadNormalization", false, "Load Normalization (see tooltip).");
+		settings.SetToolTip("LoadNormalization", "WARNING: This feature has not been tested in a full run, use at your own risk." +
+		"Toggle this to have the timer pause when the load time exceeds the optimal time.");
 
 		vars.loadStartTime = -1;
 		vars.isLoading = false;
@@ -70,10 +65,12 @@ startup {
 		vars.CheckLoadNormalization = CheckLoadNormalization;
 
 		Action LoadStarted = () => {
-			// Record the time, as we have entered the load. This will be used for load normalization.
-			TimeSpan rt = (TimeSpan) timer.CurrentTime.RealTime;
-			vars.loadStartTime = rt.TotalMilliseconds;
-			vars.checkForLoadNormalization = true;
+			if (settings["LoadNormalization"]) {
+				// Record the time, as we have entered the load. This will be used for load normalization.
+				TimeSpan rt = (TimeSpan) timer.CurrentTime.RealTime;
+				vars.loadStartTime = rt.TotalMilliseconds;
+				vars.checkForLoadNormalization = true;
+			}
 		};
 		vars.LoadStarted = LoadStarted;
 }
@@ -119,10 +116,10 @@ update {
 split {
 	// DEBUGGING
 	// vars.LogDebug("TEST");
-	// vars.LogDebug("Planet: " + vars.currentPlanet.Current);
-	// vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
+	vars.LogDebug("Planet: " + vars.currentPlanet.Current);
+	vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
 
-	// NOTE: You cannot use "else if" statements in this block, as there are toggled settings.
+	// NOTE: You cannot use "else if" statements in this "split" function, as there are toggled settings.
 	// For example, if one of the settings is true but there is no split, then none of the other
 	// "else if" statements will be checked for a split.
 	if (settings["SplitOnBolt"]) {
@@ -142,16 +139,12 @@ split {
 	}
 	// Ryllus
 	if (vars.currentPlanet.Current == 2 && planetChanged) {
-		if (settings["LoadNormalization"]) {
-			vars.LoadStarted();
-		}
+		vars.LoadStarted();
 		return true;
 	}
 	// Kalidon
 	if (vars.currentPlanet.Current == 3 && planetChanged) {
-		if (settings["LoadNormalization"]) {
-			vars.LoadStarted();
-		}
+		vars.LoadStarted();
 		return true;
 	}
 	if (settings["Yeezy%Split"]) {
@@ -166,110 +159,80 @@ split {
 	}
 	// Metalis
 	if (vars.currentPlanet.Current == 4 && planetChanged) {
-		if (settings["LoadNormalization"]) {
-			vars.LoadStarted();
-		}
+		vars.LoadStarted();
 		return true;
 	}
 	// Metalis Giant Clank
 	if (vars.currentPlanet.Current == 15 && planetChanged) {
-		if (settings["LoadNormalization"]) {
-			vars.LoadStarted();
-		}
+		vars.LoadStarted();
 		return true;
 	}
 	// Dreamtime
 	if (vars.currentPlanet.Current == 5 && planetChanged) {
-		if (settings["LoadNormalization"]) {
-			vars.LoadStarted();
-		}
+		vars.LoadStarted();
 		return true;
 	}
 	// MOO
 	if (vars.currentPlanet.Current == 6 && planetChanged) {
-		if (settings["LoadNormalization"]) {
-			vars.LoadStarted();
-		}
+		vars.LoadStarted();
 		return true;
 	}
-	if (settings["RemainsSplit"]) {
-		if (vars.currentPlanet.Current == 23 && planetChanged) {
-			if (settings["LoadNormalization"]) {
-				vars.LoadStarted();
-			}
-			return true;
-		}
+	// Remains
+	if (vars.currentPlanet.Current == 23 && planetChanged) {
+		vars.LoadStarted();
+		return true;
 	}
-	if (settings["ChallaxSplit"]) {
-		if (vars.currentPlanet.Current == 7 && planetChanged) {
-			if (settings["LoadNormalization"]) {
-				vars.LoadStarted();
-			}
-			return true;
-		}
+	// Challax
+	if (vars.currentPlanet.Current == 7 && planetChanged) {
+		vars.LoadStarted();
+		return true;
 	}
 	// Challax Giant Clank 2 (For Wrench Only and 100%)
 	if (settings["GiantClank2Split"]) {
 		if (vars.currentPlanet.Current == 21 && planetChanged) {
-			if (settings["LoadNormalization"]) {
-				vars.LoadStarted();
-			}
+		    vars.LoadStarted();
 			return true;
 		}
 		// Split on Challax 2 (when you return from giant clank section back to Challax)
 		if (vars.currentPlanet.Current == 7 && planetChanged) {
-			if (settings["LoadNormalization"]) {
-				vars.LoadStarted();
-			}
+		    vars.LoadStarted();
 			vars.challax2 = true;
 			return true;
 		}
 	}
 	// Dayni Moon
 	if (vars.currentPlanet.Current == 8 && planetChanged) {
-		if (settings["LoadNormalization"]) {
-			vars.LoadStarted();
-		}
+		vars.LoadStarted();
 		return true;
 	}
-	if (settings["IClankSplit"]) {
-		if (vars.currentPlanet.Current == 9 && planetChanged) {
-			if (settings["LoadNormalization"]) {
-				vars.LoadStarted();
-			}
-			return true;
-		}
+	// Inside Clank
+	if (vars.currentPlanet.Current == 9 && planetChanged) {
+		vars.LoadStarted();
+		return true;
 	}
 	// Dayni Moon 2
 	if (vars.currentPlanet.Current == 8 && planetChanged) {
-		if (settings["LoadNormalization"]) {
-			vars.LoadStarted();
-		}
+		vars.LoadStarted();
 		vars.dayniMoon2 = true;
 		return true;
 	}
-	if (settings["QuodronaSplit"]) {
-		if (vars.currentPlanet.Current == 10 && planetChanged) {
-			if (settings["LoadNormalization"]) {
-				vars.LoadStarted();
-			}
+	// Quodrona
+	if (vars.currentPlanet.Current == 10 && planetChanged) {
+		vars.LoadStarted();
+		return true;
+	}
+	// Otto
+	if (vars.currentPlanet.Current == 10) {
+		if (vars.ottoEntry.Current == 75000 && vars.ottoEntry.Old <= 0) {
 			return true;
 		}
 	}
-	if (settings["SplitOtto"]) {
-		if (vars.currentPlanet.Current == 10) {
-			if (vars.ottoEntry.Current == 75000 && vars.ottoEntry.Old <= 0) {
-				return true;
-			}
-		}
-	}
-	// Split on end of run
+	// Split at the end of the run.
 	if (vars.currentPlanet.Current == 10 && vars.currentCutscene.Current == 776417329) {
 		return true;
 	}
 }
 	
-
 start {
 	if (vars.currentPlanet.Current ==  1)
 	{
@@ -279,12 +242,10 @@ start {
 }
 
 reset {
-	if (settings["AutoReset"]) {
-		if (vars.currentPlanet.Current ==  1)
-		{
-			vars.ResetLoadTimeVars();
-			return vars.pokiSpawn.Current == 1 && vars.pokiSpawn.Old == 0;
-		}
+	if (vars.currentPlanet.Current ==  1)
+	{
+		vars.ResetLoadTimeVars();
+		return vars.pokiSpawn.Current == 1 && vars.pokiSpawn.Old == 0;
 	}
 }
 
@@ -298,11 +259,11 @@ isLoading {
 			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776024624);
 		}
 		// Kalidon
-		else if (vars.currentPlanet.Current == 3) {
+		if (vars.currentPlanet.Current == 3) {
 			vars.CheckLoadNormalization(vars.optimalLoadTimeKalidon, 776024880);
 		}
 		// Metalis
-		else if (vars.currentPlanet.Current == 4) {
+		if (vars.currentPlanet.Current == 4) {
 			vars.CheckLoadNormalization(vars.optimalLoadTimeKalidon, 776025136);
 		}
 		// Metalis Giant Clank
@@ -317,15 +278,13 @@ isLoading {
 		if (vars.currentPlanet.Current == 6) {
 			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776025648);
 		}
-		if (settings["RemainsSplit"]) {
-			if (vars.currentPlanet.Current == 23) {
-				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 654548);
-			}
+		// Remains
+		if (vars.currentPlanet.Current == 23) {
+			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 654548);
 		}
-		if (settings["ChallaxSplit"]) {
-			if (vars.currentPlanet.Current == 7 && !vars.challax2) {
-				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776025904);
-			}
+		// Challax
+		if (vars.currentPlanet.Current == 7 && !vars.challax2) {
+			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776025904);
 		}
 		// Challax Giant Clank 2
 		if (settings["GiantClank2Split"]) {
@@ -340,19 +299,17 @@ isLoading {
 		if (vars.currentPlanet.Current == 8 && !vars.dayniMoon2) {
 			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 654548);
 		}
-		if (settings["IClankSplit"]) {
-			if (vars.currentPlanet.Current == 9) {
-				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776026416);
-			}
+		// Inside Clank
+		if (vars.currentPlanet.Current == 9) {
+			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776026416);
 		}
 		// Dayni Moon 2
 		if (vars.currentPlanet.Current == 8 && vars.dayniMoon2) {
 			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776353840);
 		}
-		if (settings["QuodronaSplit"]) {
-			if (vars.currentPlanet.Current == 10) {
-				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776024113);
-			}
+		// Quodrona
+		if (vars.currentPlanet.Current == 10) {
+			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776024113);
 		}
 	}
 	return vars.isLoading;
@@ -362,11 +319,14 @@ isLoading {
 // Changelog (used before this project was on github)
 // ------------------------------------------------ //
 //
+// scoom_scoom -> 03/04/2022
+// - Man, I hate how long this file is. I wish I could use classes in ASL. I hope I never have to touch ASL again after this project!
+//
 // Emeralve -> 9/2/2022
 // - shhh I was here.
 //
 // scoom_scoom -> 08/02/2022
-// - Added splitting on bolt (after the bolt animation is finished). Memory address was found by Emeralve.
+// - Added splitting on bolt (splits after the bolt animation is finished). Memory address was found by Emeralve, good job man.
 //
 // scoom_scoom -> 30/12/2021
 // - Added Yeezy% split on wildfire boots collection (the start of the minicutscene)

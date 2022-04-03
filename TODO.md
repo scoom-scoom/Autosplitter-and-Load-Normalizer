@@ -12,7 +12,6 @@
 - GREAT IDEA, have the program try to scan through with the smallest crop patch size, and if there is an incorrect number of loads, it can scan through again with +1 on the patch size scale.
     - If this also fails, it can override the patch scaling and go up in pixel steps until it gets the correct number of loads.
 - Make sure autosplitter file is consistently timing loads.
-- Remove redundant splits on planet split options (e.g. "Split on Challax" option). Keep it simple.
 
 # Custom made llr by video:
 - 1.) Give video file to program, and it will scan frame by frame and output LLR time of the speed-run based on the category.

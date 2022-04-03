@@ -15,6 +15,7 @@ startup {
 		settings.SetToolTip("SplitOnBolt", "WARNING: This feature has not been tested in a full run, use at your own risk." + 
 		"Set this to true if you want to additionally split on each bolt (the split happens after the bolt collection animation" +
 		"is finished, due to current technical limitations).");
+		settings.Add("AutoReset", true, "Auto-reset the timer when starting on Pokitaru again (don't use for the 100% category though!).");
 		settings.Add("LoadNormalization", false, "Load Normalization (see tooltip).");
 		settings.SetToolTip("LoadNormalization", "WARNING: This feature has not been tested in a full run, use at your own risk." +
 		"Toggle this to have the timer pause when the load time exceeds the optimal time.");
@@ -117,8 +118,8 @@ update {
 split {
 	// DEBUGGING
 	// vars.LogDebug("TEST");
-	// vars.LogDebug("Planet: " + vars.currentPlanet.Current);
-	// vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
+	vars.LogDebug("Planet: " + vars.currentPlanet.Current);
+	vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
 
 	// NOTE: You cannot use "else if" statements in this "split" function, as there are toggled settings.
 	// For example, if one of the settings is true but there is no split, then none of the other
@@ -244,10 +245,12 @@ start {
 }
 
 reset {
-	if (vars.currentPlanet.Current ==  1)
-	{
-		vars.ResetLoadTimeVars();
-		return vars.pokiSpawn.Current == 1 && vars.pokiSpawn.Old == 0;
+	if (settings["AutoReset"]) {
+		if (vars.currentPlanet.Current ==  1)
+		{
+			vars.ResetLoadTimeVars();
+			return vars.pokiSpawn.Current == 1 && vars.pokiSpawn.Old == 0;
+		}
 	}
 }
 
@@ -288,13 +291,14 @@ isLoading {
 		if (vars.currentPlanet.Current == 7 && !vars.challax2) {
 			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776025904);
 		}
-		// Challax Giant Clank 2
+		// Giant Clank 2 (only for Wrench Only and 100% categories)
 		if (settings["GiantClank2Split"]) {
 			if (vars.currentPlanet.Current == 21) {
 				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 654548);
 			}
+			// Challax 2 (only for Wrench Only and 100% categories)
 			else if (vars.currentPlanet.Current == 7 && vars.challax2) {
-				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776353584);
+				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 654548 776353584);
 			} 
 		}
 		// Dayni Moon

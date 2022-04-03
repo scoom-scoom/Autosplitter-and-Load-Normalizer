@@ -15,7 +15,8 @@ startup {
 		settings.SetToolTip("SplitOnBolt", "WARNING: This feature has not been tested in a full run, use at your own risk." + 
 		"Set this to true if you want to additionally split on each bolt (the split happens after the bolt collection animation" +
 		"is finished, due to current technical limitations).");
-		settings.Add("AutoReset", true, "Auto-reset the timer when starting on Pokitaru again (don't use for the 100% category though!).");
+		settings.Add("AutoReset", true, "Auto-reset the timer (see tooltip).");
+		settings.SetToolTip("AutoReset", "Reset the timer when starting on Pokitaru again (don't use for the 100% category though!).");
 		settings.Add("LoadNormalization", false, "Load Normalization (see tooltip).");
 		settings.SetToolTip("LoadNormalization", "WARNING: This feature has not been tested in a full run, use at your own risk." +
 		"Toggle this to have the timer pause when the load time exceeds the optimal time.");
@@ -31,8 +32,10 @@ startup {
 		vars.challax2 = false;
 
 		// optimalLoadTime is measured in milliseconds.
-		vars.optimalLoadTimeRyllus = 12783;
-		vars.optimalLoadTimeKalidon = 12809;
+		// vars.optimalLoadTimeRyllus = 12783;
+		// vars.optimalLoadTimeKalidon = 12809;
+		vars.optimalLoadTimeRyllus = 10;
+		vars.optimalLoadTimeKalidon = 10;
 
 		// Taken from https://raw.githubusercontent.com/tduva/LiveSplit-ASL/master/AlanWake.asl
 		Action<string> LogDebug = (text) => {
@@ -298,8 +301,9 @@ isLoading {
 			}
 			// Challax 2 (only for Wrench Only and 100% categories)
 			else if (vars.currentPlanet.Current == 7 && vars.challax2) {
-				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 654548 776353584);
-			} 
+				// Old value was 776353584
+				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 654548);
+			}
 		}
 		// Dayni Moon
 		if (vars.currentPlanet.Current == 8 && !vars.dayniMoon2) {

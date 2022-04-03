@@ -1,4 +1,5 @@
 # Current LLR stuff
+- Fix ASL load normalization for giant clank 2 and challax 2.
 - Continue measuring load times (only 10 samples per load at first) and check that different runs work.
 - Start by only measuring the middle 2x2 patch of pixels.
     - Make sure each load is within the load time threshold. This will get rid of most false detections. DON'T FORGET to change the times for OG PSP hardware, which is longer than emulator.

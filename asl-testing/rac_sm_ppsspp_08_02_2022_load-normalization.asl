@@ -54,6 +54,7 @@ startup {
 			TimeSpan rt = (TimeSpan) timer.CurrentTime.RealTime;
 			if ((rt.TotalMilliseconds - vars.loadStartTime) > optimalLoadTime) {
 				// Pause the timer to normalize the long load.
+				// DEBUGGING
 				// vars.isLoading = true;
 			}
 			if (vars.currentCutscene.Current == cutsceneVal) {
@@ -64,8 +65,8 @@ startup {
 		};
 		vars.CheckLoadNormalization = CheckLoadNormalization;
 
-		Action LoadStarted = () => {
-			if (settings["LoadNormalization"]) {
+		Action<bool> LoadStarted = (isLoadNormalization) => {
+			if (isLoadNormalization) {
 				// Record the time, as we have entered the load. This will be used for load normalization.
 				TimeSpan rt = (TimeSpan) timer.CurrentTime.RealTime;
 				vars.loadStartTime = rt.TotalMilliseconds;
@@ -116,8 +117,8 @@ update {
 split {
 	// DEBUGGING
 	// vars.LogDebug("TEST");
-	vars.LogDebug("Planet: " + vars.currentPlanet.Current);
-	vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
+	// vars.LogDebug("Planet: " + vars.currentPlanet.Current);
+	// vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
 
 	// NOTE: You cannot use "else if" statements in this "split" function, as there are toggled settings.
 	// For example, if one of the settings is true but there is no split, then none of the other
@@ -133,18 +134,19 @@ split {
 	}
 
 	// Split on each planet
+	bool isLoadNormalization = settings["LoadNormalization"];
 	bool planetChanged = false;
 	if (vars.currentPlanet.Current != vars.currentPlanet.Old) {
 		planetChanged = true;
 	}
 	// Ryllus
 	if (vars.currentPlanet.Current == 2 && planetChanged) {
-		vars.LoadStarted();
+		vars.LoadStarted(isLoadNormalization);
 		return true;
 	}
 	// Kalidon
 	if (vars.currentPlanet.Current == 3 && planetChanged) {
-		vars.LoadStarted();
+		vars.LoadStarted(isLoadNormalization);
 		return true;
 	}
 	if (settings["Yeezy%Split"]) {
@@ -159,66 +161,66 @@ split {
 	}
 	// Metalis
 	if (vars.currentPlanet.Current == 4 && planetChanged) {
-		vars.LoadStarted();
+		vars.LoadStarted(isLoadNormalization);
 		return true;
 	}
 	// Metalis Giant Clank
 	if (vars.currentPlanet.Current == 15 && planetChanged) {
-		vars.LoadStarted();
+		vars.LoadStarted(isLoadNormalization);
 		return true;
 	}
 	// Dreamtime
 	if (vars.currentPlanet.Current == 5 && planetChanged) {
-		vars.LoadStarted();
+		vars.LoadStarted(isLoadNormalization);
 		return true;
 	}
 	// MOO
 	if (vars.currentPlanet.Current == 6 && planetChanged) {
-		vars.LoadStarted();
+		vars.LoadStarted(isLoadNormalization);
 		return true;
 	}
 	// Remains
 	if (vars.currentPlanet.Current == 23 && planetChanged) {
-		vars.LoadStarted();
+		vars.LoadStarted(isLoadNormalization);
 		return true;
 	}
 	// Challax
 	if (vars.currentPlanet.Current == 7 && planetChanged) {
-		vars.LoadStarted();
+		vars.LoadStarted(isLoadNormalization);
 		return true;
 	}
 	// Challax Giant Clank 2 (For Wrench Only and 100%)
 	if (settings["GiantClank2Split"]) {
 		if (vars.currentPlanet.Current == 21 && planetChanged) {
-		    vars.LoadStarted();
+		    vars.LoadStarted(isLoadNormalization);
 			return true;
 		}
 		// Split on Challax 2 (when you return from giant clank section back to Challax)
 		if (vars.currentPlanet.Current == 7 && planetChanged) {
-		    vars.LoadStarted();
+		    vars.LoadStarted(isLoadNormalization);
 			vars.challax2 = true;
 			return true;
 		}
 	}
 	// Dayni Moon
 	if (vars.currentPlanet.Current == 8 && planetChanged) {
-		vars.LoadStarted();
+		vars.LoadStarted(isLoadNormalization);
 		return true;
 	}
 	// Inside Clank
 	if (vars.currentPlanet.Current == 9 && planetChanged) {
-		vars.LoadStarted();
+		vars.LoadStarted(isLoadNormalization);
 		return true;
 	}
 	// Dayni Moon 2
 	if (vars.currentPlanet.Current == 8 && planetChanged) {
-		vars.LoadStarted();
+		vars.LoadStarted(isLoadNormalization);
 		vars.dayniMoon2 = true;
 		return true;
 	}
 	// Quodrona
 	if (vars.currentPlanet.Current == 10 && planetChanged) {
-		vars.LoadStarted();
+		vars.LoadStarted(isLoadNormalization);
 		return true;
 	}
 	// Otto

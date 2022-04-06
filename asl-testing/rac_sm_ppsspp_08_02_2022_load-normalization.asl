@@ -25,8 +25,14 @@ startup {
 		vars.isLoading = false;
 		vars.checkForLoadNormalization = false;
 
+		// Set to true once we reach Dayni Moon for the first time, so that we know to look for the Dayni Moon 2 split next time we go to Challax.
+		vars.dayniMoon1 = false;
+
 		// Set to true if we have reached Dayni Moon 2, so that the load normalization doesn't hit Dayni Moon 1 by accident.
 		vars.dayniMoon2 = false;
+
+		// Set to true once we reach Challax for the first time, so that we know to look for the Challax 2 split next time we go to Challax.
+		vars.challax1 = false;
 
 		// Set to true if we have reached Challax 2 in Wrench Only or Hundo, so that the load normalization doesn't hit Challax 1 by accident.
 		vars.challax2 = false;
@@ -47,10 +53,17 @@ startup {
 			vars.loadStartTime = -1;
 			vars.isLoading = false;
 			vars.checkForLoadNormalization = false;
-			vars.dayniMoon2 = false;
-			vars.challax2 = false;
 		};
 		vars.ResetLoadTimeVars = ResetLoadTimeVars;
+
+		Action ResetAllVars = () => {
+			vars.ResetLoadTimeVars();
+			vars.challax1 = false;
+			vars.challax2 = false;
+			vars.dayniMoon1 = false;
+			vars.dayniMoon2 = false;
+		};
+		vars.ResetAllVars = ResetAllVars;
 
 		// Takes the optimalLoadTime for this current load and the value (in memory) of the cutscene which plays at the end of the load.
 		// This info is used to determine when to pause and resume the timer to normalize the long load.
@@ -59,7 +72,7 @@ startup {
 			if ((rt.TotalMilliseconds - vars.loadStartTime) > optimalLoadTime) {
 				// Pause the timer to normalize the long load.
 				// DEBUGGING
-				// vars.isLoading = true;
+				vars.isLoading = true;
 			}
 			if (vars.currentCutscene.Current == cutsceneVal) {
 				vars.LogDebug("Load time is:" + (rt.TotalMilliseconds - vars.loadStartTime));
@@ -121,8 +134,8 @@ update {
 split {
 	// DEBUGGING
 	// vars.LogDebug("TEST");
-	vars.LogDebug("Planet: " + vars.currentPlanet.Current);
-	vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
+	// vars.LogDebug("Planet: " + vars.currentPlanet.Current);
+	// vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
 
 	// NOTE: You cannot use "else if" statements in this "split" function, as there are toggled settings.
 	// For example, if one of the settings is true but there is no split, then none of the other
@@ -189,8 +202,9 @@ split {
 		return true;
 	}
 	// Challax
-	if (vars.currentPlanet.Current == 7 && planetChanged) {
+	if (vars.currentPlanet.Current == 7 && planetChanged && !vars.challax1) {
 		vars.LoadStarted(isLoadNormalization);
+		vars.challax1 = true;
 		return true;
 	}
 	// Challax Giant Clank 2 (For Wrench Only and 100%)
@@ -200,15 +214,16 @@ split {
 			return true;
 		}
 		// Split on Challax 2 (when you return from giant clank section back to Challax)
-		if (vars.currentPlanet.Current == 7 && planetChanged) {
+		else if (vars.currentPlanet.Current == 7 && planetChanged && vars.challax1) {
 		    vars.LoadStarted(isLoadNormalization);
 			vars.challax2 = true;
 			return true;
 		}
 	}
 	// Dayni Moon
-	if (vars.currentPlanet.Current == 8 && planetChanged) {
+	if (vars.currentPlanet.Current == 8 && planetChanged && !vars.dayniMoon1) {
 		vars.LoadStarted(isLoadNormalization);
+		vars.dayniMoon1 = true;
 		return true;
 	}
 	// Inside Clank
@@ -217,7 +232,7 @@ split {
 		return true;
 	}
 	// Dayni Moon 2
-	if (vars.currentPlanet.Current == 8 && planetChanged) {
+	if (vars.currentPlanet.Current == 8 && planetChanged && vars.dayniMoon1) {
 		vars.LoadStarted(isLoadNormalization);
 		vars.dayniMoon2 = true;
 		return true;
@@ -242,7 +257,7 @@ split {
 start {
 	if (vars.currentPlanet.Current ==  1)
 	{
-		vars.ResetLoadTimeVars();
+		vars.ResetAllVars();
 		return vars.pokiSpawn.Current == 1 && vars.pokiSpawn.Old == 0;
 	}
 }
@@ -251,7 +266,7 @@ reset {
 	if (settings["AutoReset"]) {
 		if (vars.currentPlanet.Current ==  1)
 		{
-			vars.ResetLoadTimeVars();
+			vars.ResetAllVars();
 			return vars.pokiSpawn.Current == 1 && vars.pokiSpawn.Old == 0;
 		}
 	}
@@ -301,8 +316,7 @@ isLoading {
 			}
 			// Challax 2 (only for Wrench Only and 100% categories)
 			else if (vars.currentPlanet.Current == 7 && vars.challax2) {
-				// Old value was 776353584
-				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 654548);
+				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776353584);
 			}
 		}
 		// Dayni Moon

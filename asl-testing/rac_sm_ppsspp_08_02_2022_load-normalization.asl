@@ -72,7 +72,7 @@ startup {
 			if ((rt.TotalMilliseconds - vars.loadStartTime) > optimalLoadTime) {
 				// Pause the timer to normalize the long load.
 				// DEBUGGING
-				vars.isLoading = true;
+				// vars.isLoading = true;
 			}
 			if (vars.currentCutscene.Current == cutsceneVal) {
 				vars.LogDebug("Load time is:" + (rt.TotalMilliseconds - vars.loadStartTime));

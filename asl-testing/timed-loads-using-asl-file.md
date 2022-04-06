@@ -141,10 +141,49 @@
 2430
 
 # Challax ship after giant clank 2
-
+14987
+14997
+15014
+15001
+15015
 
 # Dayni ship
-# IC ratchet using shrink ray
-# Dayni 2 ratchet floating
-# Quodrona ship
+15406
+15517
+15392
+15407
+15001
+12683
+15420
+14989
+17129
+17104
+17101
+17132
+12717
 
+# IC ratchet using shrink ray
+2401
+2546
+2447
+2505
+
+# Dayni 2 ratchet floating
+2624
+2697
+2688
+2626
+2631
+2703
+
+# Quodrona ship
+15622
+13400
+15481
+15502
+15502
+15532
+15382
+15484
+15495
+13376

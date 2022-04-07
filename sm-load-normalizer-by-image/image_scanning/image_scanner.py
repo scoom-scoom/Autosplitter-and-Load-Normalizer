@@ -46,7 +46,7 @@ class ImageScanner:
         # The number of times we have entered a black screen. Useful for checking when to start the load timing.
         # self.enter_black_count = 0
         self.scanner_state = ScannerState.DEFAULT
-        self.load_time_total = 0
+        self.load_remove_time_total = 0
         self.load_bounds = self.settings["load_bounds"]
         self.black_screen_bounds = self.settings["black_screen_bounds"]
         self.poki_sped_up = settings["poki_sped_up"]
@@ -157,22 +157,21 @@ class ImageScanner:
     def get_black_screen_time_diff(self):
         raise NotImplementedError
 
-    def is_load_valid(self, load_number, load_time):
+    def get_load_bounds(self, load_number):
         try:
             load_bound = self.load_bounds[load_number]
         except IndexError as e:
             raise IndexError("ERROR: Trying to record more loads than there are in the game."
                              "A false load must have been recorded at some point.") from e
-        # load_bounds = self.settings["load_bounds"]
-        # load_bound = load_bounds[load_number]
-
-        # "load_bound[0] - 1" and "load_bound[1] + 1" to be safe, as the bounds are taken from a large sample of loads,
+        # "load_bound[0] - 0.5" and "load_bound[1] + 0.5" to be safe, as the bounds are taken from a large sample of loads,
         # but there may be a load which goes beyond these bounds.
-        # load_bound_min = load_bound[0] - 1
-        # load_bound_max = load_bound[1] + 1
         load_bound_min = load_bound[0] - 0.5
         load_bound_max = load_bound[1] + 0.5
-        return (load_time > load_bound_min) and (load_time < load_bound_max)
+        return (load_bound_min, load_bound_max)
+
+    def is_load_valid(self, load_time):
+
+        return
 
     def is_black_screen_valid(self, black_time):
         try:
@@ -193,13 +192,13 @@ class ImageScanner:
                 return True
             return (bound_to_use[0] < black_time) and (black_time < bound_to_use[1])
 
-    def record_load(self, load_time):
+    def record_load_remove_time(self, load_remove_time):
         # Check if it is the Pokitaru load (the first load), which is not counted
         # in the speed run.
         if (self.loads_added == 0):
             print("Pokitaru load detected and skipped")
         else:
-            self.load_time_total += load_time
+            self.load_remove_time_total += load_remove_time
             # DEBUGGING
             print("Load number", str(self.loads_added + 1), "added.")
         self.loads_added += 1
@@ -216,8 +215,12 @@ class ImageScanner:
             # We are at the end of the load.
             load_time = self.get_load_time_diff()
             # Only add the load if it is valid.
-            if self.is_load_valid(self.loads_added, load_time):
-                self.record_load(load_time)
+            load_bounds = self.get_load_bounds(self.loads_added)
+            load_bound_min = load_bounds[0]
+            load_bound_max = load_bounds[1]
+            if (load_time > load_bound_min) and (load_time < load_bound_max):
+                # TODO use actual min load time here, not load bound min.
+                self.record_load_remove_time(load_time - load_bound_min)
                 self.scanner_state = ScannerState.IN_SECOND_BLACK_SCREEN
                 # DEBUGGING
                 cv2.imwrite("frames/enter-black-load_" + str(self.loads_added) + "-_before" + ".png",
@@ -283,7 +286,7 @@ class ImageScanner:
         debug_prev_frame = frame
         assign_debug_frame = 0
         while success:
-            if self.is_finished:
+            if self.is_finished or self.loads_added == 13:
                 break
             next_load = self.loads_added + 1
             if next_load in self.loads_to_skip:

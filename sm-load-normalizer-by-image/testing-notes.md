@@ -37,7 +37,7 @@ Entering black at frame 54
 Entering black at frame 532
 Pokitaru load detected and skipped
 Entering black at frame 2399
-Entering black at frame 2792
+Entering black at frame 2795
 Load number 2 added.
 Entering black at frame 5646
 Entering black at frame 6039
@@ -57,16 +57,27 @@ Load number 7 added.
 Entering black at frame 40604
 Entering black at frame 41026
 Load number 8 added.
-
-Entering black at frame 43089
-Entering black at frame 43549
+Entering black at frame 43760
+Entering black at frame 44283
 Load number 9 added.
 
-9 should start at around 43780
-9 should end at around 44298
-
-DEBUG:
-ENTERING black at frame 42751
-EXITING black at frame 42755
-ENTERING black at frame 43089
-EXITING black at frame 43093
+EXITING black at frame 45450
+ENTERING black at frame 47073
+EXITING black at frame 47099
+ENTERING black at frame 47556
+Load number 10 added.
+EXITING black at frame 51370
+ENTERING black at frame 53971
+EXITING black at frame 53988
+ENTERING black at frame 54051
+Load number 11 added.
+EXITING black at frame 59315
+ENTERING black at frame 59498
+EXITING black at frame 59511
+ENTERING black at frame 59604
+Load number 12 added.
+EXITING black at frame 59712
+ENTERING black at frame 59824
+EXITING black at frame 59840
+ENTERING black at frame 60307
+Load number 13 added.

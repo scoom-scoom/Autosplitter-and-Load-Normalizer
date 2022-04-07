@@ -102,7 +102,7 @@ black_screen_bounds:
   IGNORE, # Remains
   [[0.333333, 0.666666], IGNORE], # Challax 1 - first black screen is between 10 and 20 frames.
 #  IGNORE, # Giant Clank 2 (for wrench only and 100%)
-  IGNORE, # Challax 2 (after giant clank 2, only in wrench only and 100%)
+#  IGNORE, # Challax 2 (after giant clank 2, only in wrench only and 100%)
   IGNORE, # Dayni Moon 1
   IGNORE, # IC ratchet (using the shrink ray)
   IGNORE, # Dayni Moon 2 (ratchet floating)

@@ -6,7 +6,7 @@
 - Kalidon ship
 - Metallis ratchet floating (this still does black entrance and black fade out visually, not sure about exact values though)
 - Giant Clank 1 (this still does black entrance and black fade out visually, not sure about exact values though)
-- Dreamtime (fades into white screen visually, and then fades into black, not sure about exact values though)
+- Dreamtime (fades into white screen visually, then one black screen, then the load, and then fades into black, not sure about exact values though)
 - Moo ship
 - Remains ship
 - Challax ship before giant clank 2

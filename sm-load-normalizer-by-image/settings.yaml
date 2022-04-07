@@ -33,12 +33,12 @@ screen:
 # 6.) Dreamtime
 # 7.) Medical Outpost Omega
 # 8.) Remains
-# 9.) Challax (before giant clank 2)
+# 9.) Challax 1 (before giant clank 2)
 # 10.) Giant Clank 2 (only in wrench only and 100%)
-# 11.) Challax (after giant clank 2, only in wrench only and 100%)
-# 12.) Dayni
+# 11.) Challax 2 (after giant clank 2, only in wrench only and 100%)
+# 12.) Dayni Moon 1
 # 13.) IC ratchet (using the shrink ray)
-# 14.) Dayni 2 (ratchet floating)
+# 14.) Dayni Moon 2 (ratchet floating)
 # 15.) Quodrona
 
 # Set to true if the poki load is sped up in the video. This is common
@@ -71,6 +71,11 @@ load_bounds:
   [12.707, 17.117], # Remains
   [12.798, 17.192], # Challax 1
 #  [2.413, 2.437], # Giant Clank 2 (for wrench only and 100%)
+#  [14.987, 15.015], # Challax 2 (after giant clank 2, only in wrench only and 100%)
+  [12.683, 17.132], # Dayni Moon 1
+  [2.401, 2.546], # IC ratchet (using the shrink ray)
+  [2.624, 2.703], # Dayni Moon 2 (ratchet floating)
+  [13.376, 15.622], # Quodrona
   ]
 
 # Black screen bounds in seconds, in the format
@@ -97,6 +102,11 @@ black_screen_bounds:
   IGNORE, # Remains
   [[0.333333, 0.666666], IGNORE], # Challax 1 - first black screen is between 10 and 20 frames.
 #  IGNORE, # Giant Clank 2 (for wrench only and 100%)
+  IGNORE, # Challax 2 (after giant clank 2, only in wrench only and 100%)
+  IGNORE, # Dayni Moon 1
+  IGNORE, # IC ratchet (using the shrink ray)
+  IGNORE, # Dayni Moon 2 (ratchet floating)
+  IGNORE, # Quodrona
   ]
 
 # The parameter crop_scale determines how large the cropped image in the centre should be.

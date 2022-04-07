@@ -160,8 +160,9 @@ class ImageScanner:
     def is_load_valid(self, load_number, load_time):
         try:
             load_bound = self.load_bounds[load_number]
-        except IndexError:
-            load_bound = [2, 25]
+        except IndexError as e:
+            raise IndexError("ERROR: Trying to record more loads than there are in the game."
+                             "A false load must have been recorded at some point.") from e
         # load_bounds = self.settings["load_bounds"]
         # load_bound = load_bounds[load_number]
 
@@ -174,7 +175,11 @@ class ImageScanner:
         return (load_time > load_bound_min) and (load_time < load_bound_max)
 
     def is_black_screen_valid(self, black_time):
-        bound = self.black_screen_bounds[self.loads_added]
+        try:
+            bound = self.black_screen_bounds[self.loads_added]
+        except IndexError as e:
+            raise IndexError("ERROR: Trying to record more loads than there are in the game."
+                             "A false load must have been recorded at some point.") from e
         if bound == 'IGNORE':
             return True
         else:

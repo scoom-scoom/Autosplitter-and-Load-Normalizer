@@ -103,7 +103,7 @@
 13373
 17065
 
-# Challax ship before giant clank 2
+# Challax ship 1 before giant clank 2
 12824
 13480
 17187
@@ -140,14 +140,14 @@
 2420
 2430
 
-# Challax ship after giant clank 2
+# Challax ship 2 after giant clank 2
 14987
 14997
 15014
 15001
 15015
 
-# Dayni ship
+# Dayni ship 1
 15406
 15517
 15392

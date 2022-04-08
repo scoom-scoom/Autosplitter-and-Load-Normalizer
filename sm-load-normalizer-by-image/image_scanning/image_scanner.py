@@ -163,11 +163,7 @@ class ImageScanner:
         except IndexError as e:
             raise IndexError("ERROR: Trying to record more loads than there are in the game."
                              "A false load must have been recorded at some point.") from e
-        # "load_bound[0] - 0.5" and "load_bound[1] + 0.5" to be safe, as the bounds are taken from a large sample of loads,
-        # but there may be a load which goes beyond these bounds.
-        load_bound_min = load_bound[0] - 0.5
-        load_bound_max = load_bound[1] + 0.5
-        return (load_bound_min, load_bound_max)
+        return (load_bound[0], load_bound[1])
 
     def is_load_valid(self, load_time):
 
@@ -201,6 +197,7 @@ class ImageScanner:
             self.load_remove_time_total += load_remove_time
             # DEBUGGING
             print("Load number", str(self.loads_added + 1), "added.")
+            print("Load time removed is: ", str(round(load_remove_time, 2)))
         self.loads_added += 1
 
     # Functionality performed when going from a non-black frame to a black frame (entering).
@@ -215,11 +212,14 @@ class ImageScanner:
             # We are at the end of the load.
             load_time = self.get_load_time_diff()
             # Only add the load if it is valid.
-            load_bounds = self.get_load_bounds(self.loads_added)
-            load_bound_min = load_bounds[0]
-            load_bound_max = load_bounds[1]
-            if (load_time > load_bound_min) and (load_time < load_bound_max):
-                # TODO use actual min load time here, not load bound min.
+            load_bound_min, load_bound_max = self.get_load_bounds(self.loads_added)
+            # "load_bound_min - 0.5" and "load_bound_max + 0.5" to be safe, as the bounds are taken
+            # from a large sample of loads, but there may be a load which goes beyond these bounds.
+            load_bound_min_relaxed = load_bound_min - 0.5
+            load_bound_max_relaxed = load_bound_max + 0.5
+            if (load_time > load_bound_min_relaxed) and (load_time < load_bound_max_relaxed):
+                if load_time < load_bound_min:
+                    load_bound_min = load_time
                 self.record_load_remove_time(load_time - load_bound_min)
                 self.scanner_state = ScannerState.IN_SECOND_BLACK_SCREEN
                 # DEBUGGING
@@ -318,4 +318,4 @@ class ImageScanner:
 
     # Prints stats about the program once it's finished.
     def print_finished_stats(self):
-        print("Total load time is:", round(self.load_time_total, 2), "seconds")
+        print("Total load time to remove is:", round(self.load_remove_time_total, 2), "seconds")

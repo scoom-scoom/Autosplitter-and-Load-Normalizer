@@ -1,4 +1,6 @@
 # Current LLR stuff
+- Use a percentage for the crop size, so that you can support different resolutions. Make sure to round up in pixel number.
+- Test out the program on many different any% runs.
 - Start by only measuring the middle 2x2 patch of pixels.
     - Make sure each load is within the load time threshold. This will get rid of most false detections. DON'T FORGET to change the times for OG PSP hardware, which is longer than emulator.
     - Make sure each black screen lasts for a time within the black screen threshold. Not sure how much this will help, but it's definitely worth a shot.

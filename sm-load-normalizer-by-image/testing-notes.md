@@ -33,51 +33,57 @@
 ## Full run:
 - Alemusa - 360p
 
-Entering black at frame 54
-Entering black at frame 532
+ENTERING black at frame 54
+EXITING black at frame 68
+ENTERING black at frame 532
 Pokitaru load detected and skipped
-Entering black at frame 2399
-Entering black at frame 2795
+ENTERING black at frame 2399
+EXITING black at frame 2415
+ENTERING black at frame 2795
 Load number 2 added.
-Entering black at frame 5646
-Entering black at frame 6039
+ENTERING black at frame 5646
+EXITING black at frame 5662
+ENTERING black at frame 6039
 Load number 3 added.
 Entering black at frame 12120
 Entering black at frame 12277
-Load number 4 added.
-Entering black at frame 15175
-Entering black at frame 15262
+(OLD) Load number 4 added.
+ENTERING black at frame 15175
+EXITING black at frame 15201
+ENTERING black at frame 15262
 Load number 5 added.
-Entering black at frame 24604
-Entering black at frame 25102
+ENTERING black at frame 24604
+EXITING black at frame 24605
+ENTERING black at frame 25102
 Load number 6 added.
-Entering black at frame 35829
-Entering black at frame 36311
+ENTERING black at frame 35829
+EXITING black at frame 35856
+ENTERING black at frame 36311
 Load number 7 added.
-Entering black at frame 40604
-Entering black at frame 41026
+ENTERING black at frame 40604
+EXITING black at frame 40650
+ENTERING black at frame 41026
 Load number 8 added.
-Entering black at frame 43760
-Entering black at frame 44283
+ENTERING black at frame 43760
+EXITING black at frame 43775
+ENTERING black at frame 44283
 Load number 9 added.
-
-EXITING black at frame 45450
 ENTERING black at frame 47073
 EXITING black at frame 47099
 ENTERING black at frame 47556
 Load number 10 added.
-EXITING black at frame 51370
 ENTERING black at frame 53971
 EXITING black at frame 53988
 ENTERING black at frame 54051
 Load number 11 added.
-EXITING black at frame 59315
 ENTERING black at frame 59498
 EXITING black at frame 59511
 ENTERING black at frame 59604
 Load number 12 added.
-EXITING black at frame 59712
 ENTERING black at frame 59824
 EXITING black at frame 59840
 ENTERING black at frame 60307
 Load number 13 added.
+
+Total load time to remove is: 11.76 seconds
+Total program runtime is: 18.36 seconds.

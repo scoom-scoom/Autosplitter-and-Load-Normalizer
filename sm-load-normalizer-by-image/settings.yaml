@@ -10,8 +10,8 @@ CONST_IMAGE_SCAN_TYPE_VIDEO: "video"
 CONST_IMAGE_SCAN_TYPE_SCREEN: "screen"
 
 # Determines whether to scan a video or scan the screen.
-image_scan_type: "screen"
-#image_scan_type: "video"
+#image_scan_type: "screen"
+image_scan_type: "video"
 
 vid:
   # fps of the video file, not the game.
@@ -21,7 +21,10 @@ vid:
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Touh.mp4"
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/Alemussy-144p.mp4"
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/Alemussy-360p.mp4"
-  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/emeralve-360p.mp4"
+#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/emeralve-360p.mp4"
+
+  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/emeralve-720p.mp4"
+
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/alemussy-360p.mp4"
 
 screen:
@@ -52,7 +55,7 @@ poki_sped_up: True
 # Specify loads to skip, as they cause issues in the program, and don't have much load time variation anyway.
 loads_to_skip: [
   4, # Metallis
-#  5  # Giant Clank 1
+  5  # Giant Clank 1
 ]
 
 # Load bounds in seconds, in the format [min load time, max load time].

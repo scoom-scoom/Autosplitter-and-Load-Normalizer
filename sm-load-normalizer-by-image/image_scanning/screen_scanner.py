@@ -22,8 +22,8 @@ class ScreenScanner(ImageScanner):
 
     def get_next_frame(self):
         # https://stackoverflow.com/questions/1080719/screenshot-an-application-regardless-of-whats-in-front-of-it
-        window_name = "djv"
-        # window_name = "scan this now"
+        # window_name = "djv"
+        window_name = "scan this now"
         shell = win32com.client.Dispatch("Wscript.Shell")
         # Returns true if focus given successfully.
         success = shell.AppActivate(window_name)

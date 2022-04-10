@@ -55,3 +55,7 @@ class VideoScanner(ImageScanner):
     def get_position(self):
         return self.frame_count
 
+    # DEBUGGING
+    def are_frames_almost_equal(self, frame_one, frame_two, threshold=0):
+        return super(VideoScanner, self).are_frames_almost_equal(frame_one, frame_two, threshold)
+

@@ -23,8 +23,8 @@ class ImageScanner:
         y_centre = int(self.image_res_height / 2)
         # Crop size must be big, as the Remains ship cutscene has a big black pixel patch in the centre,
         # under the orange shaped remains planet, just before the load is finished.
-        (self.crop_width, self.crop_height) = (50, 50)
-        # (self.crop_width, self.crop_height) = (2, 2)
+        # (self.crop_width, self.crop_height) = (50, 50)
+        (self.crop_width, self.crop_height) = (2, 2)
         # (self.crop_width, self.crop_height) = self.get_crop_width_and_height()
         if (self.crop_width % 2) != 0:
             print("Crop width not divisible by 2.")
@@ -42,6 +42,7 @@ class ImageScanner:
         self.is_finished = False
         # Threshold for how much difference there needs to be between a frame and
         # the black frame to consider the frame as being almost black.
+        # self.threshold = 500
         self.threshold = 0
         # The number of times we have entered a black screen. Useful for checking when to start the load timing.
         # self.enter_black_count = 0
@@ -272,6 +273,7 @@ class ImageScanner:
             norm = np.linalg.norm(frame_one - frame_two)
             almost_equal = norm < threshold
             str_debug += " Norm: " + str(norm)
+            print(str_debug)
         # print(str_debug)
         return almost_equal
 

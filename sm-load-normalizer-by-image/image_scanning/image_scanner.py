@@ -23,8 +23,9 @@ class ImageScanner:
         y_centre = int(self.image_res_height / 2)
         # Crop size must be big, as the Remains ship cutscene has a big black pixel patch in the centre,
         # under the orange shaped remains planet, just before the load is finished.
+        (self.crop_width, self.crop_height) = (100, 100)
         # (self.crop_width, self.crop_height) = (50, 50)
-        (self.crop_width, self.crop_height) = (2, 2)
+        # (self.crop_width, self.crop_height) = (2, 2)
         # (self.crop_width, self.crop_height) = self.get_crop_width_and_height()
         if (self.crop_width % 2) != 0:
             print("Crop width not divisible by 2.")

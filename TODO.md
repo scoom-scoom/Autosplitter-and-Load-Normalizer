@@ -1,16 +1,17 @@
 # Current LLR stuff
+- Check Emeralve 720p frame numbers.
+- Issue warning when 720p not used.
 - Use a percentage for the crop size, so that you can support different resolutions. Make sure to round up in pixel number.
-- Test out the program on many different any% runs.
+- Test out the program on many different categories.
 - Start by only measuring the middle 2x2 patch of pixels.
-    - Make sure each load is within the load time threshold. This will get rid of most false detections. DON'T FORGET to change the times for OG PSP hardware, which is longer than emulator.
-    - Make sure each black screen lasts for a time within the black screen threshold. Not sure how much this will help, but it's definitely worth a shot.
+    - DON'T FORGET to change the times for OG PSP hardware, which is longer than emulator.
     - If there are still false detections:
         - Ask Isaki if he has any ideas.
         - Could check to see if the pixels are close to the cutscene pixels (e.g. blue pixels for the ship cutscene). This could be dodgy though due to gameplay triggering this, but you can still use this as a last resort after the previous 2 checks.
         - Make the program wait a number of seconds before detecting the ship cutscene. This will need to be updated according to the comgold sheet (have the program download the comgold sheet when it starts and use these values to make sure that the program doesn't wait too long and miss an actual load.)
             - BE CAREFUL as this depends on what WR time is. If someone does a run with a new strat where the time is significantly lower, then this program could break.
 - GREAT IDEA you could change the patch size after each load, so that the next load will be detected correctly.
-- GREAT IDEA, have the program try to scan through with the smallest crop patch size, and if there is an incorrect number of loads, it can scan through again with +1 on the patch size scale.
+- GREAT IDEA, have the program try to scan through with the smallest crop patch size, and if there is an incorrect number of loads, it can scan through again with a greater patch size.
     - If this also fails, it can override the patch scaling and go up in pixel steps until it gets the correct number of loads.
 - Make sure autosplitter file is consistently timing loads.
 

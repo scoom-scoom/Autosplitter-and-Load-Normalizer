@@ -1,6 +1,7 @@
 # Current LLR stuff
-- Check Emeralve 720p frame numbers.
-- Issue warning when 720p not used.
+- IF IT GETS TOO HARD, consider testing this program on rac2 to see if the black screens are detected well enough, and cut your losses and do the long load removal by recording your voice.
+- Check different runs to see which ones work (currently debugging Dudek's NG+ run).
+- Issue warning when 720p not used?
 - Use a percentage for the crop size, so that you can support different resolutions. Make sure to round up in pixel number.
 - Test out the program on many different categories.
 - Start by only measuring the middle 2x2 patch of pixels.

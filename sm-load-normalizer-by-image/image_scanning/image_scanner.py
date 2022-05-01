@@ -23,8 +23,9 @@ class ImageScanner:
         y_centre = int(self.image_res_height / 2)
         # Crop size must be big, as the Remains ship cutscene has a big black pixel patch in the centre,
         # under the orange shaped remains planet, just before the load is finished.
-        (self.crop_width, self.crop_height) = (100, 100)
-        # (self.crop_width, self.crop_height) = (50, 50)
+        # (self.crop_width, self.crop_height) = (100, 100)
+        # OG crop size which works for Alemusa Any% vid.
+        (self.crop_width, self.crop_height) = (50, 50)
         # (self.crop_width, self.crop_height) = (2, 2)
         # (self.crop_width, self.crop_height) = self.get_crop_width_and_height()
         if (self.crop_width % 2) != 0:
@@ -43,8 +44,8 @@ class ImageScanner:
         self.is_finished = False
         # Threshold for how much difference there needs to be between a frame and
         # the black frame to consider the frame as being almost black.
-        # self.threshold = 500
-        self.threshold = 0
+        self.threshold = 50
+        # self.threshold = 0
         # The number of times we have entered a black screen. Useful for checking when to start the load timing.
         # self.enter_black_count = 0
         self.scanner_state = ScannerState.DEFAULT
@@ -167,10 +168,6 @@ class ImageScanner:
                              "A false load must have been recorded at some point.") from e
         return (load_bound[0], load_bound[1])
 
-    def is_load_valid(self, load_time):
-
-        return
-
     def is_black_screen_valid(self, black_time):
         try:
             bound = self.black_screen_bounds[self.loads_added]
@@ -267,6 +264,7 @@ class ImageScanner:
         str_debug = "Position: "
         str_debug += str(self.get_position())
         if threshold == 0:
+            # Perform less expensive "array_equal" operation instead of calculating the norm.
             almost_equal = np.array_equal(frame_one, frame_two)
             # str_debug += " Is Frame equal? " + str(almost_equal)
         else:
@@ -274,7 +272,7 @@ class ImageScanner:
             norm = np.linalg.norm(frame_one - frame_two)
             almost_equal = norm < threshold
             str_debug += " Norm: " + str(norm)
-            print(str_debug)
+            # print(str_debug)
         # print(str_debug)
         return almost_equal
 

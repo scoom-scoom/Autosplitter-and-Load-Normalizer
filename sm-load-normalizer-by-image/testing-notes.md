@@ -88,23 +88,82 @@ Load number 13 added.
 Total load time to remove is: 11.76 seconds
 Total program runtime is: 18.36 seconds.
 
-- Emeralve NG+ No SP - 720p
+- Emeralve NG+ No SP - 360p (incorrect)
 
 Poki is sped up, so is already accounted for.
+ENTERING black at frame 322
+EXITING black at frame 323
+ENTERING black at frame 1287
+EXITING black at frame 1303
+ENTERING black at frame 1696
+Load number 2 added.
+Load time removed is:  0.32
+EXITING black at frame 1710
+ENTERING black at frame 2940
+EXITING black at frame 3000
+ENTERING black at frame 3841
+EXITING black at frame 3863
+ENTERING black at frame 7153
+EXITING black at frame 7166
+ENTERING black at frame 8947
+
+- Emeralve NG+ No SP - 720p (incorrect)
+
+Poki is sped up, so is already accounted for.
+ENTERING black at frame 322
+EXITING black at frame 323
 ENTERING black at frame 1287
 EXITING black at frame 1303
 ENTERING black at frame 1680
 Load number 2 added.
-ENTERING black at frame 4123
-EXITING black at frame 4137
-ENTERING black at frame 4595
-Load number 3 added.
-Load 4 skipped.
-Load 5 skipped.
-
-Program does this on (100, 100) patch size:
+Load time removed is:  0.0
+EXITING black at frame 1710
+ENTERING black at frame 2940
+EXITING black at frame 3000
+ENTERING black at frame 3242
+EXITING black at frame 3248
+ENTERING black at frame 3275
+EXITING black at frame 3276
+ENTERING black at frame 3839
+EXITING black at frame 3863
 ENTERING black at frame 4123
 EXITING black at frame 4137
 ENTERING black at frame 7140
 EXITING black at frame 7167
 ENTERING black at frame 7297
+
+- Dudek NG+ - 360p (with threshold of 50)
+
+Poki is sped up, so is already accounted for.
+ENTERING black at frame 1003
+EXITING black at frame 1020
+ENTERING black at frame 1475
+Load number 2 added.
+ENTERING black at frame 3935
+EXITING black at frame 3948
+ENTERING black at frame 4322
+Load number 3 added.
+Load time removed is:  0.0
+Load 4 skipped.
+Load 5 skipped.
+ENTERING black at frame 18464
+EXITING black at frame 18465
+ENTERING black at frame 19016
+Load number 6 added.
+Load time removed is:  1.32
+ENTERING black at frame 25788
+EXITING black at frame 25815
+ENTERING black at frame 26271
+Load number 7 added.
+Load time removed is:  2.44
+ENTERING black at frame 28490
+EXITING black at frame 28536
+ENTERING black at frame 28991
+Load number 8 added.
+Load time removed is:  2.46
+EXITING black at frame 28998
+ENTERING black at frame 29078
+EXITING black at frame 29091
+ENTERING black at frame 29534
+Load number 9 added.
+Load time removed is:  1.97

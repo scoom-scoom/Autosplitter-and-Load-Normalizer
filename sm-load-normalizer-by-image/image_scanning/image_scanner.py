@@ -195,8 +195,8 @@ class ImageScanner:
         else:
             self.load_remove_time_total += load_remove_time
             # DEBUGGING
-            print("Load number", str(self.loads_added + 1), "added.")
-            print("Load time removed is: ", str(round(load_remove_time, 2)))
+            # print("Load number", str(self.loads_added + 1), "added.")
+            # print("Load time removed is: ", str(round(load_remove_time, 2)))
         self.loads_added += 1
 
     # Functionality performed when going from a non-black frame to a black frame (entering).
@@ -266,14 +266,15 @@ class ImageScanner:
         if threshold == 0:
             # Perform less expensive "array_equal" operation instead of calculating the norm.
             almost_equal = np.array_equal(frame_one, frame_two)
-            # str_debug += " Is Frame equal? " + str(almost_equal)
+            str_debug += " Is Frame equal? " + str(almost_equal)
         else:
             # Perform more expensive norm calculation only if necessary.
             norm = np.linalg.norm(frame_one - frame_two)
             almost_equal = norm < threshold
             str_debug += " Norm: " + str(norm)
-            # print(str_debug)
-        # print(str_debug)
+            print(str_debug)
+        # if almost_equal:
+        #     print(str_debug)
         return almost_equal
 
     def start_scan_loop(self):
@@ -292,7 +293,7 @@ class ImageScanner:
             next_load = self.loads_added + 1
             if next_load in self.loads_to_skip:
                 # Skip the load
-                print("Load " + str(next_load) + " skipped.")
+                # print("Load " + str(next_load) + " skipped.")
                 self.loads_added += 1
             is_curr_frame_almost_black = self.are_frames_almost_equal(frame_cropped, self.black_cropped, self.threshold)
             if (not is_prev_frame_almost_black) and is_curr_frame_almost_black:

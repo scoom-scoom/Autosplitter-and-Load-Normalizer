@@ -35,12 +35,12 @@ class VideoScanner(ImageScanner):
 
     def enter_black_frame(self, debug_frame_before_black):
         # DEBUGGING
-        print("ENTERING black at frame", str(self.frame_count))
+        # print("ENTERING black at frame", str(self.frame_count))
         super(VideoScanner, self).enter_black_frame(debug_frame_before_black)
 
     def exit_black_frame(self,):
         # DEBUGGING
-        print("EXITING black at frame", str(self.frame_count))
+        # print("EXITING black at frame", str(self.frame_count))
         super(VideoScanner, self).exit_black_frame()
 
     def record_load_start_position(self):

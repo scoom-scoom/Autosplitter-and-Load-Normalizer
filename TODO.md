@@ -1,5 +1,6 @@
 # Current LLR stuff
-- IF IT GETS TOO HARD, consider testing this program on rac2 to see if the black screens are detected well enough, and cut your losses and do the long load removal by recording your voice.
+- Print out the 20 frames before and after the black screen in the load and glance over it after each Load Normalized run to see if it was done correctly. That way, some of the runs can be automated.
+- Check if there is a common threshold value that works for all 360p vids.
 - Check different runs to see which ones work (currently debugging Dudek's NG+ run).
 - Issue warning when 720p not used?
 - Use a percentage for the crop size, so that you can support different resolutions. Make sure to round up in pixel number.

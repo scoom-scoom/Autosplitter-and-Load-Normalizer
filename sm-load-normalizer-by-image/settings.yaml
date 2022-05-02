@@ -17,8 +17,8 @@ vid:
   # fps of the video file, not the game.
   fps: 30
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/voll-360p.mp4"
-  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus/dudek-360p.mp4"
-#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Touh.mp4"
+#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus/dudek-360p.mp4"
+  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Touh.mp4"
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/Alemussy-144p.mp4"
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/Alemussy-360p.mp4"
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/emeralve-360p.mp4"
@@ -26,6 +26,9 @@ vid:
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/emeralve-720p.mp4"
 
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/alemussy-360p.mp4"
+
+# RAC 2
+#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/rac2/ng-plus/fear-360.mp4"
 
 screen:
   res_default: [1920, 1080]

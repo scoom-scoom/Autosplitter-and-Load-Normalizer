@@ -33,14 +33,14 @@ class VideoScanner(ImageScanner):
     def get_black_screen_time_diff(self):
         return (self.frame_count - self.black_screen_start_frame) / self.fps
 
-    def enter_black_frame(self, debug_frame_before_black):
+    def enter_black_frame(self):
         # DEBUGGING
-        # print("ENTERING black at frame", str(self.frame_count))
-        super(VideoScanner, self).enter_black_frame(debug_frame_before_black)
+        print("ENTERING black at frame", str(self.frame_count))
+        super(VideoScanner, self).enter_black_frame()
 
     def exit_black_frame(self,):
         # DEBUGGING
-        # print("EXITING black at frame", str(self.frame_count))
+        print("EXITING black at frame", str(self.frame_count))
         super(VideoScanner, self).exit_black_frame()
 
     def record_load_start_position(self):

@@ -57,8 +57,13 @@ class ImageScanner:
             print("Poki is sped up, so is already accounted for.")
         # Counts the number of loads added. Useful for debugging.
         self.loads_added = 1 if self.poki_sped_up else 0
-        self.debug_frame_before_load = None
-        self.debug_frame_after_load = None
+        # Debug frames code. Debug frames are frames around the measured loads which are printed out later for
+        # debugging purposes.
+
+        # Number of frames to add onto the front and back of the d_f before and after arrays.
+        self.d_f_additional_num = 5
+        self.d_f_before_load = []
+        self.d_f_after_load = []
         self.loads_to_skip = settings["loads_to_skip"]
         # Clear the old debug frame data.
         dir_working = os.path.abspath(os.getcwd())
@@ -201,10 +206,10 @@ class ImageScanner:
 
     # Functionality performed when going from a non-black frame to a black frame (entering).
     # This functionality is important for timing the loads.
-    def enter_black_frame(self, debug_frame_before_black):
+    def enter_black_frame(self):
         if self.scanner_state == ScannerState.DEFAULT:
             self.scanner_state = ScannerState.IN_FIRST_BLACK_SCREEN
-            self.debug_frame_before_load = debug_frame_before_black
+            # self.debug_frame_before_load_enter_black = debug_frame_before_black
             # Time the black screen to make sure it is valid.
             self.record_black_screen_start_position()
         elif self.scanner_state == ScannerState.IN_POTENTIAL_LOAD:
@@ -222,10 +227,11 @@ class ImageScanner:
                 self.record_load_remove_time(load_time - load_bound_min)
                 self.scanner_state = ScannerState.IN_SECOND_BLACK_SCREEN
                 # DEBUGGING
-                cv2.imwrite("frames/enter-black-load_" + str(self.loads_added) + "-_before" + ".png",
-                            self.debug_frame_before_load)
-                cv2.imwrite("frames/enter-black-load_" + str(self.loads_added) + "-after" + ".png",
-                            debug_frame_before_black)
+                # cv2.imwrite("frames/enter-black-load_" + str(self.loads_added) + "-_before" + ".png",
+                #             self.debug_frame_before_load_enter_black)
+                # self.debug_frame_after_load = debug_frame_before_black
+                # cv2.imwrite("frames/enter-black-load_" + str(self.loads_added) + "-after" + ".png",
+                #             self.debug_frame_after_load)
                 # Don't add one to "enter_black_count" here, just return and begin the process again.
             else:
                 # No load was added, so count this as the first enter_black_frame.
@@ -272,7 +278,7 @@ class ImageScanner:
             norm = np.linalg.norm(frame_one - frame_two)
             almost_equal = norm < threshold
             str_debug += " Norm: " + str(norm)
-            print(str_debug)
+            # print(str_debug)
         # if almost_equal:
         #     print(str_debug)
         return almost_equal
@@ -286,25 +292,34 @@ class ImageScanner:
         is_prev_frame_almost_black = False
         # DEBUGGING
         debug_prev_frame = frame
-        assign_debug_frame = 0
+        # Debug frames additional count before and after the load.
+        d_f_adtnl_cnt_before_load = 0
+        d_f_adtnl_cnt_after_load = 0
         while success:
             if self.is_finished or self.loads_added == 13:
                 break
             next_load = self.loads_added + 1
             if next_load in self.loads_to_skip:
                 # Skip the load
-                # print("Load " + str(next_load) + " skipped.")
+                print("Load " + str(next_load) + " skipped.")
                 self.loads_added += 1
             is_curr_frame_almost_black = self.are_frames_almost_equal(frame_cropped, self.black_cropped, self.threshold)
             if (not is_prev_frame_almost_black) and is_curr_frame_almost_black:
-                self.enter_black_frame(debug_prev_frame)
+                self.enter_black_frame()
             elif is_prev_frame_almost_black and (not is_curr_frame_almost_black):
                 self.exit_black_frame()
             # DEBUGGING
-            # Save every 50th frame, as many frames right before the black screen are very close to black due to the
-            # ship fade out, so are not useful for telling where the load was measured.
-            if assign_debug_frame % 50 == 0:
-                debug_prev_frame = frame
+            # Keep track of the debug frames which will be printed out later.
+            if self.scanner_state == ScannerState.DEFAULT:
+                self.d_f_before_load, d_f_adtnl_cnt_before_load = \
+                    self.add_d_f_before_black_screen(self.d_f_before_load, frame, d_f_adtnl_cnt_before_load)
+            elif self.scanner_state == ScannerState.IN_FIRST_BLACK_SCREEN:
+                self.d_f_before_load.append(frame)
+                d_f_adtnl_cnt_before_load = 0
+            elif self.scanner_state == ScannerState.IN_POTENTIAL_LOAD:
+                self.d_f_before_load, d_f_adtnl_cnt_before_load = \
+                    self.add_d_f_after_black_screen(self.d_f_before_load, frame, d_f_adtnl_cnt_before_load)
+            debug_prev_frame = frame
             # Read the next frame.
             success, frame = self.get_next_frame()
             if success:
@@ -315,8 +330,32 @@ class ImageScanner:
 
             # DEBUGGING
             # break
-            assign_debug_frame += 1
         self.print_finished_stats()
+
+    # Adds the debug frame to the list according to the logic before the black screen.
+    # Returns
+    # - The debug frames list
+    # - The additional count of debug frames.
+    def add_d_f_before_black_screen(self, d_f_list, frame, additional_count):
+        d_f_list.append(frame)
+        additional_count += 1
+        if additional_count > self.d_f_additional_num:
+            del self.d_f_before_load[0]
+            additional_count -= 1
+        return (d_f_list, additional_count)
+
+    # Adds the debug frame to the list according to the logic after the black screen.
+    # Returns
+    # - The debug frames list
+    # - The additional count of debug frames.
+    def add_d_f_after_black_screen(self, d_f_list, frame, additional_count):
+        d_f_list.append(frame)
+        additional_count += 1
+        if additional_count > self.d_f_additional_num:
+            length = len(d_f_list)
+            del d_f_list[length - 1]
+            additional_count -= 1
+        return (d_f_list, additional_count)
 
     # Prints stats about the program once it's finished.
     def print_finished_stats(self):

@@ -16,11 +16,13 @@ image_scan_type: "video"
 vid:
   # fps of the video file, not the game.
   fps: 30
-#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/voll-360p.mp4"
-#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus/dudek-360p.mp4"
-  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Touh.mp4"
+  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/testing/Alemussy-360p-poki-load.mp4"
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/Alemussy-144p.mp4"
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/Alemussy-360p.mp4"
+#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/voll-360p.mp4"
+#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus/dudek-360p.mp4"
+#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Touh-360p.mp4"
+
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/emeralve-360p.mp4"
 
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/emeralve-720p.mp4"
@@ -52,7 +54,7 @@ screen:
 
 # Set to true if the poki load is sped up in the video. This is common
 # as speed runners use the speed hack on emulator to skip the first load fast.
-poki_sped_up: True
+poki_sped_up: False
 
 # TODO try run the program with no loads skipped at all.
 # Specify loads to skip, as they cause issues in the program, and don't have much load time variation anyway.

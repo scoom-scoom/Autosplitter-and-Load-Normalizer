@@ -1,5 +1,6 @@
 # Current LLR stuff
-- Use queues and other data structures for adding the debug frames in Python.
+- My laptop is slowing down when running the Alemusa 360p Any% vid. Use this link to only read the index of frames for debugging instead of saving all frames. https://stackoverflow.com/questions/33650974/opencv-python-read-specific-frame-using-videocapture
+- Add logic to check the second black screen is the correct time.
 
 - Print out the 20 frames before and after the black screen in the load and glance over it after each Load Normalized run to see if it was done correctly. That way, some of the runs can be automated.
 - When releasing, see if you can run 2 instances of livesplit at the same time, or have one time with the autospliter, and one without.

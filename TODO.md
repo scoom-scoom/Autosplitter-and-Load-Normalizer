@@ -3,22 +3,16 @@
 - When releasing, see if you can run 2 instances of livesplit at the same time, or have one time with the autospliter, and one without.
 
 # ASL:
-- IMPORTANT Check that cutscene values for when the load starts and ends line up with the LN by video.
-- Might have to change when the split starts, as you want it to be as soon as you get a black screen, not when the ship cutscene loads.
-- Measure all load variations using output from the autosplitter, NOT video!
-- Also measure the non-planet loads that I'm not sure about.
+- IMPORTANT Check that cutscene values for when the load starts and ends line up with manual LN.
 - Make a graph of all the loads using Python.
-- See if I can get LiveSplit to auto detect the ASL, rather than from a local file.
 - Issue warnings:
     - To name Yeezy% and 5TB splits with Kalidon suffix, or else the autosplitter will give lower times for other categories.
     - ALSO issue warning to name Wrench Only and Hundo Challax with suffix.
-    - ALSO issue warning about using autosplitter and going to wrong planet accidentally, then returning to the planet you came from accidentally, as it will split due to checking for "current planet == && planetChanged".
 
-# Message at end of LN video:
-- Thank the rac community for being nice and funny people.
+# Message at end of LN:
 - Thank sm people for being patient with my progress.
+- Thank the rac community for being nice and funny people, and always shit posting.
 - Talk about applying this to rac2.
-- Ask if anyone wants LN or autosplitting in their rac game. Say that Isaki has alread implemented a lot of cool stuff in rac1 and uya.
 
 # Maybe later:
 - Could also apply this program to other rac LN (I think rac2 would work, as it has black screens for the loads).

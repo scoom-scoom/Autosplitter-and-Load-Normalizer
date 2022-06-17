@@ -40,8 +40,8 @@ startup {
 		// optimalLoadTime is measured in milliseconds.
 		// vars.optimalLoadTimeRyllus = 12783;
 		// vars.optimalLoadTimeKalidon = 12809;
-		vars.optimalLoadTimeRyllus = 10;
-		vars.optimalLoadTimeKalidon = 10;
+		vars.optimalLoadTimeRyllus = 0;
+		vars.optimalLoadTimeKalidon = 0;
 
 		// Taken from https://raw.githubusercontent.com/tduva/LiveSplit-ASL/master/AlanWake.asl
 		Action<string> LogDebug = (text) => {
@@ -69,13 +69,15 @@ startup {
 		// This info is used to determine when to pause and resume the timer to normalize the long load.
 		Action<int, int> CheckLoadNormalization = (optimalLoadTime, cutsceneVal) => {
 			TimeSpan rt = (TimeSpan) timer.CurrentTime.RealTime;
-			if ((rt.TotalMilliseconds - vars.loadStartTime) > optimalLoadTime) {
-				// Pause the timer to normalize the long load.
-				// DEBUGGING
-				// vars.isLoading = true;
-			}
+			// DEBUGGING
+			vars.isLoading = true;
+			// if ((rt.TotalMilliseconds - vars.loadStartTime) > optimalLoadTime) {
+			// 	// Pause the timer to normalize the long load.
+			// 	// DEBUGGING
+			// 	vars.isLoading = true;
+			// }
 			if (vars.currentCutscene.Current == cutsceneVal) {
-				vars.LogDebug("Load time is:" + (rt.TotalMilliseconds - vars.loadStartTime));
+				vars.LogDebug("Load time is: " + (rt.TotalMilliseconds - vars.loadStartTime));
 				// Resume the timer once the load is done, and the cutscene is playing.
 				vars.ResetLoadTimeVars();
 			}

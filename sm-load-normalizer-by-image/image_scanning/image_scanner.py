@@ -75,13 +75,17 @@ class ImageScanner:
         self.loads_added = 1 if self.poki_sped_up else 0
         self.loads_to_skip = settings["loads_to_skip"]
         # Clear the old debug frame data.
-        dir_working = os.path.abspath(os.getcwd())
-        dir_frames = os.path.join(dir_working, "frames")
-        for filename in os.listdir(dir_frames):
-            f = os.path.join(dir_frames, filename)
-            # Check if it is a file
-            if os.path.isfile(f):
-                os.remove(f)
+        self.dir_working = os.path.abspath(os.getcwd())
+        self.dir_frames = os.path.join(self.dir_working, "frames_output")
+        if os.path.exists(self.dir_frames):
+            # Delete previous output frames.
+            for filename in os.listdir(self.dir_frames):
+                f = os.path.join(self.dir_frames, filename)
+                # Check if it is a file
+                if os.path.isfile(f):
+                    os.remove(f)
+        else:
+            os.mkdir(self.dir_frames)
 
     def find_gcd_from_list(self, nums):
         # https://www.geeksforgeeks.org/gcd-two-array-numbers/
@@ -374,6 +378,10 @@ class ImageScanner:
                 # Update the "is_prev_frame_almost_black" variable for the next loop iteration.
                 is_prev_frame_almost_black = is_curr_frame_almost_black
                 self.increment_position()
+
+            # DEBUGGING
+            if self.get_position() > 100:
+                break
         self.log_debug_frames(d_indices_enter_black, d_indices_exit_black)
         self.print_finished_stats()
 
@@ -416,7 +424,8 @@ class ImageScanner:
             # 2 enter and exit black frames occur for each load, hence i / 2.
             load_num = math.floor(i / 2) + 1
             success, frame = self.get_frame_by_index(frame_index)
-            frame_name = "frames/load_" + str(load_num) + "-frame_num_" + str(frame_index) + ".png"
+            filename = "load_" + str(load_num) + "-frame_num_" + str(frame_index) + ".png"
+            frame_name = os.path.join(self.dir_frames, filename)
             if success:
                 cv2.imwrite(frame_name, frame)
             else:

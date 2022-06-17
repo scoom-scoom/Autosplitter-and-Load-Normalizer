@@ -60,12 +60,12 @@ class ImageScanner:
         self.is_finished = False
         # Threshold for how much difference there needs to be between a frame and
         # the black frame to consider the frame as being almost black.
-        self.threshold = 50
-        # self.threshold = 0
+        # self.threshold = 50
+        self.threshold = 0
         # The number of times we have entered a black screen. Useful for checking when to start the load timing.
         # self.enter_black_count = 0
         self.scanner_state = ScannerState.DEFAULT
-        self.load_remove_time_total = 0
+        self.load_time_total = 0
         self.load_bounds = self.settings["load_bounds"]
         self.black_screen_bounds = self.settings["black_screen_bounds"]
         self.poki_sped_up = settings["poki_sped_up"]
@@ -148,10 +148,18 @@ class ImageScanner:
     def get_black_cropped(self):
         return np.zeros((self.crop_y_end - self.crop_y_start, self.crop_x_end - self.crop_x_start, 3), np.uint8)
 
+    # Gets the next frame according to the current position.
     # Returns (success, frame):
     # - "success" states if the frame read was successful.
     # - "frame" is the frame data as a numpy array of pixels.
     def get_next_frame(self):
+        raise NotImplementedError
+
+    # Gets the frame given by the frame index.
+    # Returns (success, frame):
+    # - "success" states if the frame read was successful.
+    # - "frame" is the frame data as a numpy array of pixels.
+    def get_frame_by_index(self, frame_index):
         raise NotImplementedError
 
     def crop_frame(self, frame):
@@ -174,40 +182,46 @@ class ImageScanner:
     def get_black_screen_time_diff(self):
         raise NotImplementedError
 
+    def get_error_too_many_loads(self):
+        return "ERROR: Trying to record more loads than there are in the category.\
+                             A false load must have been recorded at some point."
+
     def get_load_bounds(self, load_number):
         try:
             load_bound = self.load_bounds[load_number]
         except IndexError as e:
-            raise IndexError("ERROR: Trying to record more loads than there are in the game."
-                             "A false load must have been recorded at some point.") from e
+            raise IndexError(self.get_error_too_many_loads()) from e
         return (load_bound[0], load_bound[1])
 
     def is_black_screen_valid(self, black_time):
         try:
             bound = self.black_screen_bounds[self.loads_added]
         except IndexError as e:
-            raise IndexError("ERROR: Trying to record more loads than there are in the game."
-                             "A false load must have been recorded at some point.") from e
+            raise IndexError(self.get_error_too_many_loads()) from e
         if bound == 'IGNORE':
             return True
         else:
             # Check if the black screen is valid given the bounds.
-            bound_to_use = None
-            if self.scanner_state == ScannerState.IN_FIRST_BLACK_SCREEN:
-                bound_to_use = bound[0]
-            elif self.scanner_state == ScannerState.IN_SECOND_BLACK_SCREEN:
-                bound_to_use = bound[1]
-            if bound_to_use == 'IGNORE':
+            if self.scanner_state != ScannerState.IN_FIRST_BLACK_SCREEN:
+                raise RuntimeError("Trying to check valid black screen, but the scanner state is not\
+                                   in the first black screen!")
+            ignore_first_bound = bound[0] == 'IGNORE'
+            ignore_second_bound = bound[1] == 'IGNORE'
+            if ignore_first_bound and ignore_second_bound:
                 return True
-            return (bound_to_use[0] < black_time) and (black_time < bound_to_use[1])
+            elif ignore_first_bound:
+                return black_time < bound[1]
+            elif ignore_second_bound:
+                return black_time > bound[0]
+            return (bound[0] < black_time) and (black_time < bound[1])
 
-    def record_load_remove_time(self, load_remove_time):
+    def record_load_time(self, load_time):
         # Check if it is the Pokitaru load (the first load), which is not counted
         # in the speed run.
         if (self.loads_added == 0):
             print("Pokitaru load detected and skipped")
         else:
-            self.load_remove_time_total += load_remove_time
+            self.load_time_total += load_time
             # DEBUGGING
             # print("Load number", str(self.loads_added + 1), "added.")
             # print("Load time removed is: ", str(round(load_remove_time, 2)))
@@ -231,9 +245,7 @@ class ImageScanner:
             load_bound_min_relaxed = load_bound_min - 0.5
             load_bound_max_relaxed = load_bound_max + 0.5
             if (load_time > load_bound_min_relaxed) and (load_time < load_bound_max_relaxed):
-                if load_time < load_bound_min:
-                    load_bound_min = load_time
-                self.record_load_remove_time(load_time - load_bound_min)
+                self.record_load_time(load_time)
                 self.scanner_state = ScannerState.IN_SECOND_BLACK_SCREEN
                 # DEBUGGING
                 # cv2.imwrite("frames/enter-black-load_" + str(self.loads_added) + "-_before" + ".png",
@@ -301,7 +313,10 @@ class ImageScanner:
         return almost_equal
 
     def start_scan_loop(self):
-        frames = []
+        # Debug frames to be printed out for debugging. These frames will be before and after each
+        # black screen entrance and exit.
+        # d_frames = []
+
         # Indices for the frame number entering and exiting the black screens before and after each load.
         # Used for debugging purposes.
         d_indices_enter_black = []
@@ -309,7 +324,8 @@ class ImageScanner:
         success, frame = self.get_next_frame()
         if not success:
             raise RuntimeError("Failed to read first frame.")
-        frames.append(frame)
+        self.increment_position()
+        # d_frames.append(frame)
         frame_cropped = self.crop_frame(frame)
 
         is_prev_frame_almost_black = False
@@ -330,6 +346,8 @@ class ImageScanner:
             if (not is_prev_frame_almost_black) and is_curr_frame_almost_black:
                 (d_indices_enter_black, d_indices_exit_black) = self.enter_black_frame(d_indices_enter_black,
                                                                                        d_indices_exit_black)
+                # DEBUGGING
+                # cv2.imwrite("frames/test.png", frame)
             elif is_prev_frame_almost_black and (not is_curr_frame_almost_black):
                 (d_indices_enter_black, d_indices_exit_black) = self.exit_black_frame(d_indices_enter_black,
                                                                                       d_indices_exit_black)
@@ -349,17 +367,14 @@ class ImageScanner:
             # Read the next frame.
             success, frame = self.get_next_frame()
             if success:
-                if self.scanner_state != ScannerState.DEFAULT:
-                    # Only save frames
-                    frames.append(frame)
+                # if self.scanner_state != ScannerState.DEFAULT:
+                #     # Only append the save frames
+                #     d_frames.append(frame)
                 frame_cropped = self.crop_frame(frame)
                 # Update the "is_prev_frame_almost_black" variable for the next loop iteration.
                 is_prev_frame_almost_black = is_curr_frame_almost_black
                 self.increment_position()
-
-            # DEBUGGING
-            # break
-        self.log_debug_frames(frames, d_indices_enter_black, d_indices_exit_black)
+        self.log_debug_frames(d_indices_enter_black, d_indices_exit_black)
         self.print_finished_stats()
 
     # # Adds the debug frame to the list according to the logic before the black screen.
@@ -389,15 +404,20 @@ class ImageScanner:
 
     # Prints stats about the program once it's finished.
     def print_finished_stats(self):
-        print("Total load time to remove is:", round(self.load_remove_time_total, 2), "seconds")
+        print("Total load time is:", round(self.load_time_total, 2), "seconds")
 
-    def log_debug_frames(self, frames, d_indices_enter_black, d_indices_exit_black):
-        self.log_frames_from_indices(frames, d_indices_enter_black)
-        self.log_frames_from_indices(frames, d_indices_exit_black)
+    def log_debug_frames(self,  d_indices_enter_black, d_indices_exit_black):
+        self.log_frames_from_indices(d_indices_enter_black)
+        self.log_frames_from_indices(d_indices_exit_black)
 
-    def log_frames_from_indices(self, frames, indices):
-        for index in range(len(indices)):
-            indice = indices[index]
-            load_num = math.floor(index / 2) + 1
-            cv2.imwrite("frames/load_" + str(load_num) + "-frame_num_" + str(indice) + ".png",
-                        frames[indice])
+    def log_frames_from_indices(self, indices):
+        for i in range(len(indices)):
+            frame_index = indices[i]
+            # 2 enter and exit black frames occur for each load, hence i / 2.
+            load_num = math.floor(i / 2) + 1
+            success, frame = self.get_frame_by_index(frame_index)
+            frame_name = "frames/load_" + str(load_num) + "-frame_num_" + str(frame_index) + ".png"
+            if success:
+                cv2.imwrite(frame_name, frame)
+            else:
+                print("WARNING: Failed to write debug frame named: ", frame_name)

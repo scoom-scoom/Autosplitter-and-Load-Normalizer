@@ -93,8 +93,7 @@ load_bounds:
   ]
 
 # Black screen bounds in seconds, in the format
-#  [[MIN black screen 1, MAX black screen 1],
-#  [MIN black screen 2, MAX black screen 2]]
+# [MIN black screen 1, MAX black screen 1]
 #
 # Stops other image frames between black screens throughout the run
 # from accidentally being counted as a load.
@@ -106,21 +105,21 @@ load_bounds:
 # counted by accident.
 black_screen_bounds:
   [
-  IGNORE, # Pokitaru
-  IGNORE, # Ryllus
-  IGNORE, # Kalidon
-  IGNORE, # Metallis
-  IGNORE, # Giant Clank 1
-  IGNORE, # Dreamtime
-  IGNORE, # Medical Outpost Omega
-  IGNORE, # Remains
-  [[0.333333, 0.666666], IGNORE], # Challax 1 - first black screen is between 10 and 20 frames.
-#  IGNORE, # Giant Clank 2 (for wrench only and 100%)
-#  IGNORE, # Challax 2 (after giant clank 2, only in wrench only and 100%)
-  IGNORE, # Dayni Moon 1
-  IGNORE, # IC ratchet (using the shrink ray)
-  IGNORE, # Dayni Moon 2 (ratchet floating)
-  IGNORE, # Quodrona
+  [IGNORE, IGNORE], # Pokitaru
+  [IGNORE, IGNORE], # Ryllus
+  [IGNORE, IGNORE], # Kalidon
+  [IGNORE, IGNORE], # Metallis
+  [IGNORE, IGNORE], # Giant Clank 1
+  [IGNORE, IGNORE], # Dreamtime
+  [IGNORE, IGNORE], # Medical Outpost Omega
+  [IGNORE, IGNORE], # Remains
+  [0.333333, 0.666666], # Challax 1 - first black screen is between 10 and 20 frames.
+#  [IGNORE, IGNORE], # Giant Clank 2 (for wrench only and 100%)
+#  [IGNORE, IGNORE], # Challax 2 (after giant clank 2, only in wrench only and 100%)
+  [IGNORE, IGNORE], # Dayni Moon 1
+  [IGNORE, IGNORE], # IC ratchet (using the shrink ray)
+  [IGNORE, IGNORE], # Dayni Moon 2 (ratchet floating)
+  [IGNORE, IGNORE], # Quodrona
   ]
 
 # The parameter crop_scale determines how large the cropped image in the centre should be.

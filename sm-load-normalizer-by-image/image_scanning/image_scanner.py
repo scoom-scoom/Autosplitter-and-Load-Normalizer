@@ -56,10 +56,10 @@ class ImageScanner:
         self.is_finished = False
         # Threshold for how much difference there needs to be between a frame and
         # the black frame to consider the frame as being almost black.
-        self.threshold = 0
+        self.threshold = self.settings["vid"]["threshold"]
         self.scanner_state = ScannerState.DEFAULT
         # Number of extra debug frames to write before and after each debug frame.
-        self.d_extra_frames_range = 5
+        self.d_extra_frames_range = 0
         self.load_time_total = 0
         self.load_bounds = self.settings["load_bounds"]
         self.black_screen_bounds = self.settings["black_screen_bounds"]

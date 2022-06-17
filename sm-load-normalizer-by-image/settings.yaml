@@ -16,15 +16,18 @@ image_scan_type: "video"
 vid:
   # fps of the video file, not the game.
   fps: 30
+  # Threshold for how much difference there needs to be between a frame and
+  # the black frame to consider the frame as being almost black.
+  threshold: 0
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/testing/Alemussy-360p-poki-load.mp4"
 #
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/Alemussy-144p.mp4"
-  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/Alemussy-360p.mp4"
+#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Alemussy/Alemussy-360p.mp4"
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/voll-360p.mp4"
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus/dudek-360p.mp4"
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Touh-360p.mp4"
 
-#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/emeralve-360p.mp4"
+  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/emeralve-360p.mp4"
 
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/emeralve-720p.mp4"
 

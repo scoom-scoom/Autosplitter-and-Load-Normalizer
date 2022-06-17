@@ -65,6 +65,8 @@ class ImageScanner:
         # The number of times we have entered a black screen. Useful for checking when to start the load timing.
         # self.enter_black_count = 0
         self.scanner_state = ScannerState.DEFAULT
+        # Number of extra debug frames to write before and after each debug frame.
+        self.d_extra_frames_range = 5
         self.load_time_total = 0
         self.load_bounds = self.settings["load_bounds"]
         self.black_screen_bounds = self.settings["black_screen_bounds"]
@@ -380,8 +382,8 @@ class ImageScanner:
                 self.increment_position()
 
             # DEBUGGING
-            if self.get_position() > 100:
-                break
+            # if self.get_position() > 100:
+            #     break
         self.log_debug_frames(d_indices_enter_black, d_indices_exit_black)
         self.print_finished_stats()
 
@@ -423,10 +425,22 @@ class ImageScanner:
             frame_index = indices[i]
             # 2 enter and exit black frames occur for each load, hence i / 2.
             load_num = math.floor(i / 2) + 1
-            success, frame = self.get_frame_by_index(frame_index)
-            filename = "load_" + str(load_num) + "-frame_num_" + str(frame_index) + ".png"
-            frame_name = os.path.join(self.dir_frames, filename)
-            if success:
-                cv2.imwrite(frame_name, frame)
-            else:
-                print("WARNING: Failed to write debug frame named: ", frame_name)
+            for j_before in range(self.d_extra_frames_range + 1):
+                frame_index_new = frame_index - j_before
+                self.write_d_frame(frame_index_new, load_num)
+            for j_after in range(self.d_extra_frames_range + 1):
+                if j_after == 0:
+                    # Skip the case where frame_index_new == frame_index, which was covered
+                    # in the previous for loop.
+                    continue
+                frame_index_new = frame_index + j_after
+                self.write_d_frame(frame_index_new, load_num)
+
+    def write_d_frame(self, frame_index, load_num):
+        success, frame = self.get_frame_by_index(frame_index)
+        filename = "load_" + str(load_num) + "-frame_num_" + str(frame_index) + ".png"
+        frame_name = os.path.join(self.dir_frames, filename)
+        if success:
+            cv2.imwrite(frame_name, frame)
+        else:
+            print("WARNING: Failed to write debug frame named: ", frame_name)

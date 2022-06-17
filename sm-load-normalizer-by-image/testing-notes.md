@@ -31,63 +31,6 @@
 720p - 31.97
 
 ## Full run:
-- Alemusa - 360p
-
-ENTERING black at frame 54
-EXITING black at frame 68
-ENTERING black at frame 532
-Pokitaru load detected and skipped
-ENTERING black at frame 2399
-EXITING black at frame 2415
-ENTERING black at frame 2795
-Load number 2 added.
-ENTERING black at frame 5646
-EXITING black at frame 5662
-ENTERING black at frame 6039
-Load number 3 added.
-Entering black at frame 12120
-Entering black at frame 12277
-(OLD) Load number 4 added.
-ENTERING black at frame 15175
-EXITING black at frame 15201
-ENTERING black at frame 15262
-Load number 5 added.
-ENTERING black at frame 24604
-EXITING black at frame 24605
-ENTERING black at frame 25102
-Load number 6 added.
-ENTERING black at frame 35829
-EXITING black at frame 35856
-ENTERING black at frame 36311
-Load number 7 added.
-ENTERING black at frame 40604
-EXITING black at frame 40650
-ENTERING black at frame 41026
-Load number 8 added.
-ENTERING black at frame 43760
-EXITING black at frame 43775
-ENTERING black at frame 44283
-Load number 9 added.
-ENTERING black at frame 47073
-EXITING black at frame 47099
-ENTERING black at frame 47556
-Load number 10 added.
-ENTERING black at frame 53971
-EXITING black at frame 53988
-ENTERING black at frame 54051
-Load number 11 added.
-ENTERING black at frame 59498
-EXITING black at frame 59511
-ENTERING black at frame 59604
-Load number 12 added.
-ENTERING black at frame 59824
-EXITING black at frame 59840
-ENTERING black at frame 60307
-Load number 13 added.
-
-Total load time to remove is: 11.76 seconds
-Total program runtime is: 18.36 seconds.
-
 UPDATED
 - Alemusa - 360p
 
@@ -246,6 +189,71 @@ ENTERING black at frame 60306
 Total load time is: 122.43 seconds
 Total program runtime is: 18.37 seconds.
 
+
+
+
+- Alemusa - 360p
+
+ENTERING black at frame 54
+EXITING black at frame 68
+ENTERING black at frame 532
+Pokitaru load detected and skipped
+ENTERING black at frame 2399
+EXITING black at frame 2415
+ENTERING black at frame 2795
+Load number 2 added.
+ENTERING black at frame 5646
+EXITING black at frame 5662
+ENTERING black at frame 6039
+Load number 3 added.
+Entering black at frame 12120
+Entering black at frame 12277
+(OLD) Load number 4 added.
+ENTERING black at frame 15175
+EXITING black at frame 15201
+ENTERING black at frame 15262
+Load number 5 added.
+ENTERING black at frame 24604
+EXITING black at frame 24605
+ENTERING black at frame 25102
+Load number 6 added.
+ENTERING black at frame 35829
+EXITING black at frame 35856
+ENTERING black at frame 36311
+Load number 7 added.
+ENTERING black at frame 40604
+EXITING black at frame 40650
+ENTERING black at frame 41026
+Load number 8 added.
+ENTERING black at frame 43760
+EXITING black at frame 43775
+ENTERING black at frame 44283
+Load number 9 added.
+ENTERING black at frame 47073
+EXITING black at frame 47099
+ENTERING black at frame 47556
+Load number 10 added.
+ENTERING black at frame 53971
+EXITING black at frame 53988
+ENTERING black at frame 54051
+Load number 11 added.
+ENTERING black at frame 59498
+EXITING black at frame 59511
+ENTERING black at frame 59604
+Load number 12 added.
+ENTERING black at frame 59824
+EXITING black at frame 59840
+ENTERING black at frame 60307
+Load number 13 added.
+
+Total load time to remove is: 11.76 seconds
+Total program runtime is: 18.36 seconds.
+
+
+
+
+
+
 - Emeralve NG+ No SP - 360p (incorrect)
 
 Poki is sped up, so is already accounted for.
@@ -264,6 +272,11 @@ EXITING black at frame 3863
 ENTERING black at frame 7153
 EXITING black at frame 7166
 ENTERING black at frame 8947
+
+
+
+
+
 
 - Emeralve NG+ No SP - 720p (incorrect)
 
@@ -289,6 +302,11 @@ EXITING black at frame 4137
 ENTERING black at frame 7140
 EXITING black at frame 7167
 ENTERING black at frame 7297
+
+
+
+
+
 
 - Dudek NG+ - 360p (with threshold of 50)
 

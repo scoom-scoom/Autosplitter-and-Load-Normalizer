@@ -2,6 +2,8 @@ import math
 import os
 import cv2
 import numpy as np
+from dataclasses import dataclass
+
 
 # Keeps track of where the scanner is in terms of load measurement.
 # A black screen is a sequence of black images.
@@ -10,6 +12,21 @@ class ScannerState:
     IN_FIRST_BLACK_SCREEN = 2
     IN_POTENTIAL_LOAD = 3
     IN_SECOND_BLACK_SCREEN = 4
+
+
+class DebugScannerState:
+    FIRST_BLACK_SCREEN_START = 1
+    FIRST_BLACK_SCREEN_END = 2
+    SECOND_BLACK_SCREEN_START = 3
+    SECOND_BLACK_SCREEN_END = 4
+
+
+class DebugIndex:
+
+    def __init__(self, index, d_scanner_state):
+        self.index = index
+        self.d_scanner_state = d_scanner_state
+
 
 # Represents the process of scanning frames.
 class ImageScanner:
@@ -113,11 +130,11 @@ class ImageScanner:
         percentage_width = 1 / gcd_res_width
         percentage_height = 1 / gcd_res_height
         # Make sure these scales are ints to keep the pixel numbers integers.
-        width_scale = (int) (self.crop_scale[0])
-        height_scale = (int) (self.crop_scale[1])
+        width_scale = (int)(self.crop_scale[0])
+        height_scale = (int)(self.crop_scale[1])
         # * 2 first so that the number is guaranteed to be even.
-        crop_width = (int) ((self.image_res_width * percentage_width) * 2)
-        crop_height = (int) ((self.image_res_height * percentage_height) * 2)
+        crop_width = (int)((self.image_res_width * percentage_width) * 2)
+        crop_height = (int)((self.image_res_height * percentage_height) * 2)
         crop_width *= width_scale
         crop_height *= height_scale
         return (crop_width, crop_height)
@@ -212,10 +229,13 @@ class ImageScanner:
     # Functionality performed when going from a non-black frame to a black frame (entering).
     # This functionality is important for timing the loads.
     def enter_black_frame(self, d_indices_enter_black, d_indices_exit_black):
+        # Debug scanner state used for the debug frame indices.
+        d_scanner_state = -1
         if self.scanner_state == ScannerState.DEFAULT:
             self.scanner_state = ScannerState.IN_FIRST_BLACK_SCREEN
             # Time the black screen to make sure it is valid.
             self.record_black_screen_start_position()
+            d_scanner_state = DebugScannerState.FIRST_BLACK_SCREEN_START
         elif self.scanner_state == ScannerState.IN_POTENTIAL_LOAD:
             # We are at the end of the load.
             load_time = self.get_load_time_diff()
@@ -228,6 +248,7 @@ class ImageScanner:
             if (load_time > load_bound_min_relaxed) and (load_time < load_bound_max_relaxed):
                 self.record_load_time(load_time)
                 self.scanner_state = ScannerState.IN_SECOND_BLACK_SCREEN
+                d_scanner_state = DebugScannerState.SECOND_BLACK_SCREEN_START
                 # Don't add one to "enter_black_count" here, just return and begin the process again.
             else:
                 # No load was added, so count this as the first enter_black_frame.
@@ -237,28 +258,32 @@ class ImageScanner:
 
                 # Time the black screen to make sure it is valid.
                 self.record_black_screen_start_position()
-        d_indices_enter_black.append(self.get_position())
+                d_scanner_state = DebugScannerState.FIRST_BLACK_SCREEN_START
+        d_indices_enter_black.append((self.get_position(), d_scanner_state))
         return (d_indices_enter_black, d_indices_exit_black)
 
     # Functionality performed when going from a black frame to a non-black frame (exiting).
     # This functionality is important for timing the loads.
     def exit_black_frame(self, d_indices_enter_black, d_indices_exit_black):
+        d_scanner_state = -1
         if self.scanner_state == ScannerState.IN_FIRST_BLACK_SCREEN:
+            d_scanner_state = DebugScannerState.FIRST_BLACK_SCREEN_END
             black_time = self.get_black_screen_time_diff()
             if self.is_black_screen_valid(black_time):
                 self.scanner_state = ScannerState.IN_POTENTIAL_LOAD
                 self.record_load_start_position()
-                d_indices_exit_black.append(self.get_position())
+                d_indices_exit_black.append((self.get_position(), d_scanner_state))
             else:
                 # We know that there cannot be a load after this black screen, so restart the
                 # load measurement process.
                 self.scanner_state = ScannerState.DEFAULT
                 d_indices_enter_black.pop()
         elif self.scanner_state == ScannerState.IN_SECOND_BLACK_SCREEN:
+            d_scanner_state = DebugScannerState.SECOND_BLACK_SCREEN_END
             # We have finished recording this load. Set the scanner state back to default to
             # prepare for measuring the next load.
             self.scanner_state = ScannerState.DEFAULT
-            d_indices_exit_black.append(self.get_position())
+            d_indices_exit_black.append((self.get_position(), d_scanner_state))
         return (d_indices_enter_black, d_indices_exit_black)
 
     # The position is either a frame number for video scanning, or a time stamp for screen scanning.
@@ -320,7 +345,7 @@ class ImageScanner:
                 self.increment_position()
 
             # DEBUGGING
-            # if self.get_position() > 100:
+            # if self.get_position() > 300:
             #     break
         self.log_debug_frames(d_indices_enter_black, d_indices_exit_black)
         self.print_finished_stats()
@@ -329,13 +354,13 @@ class ImageScanner:
     def print_finished_stats(self):
         print("Total load time is:", round(self.load_time_total, 2), "seconds")
 
-    def log_debug_frames(self,  d_indices_enter_black, d_indices_exit_black):
+    def log_debug_frames(self, d_indices_enter_black, d_indices_exit_black):
         self.log_frames_from_indices(d_indices_enter_black)
         self.log_frames_from_indices(d_indices_exit_black)
 
     def log_frames_from_indices(self, indices):
         for i in range(len(indices)):
-            frame_index = indices[i]
+            frame_index, d_scanner_state = indices[i]
             # 2 enter and exit black frames occur for each load, hence i / 2.
             load_num = math.floor(i / 2) + 1
             for j_before in range(self.d_extra_frames_range + 1):
@@ -343,18 +368,26 @@ class ImageScanner:
                 if j_before == 0:
                     middle = True
                 frame_index_new = frame_index - j_before
-                self.write_d_frame(frame_index_new, load_num, middle)
+                self.write_d_frame(frame_index_new, load_num, d_scanner_state, middle)
             for j_after in range(self.d_extra_frames_range + 1):
                 if j_after == 0:
                     # Skip the case where frame_index_new == frame_index, which was covered
                     # in the previous for loop.
                     continue
                 frame_index_new = frame_index + j_after
-                self.write_d_frame(frame_index_new, load_num)
+                self.write_d_frame(frame_index_new, load_num, d_scanner_state)
 
-    def write_d_frame(self, frame_index, load_num, middle=False):
+    def write_d_frame(self, frame_index, load_num, d_scanner_state, middle=False):
         success, frame = self.get_frame_by_index(frame_index)
         filename = "load-" + str(load_num) + "_frame-num-" + str(frame_index)
+        if d_scanner_state == DebugScannerState.FIRST_BLACK_SCREEN_START:
+            filename += "_First_Start_"
+        elif d_scanner_state == DebugScannerState.FIRST_BLACK_SCREEN_END:
+            filename += "_First_End_"
+        elif d_scanner_state == DebugScannerState.SECOND_BLACK_SCREEN_START:
+            filename += "_Second_Start_"
+        elif d_scanner_state == DebugScannerState.SECOND_BLACK_SCREEN_END:
+            filename += "_Second_End_"
         if middle:
             filename += "_MIDDLE"
         frame_name = os.path.join(self.dir_frames, filename + ".png")

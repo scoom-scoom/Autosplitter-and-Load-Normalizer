@@ -1,6 +1,6 @@
 # Current LN stuff
 - Make sure autosplitter file is consistently timing loads.
-- When releasing, see if you can run 2 instances of livesplit at the same time, or have one time with the autospliter, and one without.
+- When releasing, see if you can run 2 instances of livesplit at the same time, having one time with the autospliter, and one without.
 
 # ASL:
 - IMPORTANT Check that cutscene values for when the load starts and ends line up with manual LN.

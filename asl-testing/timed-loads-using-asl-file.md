@@ -1,5 +1,8 @@
 # Timed loads (in milliseconds) using the asl file
 
+Manual load timing starts the frame the load is visible to the frame the load is no longer visible (faded to black)
+Measuring the ASL frames starts from the second frame the timer is on the same number to the frame the timer is not on the same number.
+
 ## Pokitaru:
 
 

@@ -1,5 +1,4 @@
 # Current LN stuff
-- Make sure autosplitter file is consistently timing loads.
 - When releasing, see if you can run 2 instances of livesplit at the same time, having one time with the autospliter, and one without.
 
 # ASL:

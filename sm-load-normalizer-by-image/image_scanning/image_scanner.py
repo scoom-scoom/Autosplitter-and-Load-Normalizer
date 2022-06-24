@@ -59,7 +59,7 @@ class ImageScanner:
         self.threshold = self.settings["vid"]["threshold"]
         self.scanner_state = ScannerState.DEFAULT
         # Number of extra debug frames to write before and after each debug frame.
-        self.d_extra_frames_range = 0
+        self.d_extra_frames_range = 10
         self.load_time_total = 0
         self.load_bounds = self.settings["load_bounds"]
         self.black_screen_bounds = self.settings["black_screen_bounds"]

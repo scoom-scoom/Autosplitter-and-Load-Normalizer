@@ -23,7 +23,7 @@ class ScreenScanner(ImageScanner):
     def get_next_frame(self):
         # https://stackoverflow.com/questions/1080719/screenshot-an-application-regardless-of-whats-in-front-of-it
         # window_name = "djv"
-        window_name = "scan this now"
+        window_name = "scan"
         shell = win32com.client.Dispatch("Wscript.Shell")
         # Returns true if focus given successfully.
         success = shell.AppActivate(window_name)
@@ -41,7 +41,7 @@ class ScreenScanner(ImageScanner):
         cDC.BitBlt((0, 0), (self.crop_width, self.crop_height) , dcObj, (self.crop_x_start, self.crop_y_start), win32con.SRCCOPY)
 
         # DEBUGGING
-        bmpfilenamename = "out.bmp"  # set this
+        # bmpfilenamename = "out.bmp"  # set this
         # dataBitMap.SaveBitmapFile(cDC, bmpfilenamename)
         # img = Image.open("out.bmp")
 

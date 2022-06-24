@@ -27,14 +27,14 @@ vid:
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus/dudek-360p.mp4"
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/any/Touh-360p.mp4"
 
-  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/emeralve-360p.mp4"
+#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/emeralve-360p.mp4"
 
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/emeralve-720p.mp4"
 
 #  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/ng-plus-no-sp/alemussy-360p.mp4"
 
 # RAC 2
-#  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/rac2/ng-plus/fear-360.mp4"
+  filename_vid: "C:/Users/josho/Desktop/Big-Brother/vids/autosplitting/rac2/ng-plus/02-fear.mp4"
 
 screen:
   res_default: [1920, 1080]
@@ -74,25 +74,56 @@ loads_to_skip: [
 # Example - ship proxies produce black screens, and the gameplay can
 # be counted as a load if these bounds are not applied.
 # TODO update poki bounds with real values, if needed.
+#load_bounds:
+#  [
+#  # Pokitaru (fake values because we don't actually include the Pokitaru load time in the speed run,
+#  # and fake values work good enough for the program.
+#  [5, 20],
+#  [12.783, 17.202], # Ryllus
+#  [12.809, 17.189], # Kalidon
+#  [4.705, 4.772], # Metallis
+#  [2.457, 2.491], # Giant Clank 1
+#  [17.046, 18.366], # Dreamtime
+#  [12.764, 15.515], # Medical Outpost Omega
+#  [12.707, 17.117], # Remains
+#  [12.798, 17.192], # Challax 1
+##  [2.413, 2.437], # Giant Clank 2 (for wrench only and 100%)
+##  [14.987, 15.015], # Challax 2 (after giant clank 2, only in wrench only and 100%)
+#  [12.683, 17.132], # Dayni Moon 1
+#  [2.401, 2.546], # IC ratchet (using the shrink ray)
+#  [2.624, 2.703], # Dayni Moon 2 (ratchet floating)
+#  [13.376, 15.622], # Quodrona
+#  ]
+
+# Rac2 testing
 load_bounds:
   [
-  # Pokitaru (fake values because we don't actually include the Pokitaru load time in the speed run,
-  # and fake values work good enough for the program.
-  [5, 20],
-  [12.783, 17.202], # Ryllus
-  [12.809, 17.189], # Kalidon
-  [4.705, 4.772], # Metallis
-  [2.457, 2.491], # Giant Clank 1
-  [17.046, 18.366], # Dreamtime
-  [12.764, 15.515], # Medical Outpost Omega
-  [12.707, 17.117], # Remains
-  [12.798, 17.192], # Challax 1
-#  [2.413, 2.437], # Giant Clank 2 (for wrench only and 100%)
-#  [14.987, 15.015], # Challax 2 (after giant clank 2, only in wrench only and 100%)
-  [12.683, 17.132], # Dayni Moon 1
-  [2.401, 2.546], # IC ratchet (using the shrink ray)
-  [2.624, 2.703], # Dayni Moon 2 (ratchet floating)
-  [13.376, 15.622], # Quodrona
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
+  [0, 100],
   ]
 
 # Black screen bounds in seconds, in the format
@@ -106,23 +137,54 @@ load_bounds:
 # IGNORE means that no bounds are taken into account. We only want to check
 # bounds when needed, so that we do not stop other valid loads from being
 # counted by accident.
+#black_screen_bounds:
+#  [
+#  [IGNORE, IGNORE], # Pokitaru
+#  [IGNORE, IGNORE], # Ryllus
+#  [IGNORE, IGNORE], # Kalidon
+#  [IGNORE, IGNORE], # Metallis
+#  [IGNORE, IGNORE], # Giant Clank 1
+#  [IGNORE, IGNORE], # Dreamtime
+#  [IGNORE, IGNORE], # Medical Outpost Omega
+#  [IGNORE, IGNORE], # Remains
+#  [0.333333, 0.666666], # Challax 1 - first black screen is between 10 and 20 frames.
+##  [IGNORE, IGNORE], # Giant Clank 2 (for wrench only and 100%)
+##  [IGNORE, IGNORE], # Challax 2 (after giant clank 2, only in wrench only and 100%)
+#  [IGNORE, IGNORE], # Dayni Moon 1
+#  [IGNORE, IGNORE], # IC ratchet (using the shrink ray)
+#  [IGNORE, IGNORE], # Dayni Moon 2 (ratchet floating)
+#  [IGNORE, IGNORE], # Quodrona
+#  ]
+
+# Rac2 testing
 black_screen_bounds:
   [
-  [IGNORE, IGNORE], # Pokitaru
-  [IGNORE, IGNORE], # Ryllus
-  [IGNORE, IGNORE], # Kalidon
-  [IGNORE, IGNORE], # Metallis
-  [IGNORE, IGNORE], # Giant Clank 1
-  [IGNORE, IGNORE], # Dreamtime
-  [IGNORE, IGNORE], # Medical Outpost Omega
-  [IGNORE, IGNORE], # Remains
-  [0.333333, 0.666666], # Challax 1 - first black screen is between 10 and 20 frames.
-#  [IGNORE, IGNORE], # Giant Clank 2 (for wrench only and 100%)
-#  [IGNORE, IGNORE], # Challax 2 (after giant clank 2, only in wrench only and 100%)
-  [IGNORE, IGNORE], # Dayni Moon 1
-  [IGNORE, IGNORE], # IC ratchet (using the shrink ray)
-  [IGNORE, IGNORE], # Dayni Moon 2 (ratchet floating)
-  [IGNORE, IGNORE], # Quodrona
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
+  [IGNORE, IGNORE],
   ]
 
 # The parameter crop_scale determines how large the cropped image in the centre should be.

@@ -190,3 +190,5 @@ Measuring the ASL frames starts from the second frame the timer is on the same n
 15484
 15495
 13376
+
+Estimate total laod variation is 27

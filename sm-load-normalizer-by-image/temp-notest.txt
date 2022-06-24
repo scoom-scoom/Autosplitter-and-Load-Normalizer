@@ -1,0 +1,68 @@
+ENTERING black at frame 205
+EXITING black at frame 243
+ENTERING black at frame 608
+Pokitaru load detected and skipped
+EXITING black at frame 609
+ENTERING black at frame 653
+EXITING black at frame 697
+ENTERING black at frame 814
+Load number 2 added.
+Load time is:  3.9
+EXITING black at frame 833
+ENTERING black at frame 1229
+EXITING black at frame 1268
+ENTERING black at frame 1389
+Load number 3 added.
+Load time is:  4.03
+Load 4 skipped.
+Load 5 skipped.
+EXITING black at frame 1411
+ENTERING black at frame 1864
+EXITING black at frame 1903
+ENTERING black at frame 2286
+Load number 6 added.
+Load time is:  12.77
+EXITING black at frame 2290
+ENTERING black at frame 2309
+EXITING black at frame 2357
+ENTERING black at frame 2689
+Load number 7 added.
+Load time is:  11.07
+EXITING black at frame 2729
+ENTERING black at frame 4558
+EXITING black at frame 4586
+ENTERING black at frame 4592
+Load number 8 added.
+Load time is:  0.2
+EXITING black at frame 4596
+ENTERING black at frame 5584
+EXITING black at frame 5589
+ENTERING black at frame 5841
+Load number 9 added.
+Load time is:  8.4
+EXITING black at frame 5873
+ENTERING black at frame 6205
+EXITING black at frame 6248
+ENTERING black at frame 6867
+Load number 10 added.
+Load time is:  20.63
+EXITING black at frame 6871
+ENTERING black at frame 6893
+EXITING black at frame 6902
+ENTERING black at frame 6921
+Load number 11 added.
+Load time is:  0.63
+EXITING black at frame 6964
+ENTERING black at frame 7413
+EXITING black at frame 7443
+ENTERING black at frame 8170
+Load number 12 added.
+Load time is:  24.23
+EXITING black at frame 8171
+ENTERING black at frame 9111
+EXITING black at frame 9115
+ENTERING black at frame 9152
+Load number 13 added.
+Load time is:  1.23
+Total load time is: 87.1 seconds
+Total program runtime is: 40.93 seconds.

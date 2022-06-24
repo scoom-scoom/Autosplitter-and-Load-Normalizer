@@ -1,4 +1,5 @@
 # Current LN stuff
+- Normalize all of the speedrun.com runs.
 - When releasing, see if you can run 2 instances of livesplit at the same time, having one time with the autospliter, and one without.
 
 # ASL:

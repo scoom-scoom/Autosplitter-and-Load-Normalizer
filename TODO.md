@@ -1,6 +1,9 @@
 # Current LN stuff
+- Get Emeralve to test current LN autosplitter.
 - Normalize all of the speedrun.com runs.
 - When releasing, see if you can run 2 instances of livesplit at the same time, having one time with the autospliter, and one without.
+- Get Emeralve to test the instructions of the final LN autosplitter and manual LN.
+- Work on rac2 real-time autosplitter and load normalizer.
 
 # ASL:
 - IMPORTANT Check that cutscene values for when the load starts and ends line up with manual LN.

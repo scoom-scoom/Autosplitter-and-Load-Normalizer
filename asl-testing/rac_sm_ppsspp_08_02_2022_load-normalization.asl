@@ -7,19 +7,18 @@ state("PPSSPPWindows64") { }
 startup {
 		vars.scanTarget = new SigScanTarget (0, "48 45 52 4F 53 4B 49 4E 5F 49 6E 69 74 53 69 6E 67 6C 65 50 6C 61 79 65 72");
 		
-        settings.Add("Yeezy%Split", false, "Yeezy% - Split on wildfire boots collection");
-        settings.Add("5TBSplit", false, "5TB - Split on 5th Titanium Bolt");
-		settings.Add("GiantClank2Split", true, "Split on Giant Clank 2 (For Wrench only and 100%)");
-		settings.Add("Challax2Split", true, "Split on Challax 2 (For Wrench only and 100%)");
+        settings.Add("Yeezy%Split", false, "Yeezy% - Split on wildfire boots collection.");
+        settings.Add("5TBSplit", false, "5TB - Split on 5th Titanium Bolt.");
+		settings.Add("GiantClank2AndCallax2Split", true, "Split on Giant Clank 2 and Challax 2 (for the Wrench Only route).");
 		settings.Add("SplitOnBolt", false, "Split on Bolt (see tooltip).");
 		settings.SetToolTip("SplitOnBolt", "WARNING: This feature has not been tested in a full run, use at your own risk." + 
-		"Set this to true if you want to additionally split on each bolt (the split happens after the bolt collection animation" +
+		"Set this to true if you want to additionally split on each bolt (the split happens after the bolt collection animation " +
 		"is finished, due to current technical limitations).");
 		settings.Add("AutoReset", true, "Auto-reset the timer (see tooltip).");
-		settings.SetToolTip("AutoReset", "Reset the timer when starting on Pokitaru again (don't use for the 100% category though!).");
+		settings.SetToolTip("AutoReset", "Reset the timer when starting on Pokitaru again.");
 		settings.Add("LoadNormalization", false, "Load Normalization (see tooltip).");
-		settings.SetToolTip("LoadNormalization", "WARNING: This feature has not been tested in a full run, use at your own risk." +
-		"Toggle this to have the timer pause when the load time exceeds the optimal time.");
+		settings.SetToolTip("LoadNormalization", "WARNING: This feature has not been tested in a full run, use at your own risk. " +
+		"Toggle this to have the timer pause at the end of each load when the load time exceeds the optimal time.");
 
 		vars.loadStartTime = -1;
 		vars.isLoading = false;
@@ -37,11 +36,22 @@ startup {
 		// Set to true if we have reached Challax 2 in Wrench Only or Hundo, so that the load normalization doesn't hit Challax 1 by accident.
 		vars.challax2 = false;
 
-		// optimalLoadTime is measured in milliseconds.
-		// vars.optimalLoadTimeRyllus = 12783;
-		// vars.optimalLoadTimeKalidon = 12809;
-		vars.optimalLoadTimeRyllus = 0;
-		vars.optimalLoadTimeKalidon = 0;
+		// optimalLoadFrames (olf) measured using the manual process, taken from the spreadsheet 
+		// https://docs.google.com/spreadsheets/d/1Hp6Yp5Bp5GRuCRr4HB_wPF-CklFPrfHg/edit?usp=sharing&ouid=110232665343860107068&rtpof=true&sd=true.
+		vars.olfRyllus = 328;
+		vars.olfKalidon = 313;
+		vars.olfMetallis = 60;
+		vars.olfGiantClank1 = 42;
+		vars.olfDreamtime = 406;
+		vars.olfMOO = 359;
+		vars.olfRemains = 332;
+		vars.olfChallax = 329;
+		vars.olfGiantClank2 = 47;
+		vars.olfChallax2 = 408;
+		vars.olfDayni1 = 317;
+		vars.olfInsideClank = 57;
+		vars.olfDayni2 = 62;
+		vars.olfQuodrona = 369;
 
 		// Taken from https://raw.githubusercontent.com/tduva/LiveSplit-ASL/master/AlanWake.asl
 		Action<string> LogDebug = (text) => {
@@ -67,15 +77,14 @@ startup {
 
 		// Takes the optimalLoadTime for this current load and the value (in memory) of the cutscene which plays at the end of the load.
 		// This info is used to determine when to pause and resume the timer to normalize the long load.
-		Action<int, int> CheckLoadNormalization = (optimalLoadTime, cutsceneVal) => {
+		Action<int, int> CheckLoadNormalization = (optimalLoadFrames, cutsceneVal) => {
 			TimeSpan rt = (TimeSpan) timer.CurrentTime.RealTime;
-			// DEBUGGING
-			vars.isLoading = true;
-			// if ((rt.TotalMilliseconds - vars.loadStartTime) > optimalLoadTime) {
-			// 	// Pause the timer to normalize the long load.
-			// 	// DEBUGGING
-			// 	vars.isLoading = true;
-			// }
+			// Convert the optimalLoadFrames to time.
+			float optimalLoadTime = (optimalLoadFrames + 11) * 30;
+			if ((rt.TotalMilliseconds - vars.loadStartTime) > optimalLoadTime) {
+				// Pause the timer to normalize the long load.
+				vars.isLoading = true;
+			}
 			if (vars.currentCutscene.Current == cutsceneVal) {
 				vars.LogDebug("Load time is: " + (rt.TotalMilliseconds - vars.loadStartTime));
 				// Resume the timer once the load is done, and the cutscene is playing.
@@ -96,7 +105,7 @@ startup {
 }
 
 init {
-	// Run at 30 fps for this 30 fps game. For some weird reason, 60 fps is actually 30 fps (this has been tested). Maybe 
+	// Run at 30 fps for this 30 fps game. For some weird reason, 60 refreshRate is actually 30 fps (this has been tested). Maybe 
 	// it's because the code in this file takes ages to run each frame.
 	refreshRate = 60;
 	
@@ -209,8 +218,8 @@ split {
 		vars.challax1 = true;
 		return true;
 	}
-	// Challax Giant Clank 2 (For Wrench Only and 100%)
-	if (settings["GiantClank2Split"]) {
+	// Challax Giant Clank 2 (for Wrench Only)
+	if (settings["GiantClank2AndCallax2Split"]) {
 		if (vars.currentPlanet.Current == 21 && planetChanged) {
 		    vars.LoadStarted(isLoadNormalization);
 			return true;
@@ -245,11 +254,11 @@ split {
 		return true;
 	}
 	// Otto
-	if (vars.currentPlanet.Current == 10) {
-		if (vars.ottoEntry.Current == 75000 && vars.ottoEntry.Old <= 0) {
-			return true;
-		}
-	}
+	// if (vars.currentPlanet.Current == 10) {
+	// 	if (vars.ottoEntry.Current == 75000 && vars.ottoEntry.Old <= 0) {
+	// 		return true;
+	// 	}
+	// }
 	// Split at the end of the run.
 	if (vars.currentPlanet.Current == 10 && vars.currentCutscene.Current == 776417329) {
 		return true;
@@ -281,61 +290,61 @@ isLoading {
 	if (vars.checkForLoadNormalization){
 		// Ryllus
 		if (vars.currentPlanet.Current == 2) {
-			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776024624);
+			vars.CheckLoadNormalization(vars.olfRyllus, 776024624);
 		}
 		// Kalidon
 		if (vars.currentPlanet.Current == 3) {
-			vars.CheckLoadNormalization(vars.optimalLoadTimeKalidon, 776024880);
+			vars.CheckLoadNormalization(vars.olfKalidon, 776024880);
 		}
 		// Metalis
 		if (vars.currentPlanet.Current == 4) {
-			vars.CheckLoadNormalization(vars.optimalLoadTimeKalidon, 776025136);
+			vars.CheckLoadNormalization(vars.olfMetallis, 776025136);
 		}
-		// Metalis Giant Clank
+		// Giant Clank 1
 		if (vars.currentPlanet.Current == 15) {
-			vars.CheckLoadNormalization(vars.optimalLoadTimeKalidon, 654548);
+			vars.CheckLoadNormalization(vars.olfGiantClank1, 654548);
 		}
 		// Dreamtime
 		if (vars.currentPlanet.Current == 5) {
-			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776025392);
+			vars.CheckLoadNormalization(vars.olfDreamtime, 776025392);
 		}
 		// MOO
 		if (vars.currentPlanet.Current == 6) {
-			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776025648);
+			vars.CheckLoadNormalization(vars.olfMOO, 776025648);
 		}
 		// Remains
 		if (vars.currentPlanet.Current == 23) {
-			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 654548);
+			vars.CheckLoadNormalization(vars.olfRemains, 654548);
 		}
 		// Challax
 		if (vars.currentPlanet.Current == 7 && !vars.challax2) {
-			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776025904);
+			vars.CheckLoadNormalization(vars.olfChallax, 776025904);
 		}
-		// Giant Clank 2 (only for Wrench Only and 100% categories)
-		if (settings["GiantClank2Split"]) {
+		// Giant Clank 2 (only for the Wrench Only category)
+		if (settings["GiantClank2AndCallax2Split"]) {
 			if (vars.currentPlanet.Current == 21) {
-				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 654548);
+				vars.CheckLoadNormalization(vars.olfGiantClank2, 654548);
 			}
-			// Challax 2 (only for Wrench Only and 100% categories)
+			// Challax 2 (only for the Wrench Only category)
 			else if (vars.currentPlanet.Current == 7 && vars.challax2) {
-				vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776353584);
+				vars.CheckLoadNormalization(vars.olfChallax2, 776353584);
 			}
 		}
 		// Dayni Moon
 		if (vars.currentPlanet.Current == 8 && !vars.dayniMoon2) {
-			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 654548);
+			vars.CheckLoadNormalization(vars.olfDayni1, 654548);
 		}
 		// Inside Clank
 		if (vars.currentPlanet.Current == 9) {
-			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776026416);
+			vars.CheckLoadNormalization(vars.olfInsideClank, 776026416);
 		}
 		// Dayni Moon 2
 		if (vars.currentPlanet.Current == 8 && vars.dayniMoon2) {
-			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776353840);
+			vars.CheckLoadNormalization(vars.olfDayni2, 776353840);
 		}
 		// Quodrona
 		if (vars.currentPlanet.Current == 10) {
-			vars.CheckLoadNormalization(vars.optimalLoadTimeRyllus, 776024113);
+			vars.CheckLoadNormalization(vars.olfQuodrona, 776024113);
 		}
 	}
 	return vars.isLoading;

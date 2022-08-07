@@ -1,6 +1,6 @@
 # Timed loads (in milliseconds) using the asl file
 
-Manual load timing starts the frame the load is visible to the frame the load is no longer visible (faded to black)
+Manual load timing starts the frame the load is visible to the frame the load is no longer visible (faded to black). THESE LOAD TIMES are about 11 extra frames of the 30FPS video (0.367 seconds) of time than the manual load times.
 Measuring the ASL frames starts from the second frame the timer is on the same number to the frame the timer is not on the same number.
 
 ## Pokitaru:
@@ -38,6 +38,8 @@ Measuring the ASL frames starts from the second frame the timer is on the same n
 14911 
 17202
 
+min = 12783
+
 # Kalidon
 15524
 15103
@@ -50,6 +52,8 @@ Measuring the ASL frames starts from the second frame the timer is on the same n
 17181
 12809
 
+min = 12809
+
 # Metallis (ratchet floating)
 4772
 4736
@@ -59,12 +63,16 @@ Measuring the ASL frames starts from the second frame the timer is on the same n
 4722
 4705
 
+min = 4705
+
 # Giant Clank 1
 2463
 2470
 2457
 2491
 2473
+
+min = 2457
 
 # Dreamtime
 17100
@@ -75,6 +83,8 @@ Measuring the ASL frames starts from the second frame the timer is on the same n
 17209
 17219
 17192
+
+min = 17046
 
 # Moo ship
 13404
@@ -93,6 +103,8 @@ Measuring the ASL frames starts from the second frame the timer is on the same n
 12765
 15047
 
+min = 12764
+
 # Remains ship
 12758
 12720
@@ -105,6 +117,8 @@ Measuring the ASL frames starts from the second frame the timer is on the same n
 12746
 13373
 17065
+
+min = 12707
 
 # Challax ship 1 before giant clank 2
 12824
@@ -135,6 +149,8 @@ Measuring the ASL frames starts from the second frame the timer is on the same n
 15500
 12798
 
+min = 12798 
+
 # Giant Clank 2
 2417
 2437
@@ -143,12 +159,16 @@ Measuring the ASL frames starts from the second frame the timer is on the same n
 2420
 2430
 
+min = 2413 
+
 # Challax ship 2 after giant clank 2
 14987
 14997
 15014
 15001
 15015
+
+min = 14987 
 
 # Dayni ship 1
 15406
@@ -165,11 +185,15 @@ Measuring the ASL frames starts from the second frame the timer is on the same n
 17132
 12717
 
+min = 12683
+
 # IC ratchet using shrink ray
 2401
 2546
 2447
 2505
+
+min = 2401 
 
 # Dayni 2 ratchet floating
 2624
@@ -178,6 +202,8 @@ Measuring the ASL frames starts from the second frame the timer is on the same n
 2626
 2631
 2703
+
+min = 2624 
 
 # Quodrona ship
 15622
@@ -190,5 +216,7 @@ Measuring the ASL frames starts from the second frame the timer is on the same n
 15484
 15495
 13376
+
+min = 13376 
 
 Estimate total laod variation is 27

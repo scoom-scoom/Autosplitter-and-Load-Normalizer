@@ -1,8 +1,13 @@
 # Current LN stuff
-- Get Emeralve to test current LN autosplitter.
 - Normalize all of the speedrun.com runs.
+- Measure more Giant Clank 2 and Challax 2 load times as they are only manually done in 2 runs in the LN spreadsheet, but they must be used in the autosplitter.
+- Make the program automate Voll's runs.
+- Get Emeralve to test final LN stuff (asl file instructions, Voll program instructions, manual LN).
+- Recommend people to record in 30FPS if they will be doing manual LN, as it's easier to step through the frames.
 - When releasing, see if you can run 2 instances of livesplit at the same time, having one time with the autospliter, and one without.
-- Get Emeralve to test the instructions of the final LN autosplitter and manual LN.
+- Work on rac2 load normalizer.
+    - Try black screens first with threshold OR number pattern
+    - If black screens REALLY don't work, do image crop by user and image comparison to different resolutions of the loading screens.
 - Work on rac2 real-time autosplitter and load normalizer.
 
 # ASL:
@@ -16,10 +21,6 @@
 - Thank sm people for being patient with my progress.
 - Thank the rac community for being nice and funny people, and always shit posting.
 - Talk about applying this to rac2.
-
-# Maybe later:
-- Could also apply this program to other rac LN (I think rac2 would work, as it has black screens for the loads).
-    - Look at getting ALL rac2 and rac3 runs converted to LN time.
 
 # Making a video autosplitter:
 - 1.) Isaki suggested to have the video-autosplitter program write to a memory-mapped file. Then, have the Livesplit ASL file read the memory mapped file to decide when to split.
@@ -39,7 +40,7 @@
 - GREAT IDEA, have the program try to scan through with the smallest crop patch size, and if there is an incorrect number of loads, it can scan through again with a greater patch size.
     - If this also fails, it can override the patch scaling and go up in pixel steps until it gets the correct number of loads.
 
-# Custom made LN by video:
+# Custom made LN by video (OLD):
 - 1.) Give video file to program, and it will scan frame by frame and output LN time of the speed-run based on the category.
     - Measure the optimal load time in frames for the ASL by having a counter in an action that runs every frame (maybe split) (Test that it actually prints every frame by recording it).
     - Get it working for only the ship cutscenes, then see if any runs have cutscenes not skipped, and make program detect if the cuscene is shorter than the ship cutscene, and if so, discard and start the time again on the ship cutscene.

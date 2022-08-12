@@ -1,26 +1,12 @@
 # Current LN stuff
-- Normalize all of the speedrun.com runs.
-- Measure more Giant Clank 2 and Challax 2 load times as they are only manually done in 2 runs in the LN spreadsheet, but they must be used in the autosplitter.
-- Make the program automate Voll's runs.
-- Get Emeralve to test final LN stuff (asl file instructions, Voll program instructions, manual LN).
+- Get Emeralve to test final LN stuff (watch youtube tutorial).
 - Recommend people to record in 30FPS if they will be doing manual LN, as it's easier to step through the frames.
 - When releasing, see if you can run 2 instances of livesplit at the same time, having one time with the autospliter, and one without.
+- Make the program automate Voll's runs if needed?
 - Work on rac2 load normalizer.
     - Try black screens first with threshold OR number pattern
     - If black screens REALLY don't work, do image crop by user and image comparison to different resolutions of the loading screens.
 - Work on rac2 real-time autosplitter and load normalizer.
-
-# ASL:
-- IMPORTANT Check that cutscene values for when the load starts and ends line up with manual LN.
-- Make a graph of all the loads using Python.
-- Issue warnings:
-    - To name Yeezy% and 5TB splits with Kalidon suffix, or else the autosplitter will give lower times for other categories.
-    - ALSO issue warning to name Wrench Only and Hundo Challax with suffix.
-
-# Message at end of LN:
-- Thank sm people for being patient with my progress.
-- Thank the rac community for being nice and funny people, and always shit posting.
-- Talk about applying this to rac2.
 
 # Making a video autosplitter:
 - 1.) Isaki suggested to have the video-autosplitter program write to a memory-mapped file. Then, have the Livesplit ASL file read the memory mapped file to decide when to split.

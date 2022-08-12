@@ -53,7 +53,7 @@ startup {
 		vars.olfDayni2 = 62;
 		vars.olfQuodrona = 369;
 
-		// Taken from https://raw.githubusercontent.com/tduva/LiveSplit-ASL/master/AlanWake.asl
+		// Code taken from https://raw.githubusercontent.com/tduva/LiveSplit-ASL/master/AlanWake.asl
 		Action<string> LogDebug = (text) => {
 			print("[DEBUG] " + text);
 		};
@@ -106,7 +106,7 @@ startup {
 
 init {
 	// Run at 30 fps for this 30 fps game. For some weird reason, 60 refreshRate is actually 30 fps (this has been tested). Maybe 
-	// it's because the code in this file takes ages to run each frame.
+	// it's because the code in this file takes ages to run each frame?
 	refreshRate = 60;
 	
 	var ptr = IntPtr.Zero;

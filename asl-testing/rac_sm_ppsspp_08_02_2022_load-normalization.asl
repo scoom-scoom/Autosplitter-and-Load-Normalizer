@@ -33,7 +33,7 @@ startup {
 		// Set to true once we reach Challax for the first time, so that we know to look for the Challax 2 split next time we go to Challax.
 		vars.challax1 = false;
 
-		// Set to true if we have reached Challax 2 in Wrench Only or Hundo, so that the load normalization doesn't hit Challax 1 by accident.
+		// Set to true if we have reached Challax 2 in Wrench Only, so that the load normalization doesn't hit Challax 1 by accident.
 		vars.challax2 = false;
 
 		// optimalLoadFrames (olf) measured using the manual process, taken from the spreadsheet 
@@ -254,11 +254,11 @@ split {
 		return true;
 	}
 	// Otto
-	// if (vars.currentPlanet.Current == 10) {
-	// 	if (vars.ottoEntry.Current == 75000 && vars.ottoEntry.Old <= 0) {
-	// 		return true;
-	// 	}
-	// }
+	if (vars.currentPlanet.Current == 10) {
+		if (vars.ottoEntry.Current == 75000 && vars.ottoEntry.Old <= 0) {
+			return true;
+		}
+	}
 	// Split at the end of the run.
 	if (vars.currentPlanet.Current == 10 && vars.currentCutscene.Current == 776417329) {
 		return true;

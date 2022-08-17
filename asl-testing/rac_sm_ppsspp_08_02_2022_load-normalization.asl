@@ -79,7 +79,7 @@ startup {
 		// This info is used to determine when to pause and resume the timer to normalize the long load.
 		Action<int, int> CheckLoadNormalization = (optimalLoadFrames, cutsceneVal) => {
 			TimeSpan rt = (TimeSpan) timer.CurrentTime.RealTime;
-			// Convert the optimalLoadFrames to time.
+			// Convert the optimalLoadFrames to time. The asl file splits 11 frames later than the manual timing, hence the + 11.
 			float optimalLoadTime = (optimalLoadFrames + 11) * 30;
 			if ((rt.TotalMilliseconds - vars.loadStartTime) > optimalLoadTime) {
 				// Pause the timer to normalize the long load.

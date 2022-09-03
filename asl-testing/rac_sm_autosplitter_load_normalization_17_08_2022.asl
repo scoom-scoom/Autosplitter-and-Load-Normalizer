@@ -10,15 +10,13 @@ startup {
         settings.Add("Yeezy%Split", false, "Yeezy% - Split on wildfire boots collection.");
         settings.Add("5TBSplit", false, "5TB - Split on 5th Titanium Bolt.");
 		settings.Add("GiantClank2AndCallax2Split", true, "Split on Giant Clank 2 and Challax 2 (for the Wrench Only route).");
-		settings.Add("SplitOnBolt", false, "Split on Bolt (see tooltip).");
-		settings.SetToolTip("SplitOnBolt", "WARNING: This feature has not been tested in a full run, use at your own risk." + 
-		"Set this to true if you want to additionally split on each bolt (the split happens after the bolt collection animation " +
+		settings.Add("SplitOnBolt", false, "Split on Bolt (see tooltip, or instructions google doc).");
+		settings.SetToolTip("SplitOnBolt", "Set this to true if you want to additionally split on each bolt (the split happens after the bolt collection animation " +
 		"is finished, due to current technical limitations).");
-		settings.Add("AutoReset", true, "Auto-reset the timer (see tooltip).");
+		settings.Add("AutoReset", true, "Auto-reset the timer (see tooltip, or instructions google doc).");
 		settings.SetToolTip("AutoReset", "Reset the timer when starting on Pokitaru again.");
-		settings.Add("LoadNormalization", false, "Load Normalization (see tooltip).");
-		settings.SetToolTip("LoadNormalization", "WARNING: This feature has not been tested in a full run, use at your own risk. " +
-		"Toggle this to have the timer pause at the end of each load when the load time exceeds the optimal time.");
+		settings.Add("LoadNormalization", false, "Load Normalization (see tooltip, or instructions google doc).");
+		settings.SetToolTip("LoadNormalization", "Toggle this to have the timer pause at the end of each load when the load time exceeds the optimal time.");
 
 		vars.loadStartTime = -1;
 		vars.isLoading = false;
@@ -146,7 +144,7 @@ split {
 	// DEBUGGING
 	// vars.LogDebug("TEST");
 	// vars.LogDebug("Planet: " + vars.currentPlanet.Current);
-	// vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
+	vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
 
 	// NOTE: You cannot use "else if" statements in this "split" function, as there are toggled settings.
 	// For example, if one of the settings is true but there is no split, then none of the other
@@ -355,7 +353,7 @@ isLoading {
 // ------------------------------------------------ //
 //
 // scoom_scoom -> 03/04/2022
-// - Man, I hate how long this file is. I wish I could use classes in ASL. I hope I never have to touch ASL again after this project!
+// - Man, I hate how many if statements are in this file. I wish I could use classes in ASL. I hope I never have to touch ASL again after this project!
 //
 // Emeralve -> 9/2/2022
 // - shhh I was here.

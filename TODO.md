@@ -1,7 +1,5 @@
 # Current LN stuff
 - Get Emeralve to test final LN stuff (watch youtube tutorial).
-- Recommend people to record in 30FPS if they will be doing manual LN, as it's easier to step through the frames.
-- When releasing, see if you can run 2 instances of livesplit at the same time, having one time with the autospliter, and one without.
 - Make the program automate Voll's runs if needed?
 - Work on rac2 load normalizer.
     - Try black screens first with threshold OR number pattern

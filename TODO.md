@@ -1,5 +1,4 @@
 # Current LN stuff
-- Get Emeralve to test final LN stuff (watch youtube tutorial).
 - Make the program automate Voll's runs if needed?
 - Work on rac2 load normalizer.
     - Try black screens first with threshold OR number pattern

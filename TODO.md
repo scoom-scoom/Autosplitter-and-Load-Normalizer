@@ -1,8 +1,11 @@
 # Current LN stuff
 - Make the program automate Voll's Size Matters runs if needed?
 - Work on rac2 load normalizer.
-    - Try black screens first with threshold OR number pattern
-    - If black screens REALLY don't work, do image crop by user and image comparison to different resolutions of the loading screens.
+    1.) Try measure the pixel data of people's runs and see if there is a consistent pattern with the colour of the black screens at different points in the game (e.g. black screen before load 5 is always 50% more black than the black screen before load 11). Then, you could just match the pattern for the splitting and load normalizing.
+    2.) If 1.) doesn't work, then try matching against the difference between the frame before the black screen, and the first black frame of the black screen.
+    3.) If 2.) don't work, have the user draw a crop around their gameplay screen and match that cropped frame to a generic set of rac2 load screenshots (the user doesn't have to take their own screenshots), where every video resolution is supported, and the program can check each resolution for a match.
+    4.) If 3.) doesn't work, then try have the user take their own screenshots.
+    5.) if 4.) doesn't work, cry, as you will have to do all the load normalization manually. If doing manually, use a spreadsheet like what I did for size matters. 
 - Work on rac2 real-time autosplitter and load normalizer.
 
 # Making a video autosplitter:

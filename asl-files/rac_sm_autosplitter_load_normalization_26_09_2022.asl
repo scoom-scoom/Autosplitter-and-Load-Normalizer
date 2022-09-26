@@ -9,7 +9,6 @@ startup {
 		
         settings.Add("Yeezy%Split", false, "Yeezy% - Split on wildfire boots collection.");
         settings.Add("5TBSplit", false, "5TB - Split on 5th Titanium Bolt.");
-		settings.Add("GiantClank2AndCallax2Split", true, "Split on Giant Clank 2 and Challax 2 (for the Wrench Only route).");
 		settings.Add("SplitOnBolt", false, "Split on Bolt (see tooltip, or instructions google doc).");
 		settings.SetToolTip("SplitOnBolt", "Set this to true if you want to additionally split on each bolt (the split happens after the bolt collection animation " +
 		"is finished, due to current technical limitations).");
@@ -171,6 +170,8 @@ split {
 
 	// Split on each planet
 	bool isLoadNormalization = settings["LoadNormalization"];
+	// For the splitting, planet changed is used, rather than "vars.currentPlanet.Current == x && vars.currentPlanet.Old == y". This
+	// is just in cause the autosplitter missed a frame and doesn't detect the exact frame where the current and old planet values match.
 	bool planetChanged = false;
 	if (vars.currentPlanet.Current != vars.currentPlanet.Old) {
 		planetChanged = true;
@@ -234,17 +235,15 @@ split {
 		return true;
 	}
 	// Challax Giant Clank 2 (for Wrench Only)
-	if (settings["GiantClank2AndCallax2Split"]) {
-		if (vars.currentPlanet.Current == 21 && planetChanged) {
-		    vars.LoadStarted(isLoadNormalization);
-			return true;
-		}
-		// Split on Challax 2 (when you return from giant clank section back to Challax)
-		else if (vars.currentPlanet.Current == 7 && planetChanged && vars.challax1) {
-		    vars.LoadStarted(isLoadNormalization);
-			vars.challax2 = true;
-			return true;
-		}
+	if (vars.currentPlanet.Current == 21 && planetChanged) {
+		vars.LoadStarted(isLoadNormalization);
+		return true;
+	}
+	// Split on Challax 2 (when you return from the giant clank section back to Challax)
+	else if (vars.currentPlanet.Current == 7 && planetChanged && vars.challax1) {
+		vars.LoadStarted(isLoadNormalization);
+		vars.challax2 = true;
+		return true;
 	}
 	// Dayni Moon
 	if (vars.currentPlanet.Current == 8 && planetChanged && !vars.dayniMoon1) {
@@ -340,14 +339,12 @@ isLoading {
 			vars.CheckLoadNormalization(vars.olfChallax, 776025904);
 		}
 		// Giant Clank 2 (only for the Wrench Only category)
-		if (settings["GiantClank2AndCallax2Split"]) {
-			if (vars.currentPlanet.Current == 21) {
-				vars.CheckLoadNormalization(vars.olfGiantClank2, 654548);
-			}
-			// Challax 2 (only for the Wrench Only category)
-			else if (vars.currentPlanet.Current == 7 && vars.challax2) {
-				vars.CheckLoadNormalization(vars.olfChallax2, 776353584);
-			}
+		if (vars.currentPlanet.Current == 21) {
+			vars.CheckLoadNormalization(vars.olfGiantClank2, 654548);
+		}
+		// Challax 2 (only for the Wrench Only category)
+		else if (vars.currentPlanet.Current == 7 && vars.challax2) {
+			vars.CheckLoadNormalization(vars.olfChallax2, 776353584);
 		}
 		// Dayni Moon
 		if (vars.currentPlanet.Current == 8 && !vars.dayniMoon2) {

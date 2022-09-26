@@ -1,5 +1,5 @@
 # Current LN stuff
-- Make the program automate Voll's runs if needed?
+- Make the program automate Voll's Size Matters runs if needed?
 - Work on rac2 load normalizer.
     - Try black screens first with threshold OR number pattern
     - If black screens REALLY don't work, do image crop by user and image comparison to different resolutions of the loading screens.

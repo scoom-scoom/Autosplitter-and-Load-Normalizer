@@ -22,7 +22,14 @@ startup {
 		vars.isLoading = false;
 		vars.checkForLoadNormalization = false;
 
-		// Set to true once we reach Dayni Moon for the first time, so that we know to look for the Dayni Moon 2 split next time we go to Challax.
+		// Used for ATB where you need to go back to Metalis for the optimal route.
+		// Set to true once we reach Metalis for the first time, so that we know to look for the Metalis 2 split next time we go to Metalis.
+		vars.metalis1 = false;
+
+		// Set to true if we have reached Dayni Moon 2, so that the load normalization doesn't hit Dayni Moon 1 by accident.
+		vars.metalis2 = false;
+
+		// Set to true once we reach Dayni Moon for the first time, so that we know to look for the Dayni Moon 2 split next time we go to Dayni.
 		vars.dayniMoon1 = false;
 
 		// Set to true if we have reached Dayni Moon 2, so that the load normalization doesn't hit Dayni Moon 1 by accident.
@@ -38,11 +45,12 @@ startup {
 		// https://docs.google.com/spreadsheets/d/1Hp6Yp5Bp5GRuCRr4HB_wPF-CklFPrfHg/edit?usp=sharing&ouid=110232665343860107068&rtpof=true&sd=true.
 		vars.olfRyllus = 328;
 		vars.olfKalidon = 313;
-		vars.olfMetallis = 60;
+		vars.olfMetalis = 60;
 		vars.olfGiantClank1 = 42;
 		vars.olfDreamtime = 406;
 		vars.olfMOO = 359;
 		vars.olfRemains = 332;
+		vars.olfMetalis2 = 367;
 		vars.olfChallax = 329;
 		vars.olfGiantClank2 = 47;
 		vars.olfChallax2 = 408;
@@ -70,6 +78,8 @@ startup {
 			vars.challax2 = false;
 			vars.dayniMoon1 = false;
 			vars.dayniMoon2 = false;
+			vars.metalis1 = false;
+			vars.metalis2 = false;
 		};
 		vars.ResetAllVars = ResetAllVars;
 
@@ -144,7 +154,7 @@ split {
 	// DEBUGGING
 	// vars.LogDebug("TEST");
 	// vars.LogDebug("Planet: " + vars.currentPlanet.Current);
-	vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
+	// vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
 
 	// NOTE: You cannot use "else if" statements in this "split" function, as there are toggled settings.
 	// For example, if one of the settings is true but there is no split, then none of the other
@@ -185,12 +195,13 @@ split {
 			return true;
 		}
 	}
-	// Metalis
-	if (vars.currentPlanet.Current == 4 && planetChanged) {
+	// Metalis 1
+	if (vars.currentPlanet.Current == 4 && planetChanged && !vars.metalis1) {
 		vars.LoadStarted(isLoadNormalization);
+		vars.metalis1 = true;
 		return true;
 	}
-	// Metalis Giant Clank
+	// Giant Clank 1
 	if (vars.currentPlanet.Current == 15 && planetChanged) {
 		vars.LoadStarted(isLoadNormalization);
 		return true;
@@ -208,6 +219,12 @@ split {
 	// Remains
 	if (vars.currentPlanet.Current == 23 && planetChanged) {
 		vars.LoadStarted(isLoadNormalization);
+		return true;
+	}
+	// Metalis 2 (ATB only)
+	if (vars.currentPlanet.Current == 4 && planetChanged && vars.metalis1) {
+		vars.LoadStarted(isLoadNormalization);
+		vars.metalis2 = true;
 		return true;
 	}
 	// Challax
@@ -294,9 +311,9 @@ isLoading {
 		if (vars.currentPlanet.Current == 3) {
 			vars.CheckLoadNormalization(vars.olfKalidon, 776024880);
 		}
-		// Metalis
-		if (vars.currentPlanet.Current == 4) {
-			vars.CheckLoadNormalization(vars.olfMetallis, 776025136);
+		// Metalis 1
+		if (vars.currentPlanet.Current == 4  && !vars.metalis2) {
+			vars.CheckLoadNormalization(vars.olfMetalis, 776025136);
 		}
 		// Giant Clank 1
 		if (vars.currentPlanet.Current == 15) {
@@ -313,6 +330,10 @@ isLoading {
 		// Remains
 		if (vars.currentPlanet.Current == 23) {
 			vars.CheckLoadNormalization(vars.olfRemains, 654548);
+		}
+		// Metalis 2 (ATB only)
+		if (vars.currentPlanet.Current == 4  && vars.metalis2) {
+			vars.CheckLoadNormalization(vars.olfMetalis2, 654548);
 		}
 		// Challax
 		if (vars.currentPlanet.Current == 7 && !vars.challax2) {

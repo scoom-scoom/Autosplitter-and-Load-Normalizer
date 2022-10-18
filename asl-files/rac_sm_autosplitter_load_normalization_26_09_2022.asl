@@ -21,6 +21,9 @@ startup {
 		vars.isLoading = false;
 		vars.checkForLoadNormalization = false;
 
+		// Used for Any% routes where you enter the race on kalidon. We need to make sure that we don't split for kalidon by accident after the race.
+		vars.kalidonLoaded = false;
+
 		// Used for ATB where you need to go back to Metalis for the optimal route.
 		// Set to true once we reach Metalis for the first time, so that we know to look for the Metalis 2 split next time we go to Metalis.
 		vars.metalis1 = false;
@@ -77,6 +80,7 @@ startup {
 			vars.challax2 = false;
 			vars.dayniMoon1 = false;
 			vars.dayniMoon2 = false;
+			vars.kalidonLoaded = false;
 			vars.metalis1 = false;
 			vars.metalis2 = false;
 		};
@@ -172,6 +176,9 @@ split {
 	bool isLoadNormalization = settings["LoadNormalization"];
 	// For the splitting, planet changed is used, rather than "vars.currentPlanet.Current == x && vars.currentPlanet.Old == y". This
 	// is just in cause the autosplitter missed a frame and doesn't detect the exact frame where the current and old planet values match.
+	//
+	// This choice also means that the autosplitter will automatically work for slightly different routes. E.g. a player might go to Metallis after 
+	// remains in ATB, or might go to Metallis after Challax in ATB. Either way, the autosplitter will work, as it isn't checking for currentPlanet.Old.
 	bool planetChanged = false;
 	if (vars.currentPlanet.Current != vars.currentPlanet.Old) {
 		planetChanged = true;
@@ -181,9 +188,10 @@ split {
 		vars.LoadStarted(isLoadNormalization);
 		return true;
 	}
-	// Kalidon
-	if (vars.currentPlanet.Current == 3 && planetChanged) {
+	// Kalidon. Make sure not to split kalidon again after the race.
+	if (vars.currentPlanet.Current == 3 && planetChanged && !vars.kalidonLoaded) {
 		vars.LoadStarted(isLoadNormalization);
+		vars.kalidonLoaded = true;
 		return true;
 	}
 	if (settings["Yeezy%Split"]) {

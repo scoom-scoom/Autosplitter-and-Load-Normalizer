@@ -204,8 +204,8 @@ split {
 			return true;
 		}
 	}
-	// Kalidon race
-	if (vars.currentPlanet.Current == 22 && planetChanged) {
+	// Kalidon after race
+	if (vars.currentPlanet.Current == 3 && planetChanged && vars.kalidonLoaded) {
 		return true;
 	}
 	// Metalis 1

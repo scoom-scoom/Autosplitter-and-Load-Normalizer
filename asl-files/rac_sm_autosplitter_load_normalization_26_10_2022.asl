@@ -24,6 +24,9 @@ startup {
 		// Used for Any% routes where you enter the race on kalidon. We need to make sure that we don't split for kalidon by accident after the race.
 		vars.kalidonLoaded = false;
 
+		// Needed so that Otto only splits once.
+		vars.ottoAlreadySplit = false;
+
 		// Used for ATB where you need to go back to Metalis for the optimal route.
 		// Set to true once we reach Metalis for the first time, so that we know to look for the Metalis 2 split next time we go to Metalis.
 		vars.metalis1 = false;
@@ -81,6 +84,7 @@ startup {
 			vars.dayniMoon1 = false;
 			vars.dayniMoon2 = false;
 			vars.kalidonLoaded = false;
+			vars.ottoAlreadySplit = false;
 			vars.metalis1 = false;
 			vars.metalis2 = false;
 		};
@@ -158,6 +162,7 @@ split {
 	// vars.LogDebug("TEST");
 	// vars.LogDebug("Planet: " + vars.currentPlanet.Current);
 	// vars.LogDebug("Cutscene " + vars.currentCutscene.Current);
+	// vars.LogDebug("Otto " + vars.ottoEntry.Current);
 
 	// NOTE: You cannot use "else if" statements in this "split" function, as there are toggled settings.
 	// For example, if one of the settings is true but there is no split, then none of the other
@@ -276,8 +281,10 @@ split {
 		return true;
 	}
 	// Otto
-	if (vars.currentPlanet.Current == 10) {
-		if (vars.ottoEntry.Current == 75000 && vars.ottoEntry.Old <= 0) {
+	if (vars.currentPlanet.Current == 10 && !vars.ottoAlreadySplit) {
+		// 5000 is only for ATB for some reason.
+		if (vars.ottoEntry.Current == 75000 || vars.ottoEntry.Current == 5000) {
+			vars.ottoAlreadySplit = true;
 			return true;
 		}
 	}
